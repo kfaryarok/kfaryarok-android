@@ -5,4 +5,5 @@
     <string name="menu_about">אודות</string>
     <string name="debug_string">placeholder</string>
     <string name="global_update">הודעה כללית</string>
+    <string name="act_update_details">עדכון</string>
 </resources>
