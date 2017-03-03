@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">KfarYarok</string>
+    <string name="menu_settings">הגדרות</string>
+    <string name="menu_advanced">מצב מתקדם</string>
+    <string name="menu_about">אודות</string>
+    <string name="debug_string">placeholder</string>
+    <string name="global_update">הודעה כללית</string>
 </resources>
