@@ -1,9 +1,9 @@
 package io.github.kfaryarok.kfaryarokapp.updates;
 
-import java.util.Objects;
-
 /**
  * Simple wrapper for affecting specific classes.
+ * The classes need to be in English, and only when displayed to the user should
+ * they be converted back to Hebrew.
  *
  * Created by tbsc on 03/03/2017.
  */
@@ -11,7 +11,7 @@ public class ClassesAffected implements Affected {
 
     private String[] mClassesAffected;
 
-    public ClassesAffected(String[] classes) {
+    public ClassesAffected(String... classes) {
         this.mClassesAffected = classes;
     }
 

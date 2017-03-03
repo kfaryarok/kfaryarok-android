@@ -8,11 +8,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import io.github.kfaryarok.kfaryarokapp.updates.ClassesAffected;
+import io.github.kfaryarok.kfaryarokapp.updates.GlobalAffected;
 import io.github.kfaryarok.kfaryarokapp.updates.Update;
 import io.github.kfaryarok.kfaryarokapp.updates.UpdateAdapter;
 import io.github.kfaryarok.kfaryarokapp.updates.UpdateImpl;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements UpdateAdapter.UpdateAdapterOnClickHandler {
 
     private RecyclerView mUpdatesRecyclerView;
     private UpdateAdapter mUpdateAdapter;
@@ -23,12 +25,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // TODO fetch updates, filter unwanted ones and save into array
-        Update[] updates = new Update[] {
-                new UpdateImpl("שלום"),
-                new UpdateImpl("test", "hello?"),
+        Update[] testUpdates = new Update[] {
+                new UpdateImpl("שלום", "בדיקה, כי אפילו שאני לא יודע מה אני רוצה לומר אני כותב את זה כאן, ואני רוצה שפשוט תלך החוצה ותצעק על בוטס שהוא רוצה לאכול אותי!"),
+                new UpdateImpl("test", "בדיקה, כי אפילו שאני לא יודע מה אני רוצה לומר אני כותב את זה כאן, ואני רוצה שפשוט תלך החוצה ותצעק על בוטס שהוא רוצה לאכול אותי!"),
                 new UpdateImpl(new String[] {
-                        "ח4", "י7"
-                }, "private!")
+                        "H4", "I10", "H5", "I10", "K1", "G5", "G4", "G3", "G2", "K11", "K10", "H3"
+                }, "private!", "בדיקה, כי אפילו שאני לא יודע מה אני רוצה לומר אני כותב את זה כאן, ואני רוצה שפשוט תלך החוצה ותצעק על בוטס שהוא רוצה לאכול אותי!"),
+                new UpdateImpl(new ClassesAffected("L69"), "test 1"),
+                new UpdateImpl("hi"),
+                new UpdateImpl("fua")
         };
 
         mUpdatesRecyclerView = (RecyclerView) findViewById(R.id.rv_updates);
@@ -37,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
         mUpdatesRecyclerView.setLayoutManager(layoutManager);
         mUpdatesRecyclerView.setHasFixedSize(true);
 
-        mUpdateAdapter = new UpdateAdapter(updates.length, updates);
+        mUpdateAdapter = new UpdateAdapter(testUpdates.length, testUpdates, this);
         mUpdatesRecyclerView.setAdapter(mUpdateAdapter);
     }
 
@@ -64,4 +69,16 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void onClick(Update update) {
+        Intent intent = new Intent(this, UpdateDetailsActivity.class);
+        intent.putExtra(Intent.EXTRA_TEXT, update.getLongText());
+        if (update.getAffected() instanceof GlobalAffected)
+            intent.putExtra(Intent.EXTRA_SUBJECT, new String[] { "global" });
+        else if (update.getAffected() instanceof ClassesAffected)
+            intent.putExtra(Intent.EXTRA_SUBJECT, ((ClassesAffected) update.getAffected()).getClassesAffected());
+        startActivity(intent);
+    }
+
 }
