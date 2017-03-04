@@ -2,6 +2,8 @@
 אפליקציית הכפר הירוק הרשמית - גרסת אנדרואיד
 
 ### איך לעבוד על הקוד
-1. לשכפל:
-    git clone https://github.com/kfaryarok/kfaryarok-android
-2. לפתוח ב-Android Studio את תיקיית app
+    git clone https://github.com/Tbsc/kfaryarok-android
+    Android Studio -> Import Project -> Select "*repo*\app" Folder
+**או**
+
+    Android Studio -> Check out from Version Control -> Git -> URL: https://github.com/Tbsc/kfaryarok-android
