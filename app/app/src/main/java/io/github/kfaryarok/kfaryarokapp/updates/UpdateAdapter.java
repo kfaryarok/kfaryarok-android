@@ -1,5 +1,6 @@
 package io.github.kfaryarok.kfaryarokapp.updates;
 
+import android.content.res.Resources;
 import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -72,7 +73,7 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.UpdateView
                     // once text length reaches certain size, stop appending and add 3 dots
                     Rect bounds = new Rect();
                     tvClass.getPaint().getTextBounds(tvClass.getText().toString(), 0, tvClass.getText().length(), bounds);
-                    if (ScreenUtil.pxToDp(bounds.width()) >= 140) {
+                    if (ScreenUtil.pxToDp(bounds.width()) >= 120) {
                         tvClass.append("...");
                         break;
                     }
