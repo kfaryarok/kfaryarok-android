@@ -1,12 +1,14 @@
 package io.github.kfaryarok.kfaryarokapp;
 
 import android.content.Intent;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import io.github.kfaryarok.kfaryarokapp.updates.ClassesAffected;
 import io.github.kfaryarok.kfaryarokapp.updates.GlobalAffected;
@@ -21,6 +23,10 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter.Upd
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+        }
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
