@@ -1,6 +1,5 @@
 package io.github.kfaryarok.kfaryarokapp.updates;
 
-import android.content.res.Resources;
 import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -23,8 +22,8 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.UpdateView
     private int mItemCount;
     private final UpdateAdapterOnClickHandler mClickHandler;
 
-    public UpdateAdapter(int itemCount, Update[] updates, UpdateAdapterOnClickHandler clickHandler) {
-        this.mItemCount = itemCount;
+    public UpdateAdapter(Update[] updates, UpdateAdapterOnClickHandler clickHandler) {
+        this.mItemCount = updates.length;
         this.mUpdates = updates;
         this.mClickHandler = clickHandler;
     }
@@ -97,21 +96,30 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.UpdateView
         public UpdateViewHolder(View itemView) {
             super(itemView);
 
-            // hacky way to handle clicks
+            // hacky way to handle clicks, but it works i guess
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     // if should be able to press, then call handler
                     if (mUpdates[getAdapterPosition()].hasLongText()) {
-                        mClickHandler.onClick(mUpdates[getAdapterPosition()]);
+                        mClickHandler.onClickCard(mUpdates[getAdapterPosition()]);
                     }
+                }
+            });
+
+            // click handler for options button
+            itemView.findViewById(R.id.btn_updatecard_options).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mClickHandler.onClickOptions(mUpdates[getAdapterPosition()]);
                 }
             });
         }
     }
 
     public interface UpdateAdapterOnClickHandler {
-        void onClick(Update update);
+        void onClickCard(Update update);
+        void onClickOptions(Update update);
     }
 
 }

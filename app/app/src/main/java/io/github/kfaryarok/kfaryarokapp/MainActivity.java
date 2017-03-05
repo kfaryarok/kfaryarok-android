@@ -2,19 +2,23 @@ package io.github.kfaryarok.kfaryarokapp;
 
 import android.content.Intent;
 import android.os.Build;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
+
+import org.json.JSONException;
 
 import io.github.kfaryarok.kfaryarokapp.updates.ClassesAffected;
 import io.github.kfaryarok.kfaryarokapp.updates.GlobalAffected;
 import io.github.kfaryarok.kfaryarokapp.updates.Update;
 import io.github.kfaryarok.kfaryarokapp.updates.UpdateAdapter;
-import io.github.kfaryarok.kfaryarokapp.updates.UpdateImpl;
+import io.github.kfaryarok.kfaryarokapp.updates.UpdateParser;
+import io.github.kfaryarok.kfaryarokapp.util.TestUtil;
 
 public class MainActivity extends AppCompatActivity implements UpdateAdapter.UpdateAdapterOnClickHandler {
 
@@ -31,16 +35,18 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter.Upd
         setContentView(R.layout.activity_main);
 
         // TODO fetch updates, filter unwanted ones and save into array
-        Update[] testUpdates = new Update[] {
-                new UpdateImpl("שלום", "בדיקה, כי אפילו שאני לא יודע מה אני רוצה לומר אני כותב את זה כאן, ואני רוצה שפשוט תלך החוצה ותצעק על בוטס שהוא רוצה לאכול אותי!"),
-                new UpdateImpl("test", "בדיקה, כי אפילו שאני לא יודע מה אני רוצה לומר אני כותב את זה כאן, ואני רוצה שפשוט תלך החוצה ותצעק על בוטס שהוא רוצה לאכול אותי!"),
-                new UpdateImpl(new String[] {
-                        "H4", "I10", "H5", "I10", "K1", "G5", "G4", "G3", "G2", "K11", "K10", "H3"
-                }, "private!", "בדיקה, כי אפילו שאני לא יודע מה אני רוצה לומר אני כותב את זה כאן, ואני רוצה שפשוט תלך החוצה ותצעק על בוטס שהוא רוצה לאכול אותי!"),
-                new UpdateImpl(new ClassesAffected("L69"), "test 1"),
-                new UpdateImpl("hi"),
-                new UpdateImpl("fua")
-        };
+        // temp until i get a json serving server up
+        String response = TestUtil.getTestJsonString(); // UpdateFetcher.fetchUpdates();
+
+        Update[] updates = new Update[0];
+        try {
+            updates = UpdateParser.parseUpdates(response);
+        } catch (JSONException e) {
+            // just in case something errors, exit
+            e.printStackTrace();
+            Toast.makeText(this, "כישלון בעיבוד נתונים.", Toast.LENGTH_LONG).show();
+            finish();
+        }
 
         mUpdatesRecyclerView = (RecyclerView) findViewById(R.id.rv_updates);
 
@@ -48,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter.Upd
         mUpdatesRecyclerView.setLayoutManager(layoutManager);
         mUpdatesRecyclerView.setHasFixedSize(true);
 
-        mUpdateAdapter = new UpdateAdapter(testUpdates.length, testUpdates, this);
+        mUpdateAdapter = new UpdateAdapter(updates, this);
         mUpdatesRecyclerView.setAdapter(mUpdateAdapter);
     }
 
@@ -77,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter.Upd
     }
 
     @Override
-    public void onClick(Update update) {
+    public void onClickCard(Update update) {
         Intent intent = new Intent(this, UpdateDetailsActivity.class);
         intent.putExtra(Intent.EXTRA_TEXT, update.getLongText());
         if (update.getAffected() instanceof GlobalAffected)
@@ -85,6 +91,11 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter.Upd
         else if (update.getAffected() instanceof ClassesAffected)
             intent.putExtra(Intent.EXTRA_SUBJECT, ((ClassesAffected) update.getAffected()).getClassesAffected());
         startActivity(intent);
+    }
+
+    @Override
+    public void onClickOptions(Update update) {
+        // TODO show options, but i don't know what options
     }
 
 }
