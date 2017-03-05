@@ -1,5 +1,7 @@
 package io.github.kfaryarok.kfaryarokapp.updates;
 
+import java.util.List;
+
 /**
  * In true OOP-fashion, new class for containing new updates, that will be given to the adapter
  * for creating new cards.
@@ -29,7 +31,7 @@ public class UpdateImpl implements Update {
      * Constructor for creating an update, that affects only certain classes,
      * with only a short text as the update, with no extra text to show.
      *
-     * @param affectedClasses List of classes that this update affects.
+     * @param affectedClasses Array of classes that this update affects.
      *                        If, for example, I'm in E7, and this update affects
      *                        E6, I'm not one of the affected classes. But if it
      *                        affects E7, then I should see this update.
@@ -52,6 +54,38 @@ public class UpdateImpl implements Update {
      */
     public UpdateImpl(String[] affectedClasses, String summary, String longText) {
         this.mAffected = new ClassesAffected(affectedClasses);
+        this.mSummary = summary;
+        this.mHasLongText = true;
+        this.mLongText = longText;
+    }
+
+    /**
+     * Constructor for creating an update, that affects only certain classes,
+     * with only a short text as the update, with no extra text to show.
+     *
+     * @param affectedClasses List of classes that this update affects.
+     *                        If, for example, I'm in E7, and this update affects
+     *                        E6, I'm not one of the affected classes. But if it
+     *                        affects E7, then I should see this update.
+     * @param text A short text explaining the update
+     */
+    public UpdateImpl(List<String> affectedClasses, String text) {
+        this.mAffected = new ClassesAffected(affectedClasses.toArray(new String[0]));
+        this.mSummary = text;
+        this.mHasLongText = false;
+    }
+
+    /**
+     * Constructor for creating an update, that affects only certain classes,
+     * with a summary of the text shown, and an option to view a long version
+     * of the update, by clicking on the card.
+     *
+     * @param affectedClasses read {@link #UpdateImpl(List, String)}
+     * @param summary short summary of the long text
+     * @param longText the entire update
+     */
+    public UpdateImpl(List<String> affectedClasses, String summary, String longText) {
+        this.mAffected = new ClassesAffected(affectedClasses.toArray(new String[0]));
         this.mSummary = summary;
         this.mHasLongText = true;
         this.mLongText = longText;
