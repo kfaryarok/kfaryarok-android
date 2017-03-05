@@ -3,10 +3,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:icon="@drawable/ic_check_black_24dp"
-        android:title="Item"
-        app:showAsAction="ifRoom" />
-    <item
         android:id="@+id/menu_updatedetails_placeholder"
         android:title="@string/debug_string" />
 </menu>

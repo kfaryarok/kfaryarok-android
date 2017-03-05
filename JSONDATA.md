@@ -19,7 +19,7 @@ For example:
 	"global_updates": [
 		{
 			"short_text": "hi?",
-			"long_text":"more hi"
+			"long_text": "more hi"
 		},
 		{
 			"short_text": "hi again"
