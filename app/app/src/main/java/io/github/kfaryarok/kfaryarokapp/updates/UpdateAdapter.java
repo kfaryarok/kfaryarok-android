@@ -14,7 +14,7 @@ import io.github.kfaryarok.kfaryarokapp.util.ScreenUtil;
 /**
  * Update adapter for creating cards to display in the recycler view.
  *
- * Created by tbsc on 03/03/2017.
+ * @author tbsc on 03/03/2017
  */
 public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.UpdateViewHolder> {
 

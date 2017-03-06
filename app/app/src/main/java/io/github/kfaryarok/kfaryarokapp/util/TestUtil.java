@@ -14,7 +14,7 @@ import io.github.kfaryarok.kfaryarokapp.updates.UpdateParser;
  * Mostly for working with parts of the app that aren't there yet, so for
  * providing test data (ie. json-formatted updates).
  *
- * Created by tbsc on 05/03/2017.
+ * @author tbsc on 05/03/2017
  */
 public class TestUtil {
 

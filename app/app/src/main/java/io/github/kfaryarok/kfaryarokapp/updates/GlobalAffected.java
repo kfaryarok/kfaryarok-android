@@ -3,7 +3,7 @@ package io.github.kfaryarok.kfaryarokapp.updates;
 /**
  * Wrapper for global affections. Affects all classes and is global.
  *
- * Created by tbsc on 03/03/2017.
+ * @author tbsc on 03/03/2017
  */
 public class GlobalAffected implements Affected {
 

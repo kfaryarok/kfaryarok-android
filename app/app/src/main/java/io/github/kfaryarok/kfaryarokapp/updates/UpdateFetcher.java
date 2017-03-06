@@ -4,7 +4,7 @@ package io.github.kfaryarok.kfaryarokapp.updates;
  * Gets updates from a server, and saves the update into a String.
  * Doesn't parse the JSON, only gets it.
  *
- * Created by tbsc on 04/03/2017.
+ * @author tbsc on 04/03/2017
  */
 public class UpdateFetcher {
 
