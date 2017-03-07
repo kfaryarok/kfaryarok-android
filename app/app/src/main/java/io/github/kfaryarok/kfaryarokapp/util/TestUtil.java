@@ -26,12 +26,12 @@ public class TestUtil {
 
         JSONObject testJson = new JSONObject();
         try {
-            JSONObject globalUpdate1 = new JSONObject().put(UpdateParser.SHORT_TEXT_STRING, "hi?").put(UpdateParser.LONG_TEXT_STRING, "more hi");
-            JSONObject globalUpdate2 = new JSONObject().put(UpdateParser.SHORT_TEXT_STRING, "hi again");
+            JSONObject globalUpdate1 = new JSONObject().put(UpdateParser.TEXT_STRING, "עדכון רגיל 1 \n ל");
+            JSONObject globalUpdate2 = new JSONObject().put(UpdateParser.TEXT_STRING, "עדכון רגיל 2");
             JSONArray globalUpdates = new JSONArray().put(globalUpdate1).put(globalUpdate2);
 
-            JSONObject update1 = new JSONObject().put(UpdateParser.SHORT_TEXT_STRING, "normal").put(UpdateParser.CLASSES_ARRAY, new JSONArray().put("H4").put("I3")).put(UpdateParser.LONG_TEXT_STRING, "long normal");
-            JSONObject update2 = new JSONObject().put(UpdateParser.SHORT_TEXT_STRING, "normal 2").put(UpdateParser.CLASSES_ARRAY, new JSONArray().put("I2").put("K7")).put(UpdateParser.LONG_TEXT_STRING, "long normal 2");
+            JSONObject update1 = new JSONObject().put(UpdateParser.TEXT_STRING, "normal").put(UpdateParser.CLASSES_ARRAY, new JSONArray().put("H4").put("I3"));
+            JSONObject update2 = new JSONObject().put(UpdateParser.TEXT_STRING, "normal 2").put(UpdateParser.CLASSES_ARRAY, new JSONArray().put("I2").put("K7"));
             JSONArray updatesJson = new JSONArray().put(update1).put(update2);
 
             testJson.put(UpdateParser.GLOBAL_UPDATES_ARRAY, globalUpdates);
@@ -43,11 +43,11 @@ public class TestUtil {
         mTestJsonString = testJson.toString();
 
         mTestUpdateArray = new Update[] {
-                new UpdateImpl("שלום", "בדיקה, כי אפילו שאני לא יודע מה אני רוצה לומר אני כותב את זה כאן, ואני רוצה שפשוט תלך החוצה ותצעק על בוטס שהוא רוצה לאכול אותי!"),
-                new UpdateImpl("test", "בדיקה, כי אפילו שאני לא יודע מה אני רוצה לומר אני כותב את זה כאן, ואני רוצה שפשוט תלך החוצה ותצעק על בוטס שהוא רוצה לאכול אותי!"),
+                new UpdateImpl("שלום"),
+                new UpdateImpl("test"),
                 new UpdateImpl(new String[] {
                         "H4", "I10", "H5", "I10", "K1", "G5", "G4", "G3", "G2", "K11", "K10", "H3"
-                }, "private!", "בדיקה, כי אפילו שאני לא יודע מה אני רוצה לומר אני כותב את זה כאן, ואני רוצה שפשוט תלך החוצה ותצעק על בוטס שהוא רוצה לאכול אותי!"),
+                }, "private!"),
                 new UpdateImpl(new ClassesAffected("L69"), "test 1"),
                 new UpdateImpl("hi"),
                 new UpdateImpl("fua")

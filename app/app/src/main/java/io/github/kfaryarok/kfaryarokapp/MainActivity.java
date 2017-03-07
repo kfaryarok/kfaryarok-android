@@ -1,9 +1,11 @@
 package io.github.kfaryarok.kfaryarokapp;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
@@ -13,11 +15,10 @@ import android.widget.Toast;
 
 import org.json.JSONException;
 
-import io.github.kfaryarok.kfaryarokapp.updates.ClassesAffected;
-import io.github.kfaryarok.kfaryarokapp.updates.GlobalAffected;
 import io.github.kfaryarok.kfaryarokapp.updates.Update;
 import io.github.kfaryarok.kfaryarokapp.updates.UpdateAdapter;
 import io.github.kfaryarok.kfaryarokapp.updates.UpdateParser;
+import io.github.kfaryarok.kfaryarokapp.util.PreferenceConstants;
 import io.github.kfaryarok.kfaryarokapp.util.TestUtil;
 
 public class MainActivity extends AppCompatActivity implements UpdateAdapter.UpdateAdapterOnClickHandler {
@@ -27,6 +28,16 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter.Upd
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        if (!preferences.getBoolean(PreferenceConstants.LAUNCHED_BEFORE, false)) {
+            // first launch!
+            // mark in preferences that this is the first launch, and that it happened
+            preferences.edit().putBoolean(PreferenceConstants.LAUNCHED_BEFORE, true).apply();
+
+            // TODO show first launch activity for configuring basic settings
+        }
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
         }
@@ -84,13 +95,7 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter.Upd
 
     @Override
     public void onClickCard(Update update) {
-        Intent intent = new Intent(this, UpdateDetailsActivity.class);
-        intent.putExtra(Intent.EXTRA_TEXT, update.getLongText());
-        if (update.getAffected() instanceof GlobalAffected)
-            intent.putExtra(Intent.EXTRA_SUBJECT, new String[] { "global" });
-        else if (update.getAffected() instanceof ClassesAffected)
-            intent.putExtra(Intent.EXTRA_SUBJECT, ((ClassesAffected) update.getAffected()).getClassesAffected());
-        startActivity(intent);
+        // really nothing to do here as of now
     }
 
     @Override

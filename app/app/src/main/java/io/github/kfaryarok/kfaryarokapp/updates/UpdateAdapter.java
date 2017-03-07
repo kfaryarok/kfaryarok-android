@@ -38,17 +38,10 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.UpdateView
         View itemView = holder.itemView;
         Update update = mUpdates[position];
 
-        // set short text
-        TextView tvShort = (TextView) itemView.findViewById(R.id.tv_updatecard_text);
+        // set text
+        TextView tvText = (TextView) itemView.findViewById(R.id.tv_updatecard_text);
         String text = " " + update.getText();
-        tvShort.setText(text); // so android studio won't complain about concatenation
-
-        // allow viewing long text if there is one
-        if (update.hasLongText()) {
-            // shows more button
-            View btnMore = itemView.findViewById(R.id.view_updatecard_more);
-            btnMore.setVisibility(View.VISIBLE);
-        }
+        tvText.setText(text); // so android studio won't complain about concatenation
 
         // set class
         TextView tvClass = (TextView) itemView.findViewById(R.id.tv_updatecard_class);
@@ -93,17 +86,22 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.UpdateView
 
     public class UpdateViewHolder extends RecyclerView.ViewHolder {
 
-        public UpdateViewHolder(View itemView) {
+        public UpdateViewHolder(final View itemView) {
             super(itemView);
 
             // hacky way to handle clicks, but it works i guess
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // if should be able to press, then call handler
-                    if (mUpdates[getAdapterPosition()].hasLongText()) {
-                        mClickHandler.onClickCard(mUpdates[getAdapterPosition()]);
-                    }
+                    mClickHandler.onClickCard(mUpdates[getAdapterPosition()]);
+                }
+            });
+
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    mClickHandler.onClickOptions(mUpdates[getAdapterPosition()]);
+                    return true;
                 }
             });
 
