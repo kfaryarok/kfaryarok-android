@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import io.github.kfaryarok.kfaryarokapp.R;
-import io.github.kfaryarok.kfaryarokapp.util.ClassUtil;
 import io.github.kfaryarok.kfaryarokapp.util.ScreenUtil;
 
 /**
@@ -57,8 +56,7 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.UpdateView
                 String[] classesAffected = affected.getClassesAffected();
                 for (int i = 0; i < classesAffected.length; i++) {
                     // if class is in English, convert to Hebrew
-                    String clazz = ClassUtil.checkValidEnglishClassName(classesAffected[i]) ?
-                            ClassUtil.convertEnglishClassToHebrew(classesAffected[i]) : classesAffected[i];
+                    String clazz = classesAffected[i];
 
                     tvClass.append(clazz);
 

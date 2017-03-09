@@ -30,9 +30,12 @@ public class TestUtil {
             JSONObject globalUpdate2 = new JSONObject().put(UpdateParser.TEXT_STRING, "עדכון רגיל 2");
             JSONArray globalUpdates = new JSONArray().put(globalUpdate1).put(globalUpdate2);
 
-            JSONObject update1 = new JSONObject().put(UpdateParser.TEXT_STRING, "normal").put(UpdateParser.CLASSES_ARRAY, new JSONArray().put("H4").put("I3"));
-            JSONObject update2 = new JSONObject().put(UpdateParser.TEXT_STRING, "normal 2").put(UpdateParser.CLASSES_ARRAY, new JSONArray().put("I2").put("K7"));
-            JSONArray updatesJson = new JSONArray().put(update1).put(update2);
+            JSONObject update1 = new JSONObject().put(UpdateParser.TEXT_STRING, "normal 1").put(UpdateParser.CLASSES_ARRAY, new JSONArray().put("ח4").put("ט3"));
+            JSONObject update2 = new JSONObject().put(UpdateParser.TEXT_STRING, "normal 2").put(UpdateParser.CLASSES_ARRAY, new JSONArray().put("ט2").put("יא7"));
+            JSONObject update3 = new JSONObject().put(UpdateParser.TEXT_STRING, "normal 3").put(UpdateParser.CLASSES_ARRAY, new JSONArray().put("ט5").put("ח4"));
+            JSONObject update4 = new JSONObject().put(UpdateParser.TEXT_STRING, "normal 4").put(UpdateParser.CLASSES_ARRAY, new JSONArray().put("ט2"));
+            JSONObject update5 = new JSONObject().put(UpdateParser.TEXT_STRING, "normal 5").put(UpdateParser.CLASSES_ARRAY, new JSONArray().put("יב5"));
+            JSONArray updatesJson = new JSONArray().put(update1).put(update2).put(update3).put(update4).put(update5);
 
             testJson.put(UpdateParser.GLOBAL_UPDATES_ARRAY, globalUpdates);
             testJson.put(UpdateParser.UPDATES_ARRAY, updatesJson);
