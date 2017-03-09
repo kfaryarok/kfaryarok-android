@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <EditTextPreference
+        android:key="@string/pref_class_string"
+        android:selectAllOnFocus="true"
+        android:title="@string/settings_class" />
+    <PreferenceScreen
+        android:key="@string/settings_alerts_category"
+        android:title="@string/settings_alertcategory_title" >
+
+        <CheckBoxPreference
+            android:title="@string/settings_alertcategory_enabled"
+            android:key="@string/pref_alerts_enabled_bool"
+            android:defaultValue="true" />
+    </PreferenceScreen>
+    <PreferenceScreen
+        android:key="@string/settings_advanced_category"
+        android:title="@string/settings_advancedcategory_title">
+
+        <EditTextPreference
+            android:title="@string/settings_advancedcategory_server"
+            android:key="@string/pref_updateserver_string" />
+    </PreferenceScreen>
+</PreferenceScreen>

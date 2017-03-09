@@ -19,7 +19,7 @@ public class ClassUtil {
      * @return Hebrew class name
      */
     public static String convertEnglishClassToHebrew(String clazz) {
-        return convertEnglishGradeToHebrew(clazz.charAt(0)) + clazz.substring(1);
+        return (clazz == null || clazz.length() == 0) ? "" : convertEnglishGradeToHebrew(clazz.charAt(0)) + clazz.substring(1);
     }
 
     /**
@@ -30,6 +30,11 @@ public class ClassUtil {
      */
     public static String convertHebrewClassToEnglish(String clazz) {
         StringBuilder sb = new StringBuilder();
+
+        if (clazz == null || clazz.length() == 0) {
+            // invalid, so return null
+            return "";
+        }
 
         if (clazz.length() == 2) {
             // class name is just 2 chars, so only 1 letter and 1 digit
@@ -69,7 +74,7 @@ public class ClassUtil {
      * @return is it valid
      */
     public static boolean checkValidClassName(String clazz) {
-        return checkValidEnglishClassName(clazz) || checkValidHebrewClassName(clazz);
+        return !(clazz == null || clazz.length() == 0) && (checkValidEnglishClassName(clazz) || checkValidHebrewClassName(clazz));
     }
 
     /**
@@ -78,6 +83,10 @@ public class ClassUtil {
      * @return is it really valid (in English)
      */
     public static boolean checkValidEnglishClassName(String clazz) {
+        if (clazz == null || clazz.length() == 0) {
+            return false;
+        }
+
         // first char must always be a letter, so check it
         if ((clazz.charAt(0) <= 'a' && clazz.charAt(0) >= 'z') || (clazz.charAt(0) <= 'A' && clazz.charAt(0) >= 'Z')) {
             // i do it like this because i want to make sure its an english letter specifically
@@ -114,6 +123,10 @@ public class ClassUtil {
      * @return is valid hebrew class name
      */
     public static boolean checkValidHebrewClassName(String clazz) {
+        if (clazz == null || clazz.length() == 0) {
+            return false;
+        }
+
         // first char has be a letter, so check it once
         if (!isHebrewLetter(clazz.charAt(0))) {
             return false;
@@ -193,7 +206,7 @@ public class ClassUtil {
             case 'l':
                 return "יב";
             default:
-                return null;
+                return "";
         }
     }
 
@@ -203,6 +216,10 @@ public class ClassUtil {
      * @return Grade in English, space ( ) if invalid/unsupported
      */
     public static char convertHebrewGradeToEnglish(String hebrewGrade) {
+        if (hebrewGrade == null || hebrewGrade.length() == 0) {
+            return ' ';
+        }
+
         switch (hebrewGrade) {
             case "ז":
                 return 'G';

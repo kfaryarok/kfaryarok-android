@@ -1,9 +1,34 @@
 <resources>
+    <!-- General strings -->
     <string name="app_name">KfarYarok</string>
+    <string name="debug_string">placeholder</string>
+
+    <!-- Activity strings -->
+    <string name="act_update_details">עדכון</string>
+    <string name="act_settings">הגדרות</string>
+
+    <!-- View strings -->
+    <string name="global_update">הודעה כללית</string>
+    <string name="btn_devmode_easteregg">dev off</string>
+
+    <!-- Menu strings -->
     <string name="menu_settings">הגדרות</string>
     <string name="menu_advanced">מצב מתקדם</string>
     <string name="menu_about">אודות</string>
-    <string name="debug_string">placeholder</string>
-    <string name="global_update">הודעה כללית</string>
-    <string name="act_update_details">עדכון</string>
+
+    <!-- Preference title strings -->
+    <string name="settings_alertcategory_title">התראות</string>
+    <string name="settings_alertcategory_enabled">פעיל</string>
+    <string name="settings_advancedcategory_title">הגדרות מתקדמות</string>
+    <string name="settings_advancedcategory_server">שרת עדכון</string>
+    <string name="settings_class">כיתה</string>
+
+    <!-- Preference key strings -->
+    <string name="pref_class_string">class</string>
+    <string name="pref_updateserver_string">update_server</string>
+    <string name="pref_alerts_enabled_bool">alerts_enabled</string>
+    <string name="pref_launched_before_bool">launched_before</string>
+    <string name="pref_advanced_mode_bool">advanced_mode</string>
+    <string name="settings_alerts_category">settings_alerts_category</string>
+    <string name="settings_advanced_category">settings_advanced_category</string>
 </resources>

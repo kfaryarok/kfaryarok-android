@@ -17,16 +17,4 @@ public interface Update {
      */
     String getText();
 
-    /**
-     * Used to know whether this update should be clickable, to view the whole update.
-     * @return has long text
-     */
-    boolean hasLongText();
-
-    /**
-     * Make sure to check if there is a long text before doing this! {@link #hasLongText()}
-     * @return The long text, that should be shown by clicking the card
-     */
-    String getLongText();
-
 }

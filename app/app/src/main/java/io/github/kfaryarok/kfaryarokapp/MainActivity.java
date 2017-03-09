@@ -1,9 +1,11 @@
 package io.github.kfaryarok.kfaryarokapp;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
@@ -13,8 +15,7 @@ import android.widget.Toast;
 
 import org.json.JSONException;
 
-import io.github.kfaryarok.kfaryarokapp.updates.ClassesAffected;
-import io.github.kfaryarok.kfaryarokapp.updates.GlobalAffected;
+import io.github.kfaryarok.kfaryarokapp.settings.SettingsActivity;
 import io.github.kfaryarok.kfaryarokapp.updates.Update;
 import io.github.kfaryarok.kfaryarokapp.updates.UpdateAdapter;
 import io.github.kfaryarok.kfaryarokapp.updates.UpdateParser;
@@ -27,6 +28,16 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter.Upd
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        if (!preferences.getBoolean(getString(R.string.pref_launched_before_bool), false)) {
+            // first launch!
+            // mark in preferences that this is the first launch, and that it happened
+            preferences.edit().putBoolean(getString(R.string.pref_launched_before_bool), true).apply();
+
+            // TODO show first launch activity for configuring basic settings
+        }
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
         }
@@ -40,7 +51,8 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter.Upd
 
         Update[] updates = new Update[0];
         try {
-            updates = UpdateParser.parseUpdates(response);
+            // parse updates from JSON, then filter to only have updates relevent
+            updates = UpdateParser.filterUpdates(UpdateParser.parseUpdates(response), preferences.getString(getString(R.string.pref_class_string), ""));
         } catch (JSONException e) {
             // just in case something errors, exit
             e.printStackTrace();
@@ -68,11 +80,7 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter.Upd
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_settings:
-                // TODO settings menu
-                break;
-            case R.id.menu_advanced:
-                item.setChecked(!item.isChecked());
-                // TODO save checked data and show advanced options
+                startActivity(new Intent(this, SettingsActivity.class));
                 break;
             case R.id.menu_about:
                 startActivity(new Intent(this, AboutActivity.class));
@@ -84,13 +92,7 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter.Upd
 
     @Override
     public void onClickCard(Update update) {
-        Intent intent = new Intent(this, UpdateDetailsActivity.class);
-        intent.putExtra(Intent.EXTRA_TEXT, update.getLongText());
-        if (update.getAffected() instanceof GlobalAffected)
-            intent.putExtra(Intent.EXTRA_SUBJECT, new String[] { "global" });
-        else if (update.getAffected() instanceof ClassesAffected)
-            intent.putExtra(Intent.EXTRA_SUBJECT, ((ClassesAffected) update.getAffected()).getClassesAffected());
-        startActivity(intent);
+        // really nothing to do here as of now
     }
 
     @Override
