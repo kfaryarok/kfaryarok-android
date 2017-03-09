@@ -8,7 +8,7 @@ Each update must contain the following tag:
 - text (string): text for the update
 
 If the update is a non-global update, then it must also contain the following tag:
-- classes (string array): which classes this affects, and also who should see this
+- classes (string array): which classes this affects, and also who should see this in Hebrew
 
 All of that information is in the following table (req = required, opt = optional):
 
@@ -32,18 +32,18 @@ Actual example:
 			{
 				"text": "update 1",
 				"classes": [
-					"H4",
-					"I3"
-				],
+					"ח4",
+					"ט3"
+				]
 			},
 			{
 				"text": "update 2",
 				"classes": 
 				[
-					"I2",
-					"K7",
-					"G11"
-				],
+					"ט2",
+					"יא7",
+					"ז11"
+				]
 			}
 		]
 	}
