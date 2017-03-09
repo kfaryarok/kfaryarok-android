@@ -51,4 +51,31 @@ public class UpdateParser {
         return updateList.toArray(new Update[0]);
     }
 
+    /**
+     * Takes the update array, and returns an array containing only the updates relevant to the
+     * class given.
+     * @param updates Update array
+     * @param clazz Class name in Hebrew
+     * @return Filtered update array
+     */
+    public static Update[] filterUpdates(Update[] updates, String clazz) {
+        List<Update> filteredUpdates = new ArrayList<>();
+
+        for (Update update : updates) {
+            if (update.getAffected() instanceof GlobalAffected) {
+                // global update, add it
+                filteredUpdates.add(update);
+            } else if (update.getAffected() instanceof ClassesAffected) {
+                // normal update, check if affected
+                ClassesAffected affected = (ClassesAffected) update.getAffected();
+                if (affected.affects(clazz)) {
+                    // affected
+                    filteredUpdates.add(update);
+                }
+            }
+        }
+
+        return filteredUpdates.toArray(new Update[0]);
+    }
+
 }
