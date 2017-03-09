@@ -56,6 +56,7 @@ public class AboutActivity extends AppCompatActivity {
                     } else {
                         // increase count
                         mEasterEggClickCounter++;
+
                         if (mEasterEggClickCounter >= 4) {
                             if (mToast != null) {
                                 mToast.cancel();
