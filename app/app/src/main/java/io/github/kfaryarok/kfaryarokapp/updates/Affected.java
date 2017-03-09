@@ -3,7 +3,7 @@ package io.github.kfaryarok.kfaryarokapp.updates;
 /**
  * Interface for checking is a certain class if affected.
  *
- * Created by tbsc on 03/03/2017.
+ * @author tbsc on 03/03/2017
  */
 public interface Affected {
 

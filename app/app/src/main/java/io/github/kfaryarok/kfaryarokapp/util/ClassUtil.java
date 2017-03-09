@@ -5,7 +5,7 @@ package io.github.kfaryarok.kfaryarokapp.util;
  * ie: I3 -> י3
  * (and for some reason android studio renders hebrew incorrectly in comments)
  *
- * Created by tbsc on 03/03/2017.
+ * @author tbsc on 03/03/2017
  */
 public class ClassUtil {
 

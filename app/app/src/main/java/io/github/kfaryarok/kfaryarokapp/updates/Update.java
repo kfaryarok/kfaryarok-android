@@ -3,7 +3,7 @@ package io.github.kfaryarok.kfaryarokapp.updates;
 /**
  * General interface for updates.
  *
- * Created by tbsc on 03/03/2017.
+ * @author tbsc on 03/03/2017
  */
 public interface Update {
 

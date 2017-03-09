@@ -5,7 +5,7 @@ import android.content.res.Resources;
 /**
  * Various util methods for working with screen sizes.
  *
- * Created by tbsc on 04/03/2017.
+ * @author tbsc on 04/03/2017
  */
 public class ScreenUtil {
 

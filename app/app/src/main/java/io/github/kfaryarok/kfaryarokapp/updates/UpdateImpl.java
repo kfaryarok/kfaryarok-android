@@ -11,7 +11,7 @@ import java.util.List;
  * when you want to create an update for only some classes, and {@link #UpdateImpl(String)} and
  * {@link #UpdateImpl(String, String)} for when you want to create a global update.
  *
- * Created by tbsc on 03/03/2017.
+ * @author tbsc on 03/03/2017
  */
 public class UpdateImpl implements Update {
 

@@ -5,7 +5,7 @@ package io.github.kfaryarok.kfaryarokapp.updates;
  * The classes need to be in English, and only when displayed to the user should
  * they be converted back to Hebrew.
  *
- * Created by tbsc on 03/03/2017.
+ * @author tbsc on 03/03/2017
  */
 public class ClassesAffected implements Affected {
 
