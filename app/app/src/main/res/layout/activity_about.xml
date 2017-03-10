@@ -28,7 +28,9 @@
         android:id="@+id/btn_about_advancedmode_easteregg"
         android:layout_width="44dp"
         android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
         android:text="@string/btn_devmode_easteregg"
-        android:textSize="10sp" />
+        android:textSize="10sp"
+        android:visibility="visible" />
 
 </LinearLayout>
