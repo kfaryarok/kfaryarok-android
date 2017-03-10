@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,14 +29,18 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter.Upd
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-        if (!preferences.getBoolean(getString(R.string.pref_launched_before_bool), false)) {
+//        prefs.edit().putBoolean(getString(R.string.pref_launched_before_bool), false).apply();
+        Log.i(getClass().getSimpleName(), "" + prefs.getBoolean(getString(R.string.pref_launched_before_bool), false));
+
+        if (!prefs.getBoolean(getString(R.string.pref_launched_before_bool), false)) {
             // first launch!
             // mark in preferences that this is the first launch, and that it happened
-            preferences.edit().putBoolean(getString(R.string.pref_launched_before_bool), true).apply();
+            prefs.edit().putBoolean(getString(R.string.pref_launched_before_bool), true).apply();
 
-            // TODO show first launch activity for configuring basic settings
+            Intent firstLaunchActivity = new Intent(this, SettingsActivity.class).putExtra(Intent.EXTRA_TEXT, true);
+            startActivity(firstLaunchActivity);
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
@@ -52,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter.Upd
         Update[] updates = new Update[0];
         try {
             // parse updates from JSON, then filter to only have updates relevent
-            updates = UpdateParser.filterUpdates(UpdateParser.parseUpdates(response), preferences.getString(getString(R.string.pref_class_string), ""));
+            updates = UpdateParser.filterUpdates(UpdateParser.parseUpdates(response), prefs.getString(getString(R.string.pref_class_string), ""));
         } catch (JSONException e) {
             // just in case something errors, exit
             e.printStackTrace();
@@ -80,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter.Upd
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_settings:
-                startActivity(new Intent(this, SettingsActivity.class));
+                startActivity(new Intent(this, SettingsActivity.class).putExtra(Intent.EXTRA_TEXT, false));
                 break;
             case R.id.menu_about:
                 startActivity(new Intent(this, AboutActivity.class));
