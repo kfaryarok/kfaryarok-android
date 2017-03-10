@@ -1,14 +1,14 @@
 package io.github.kfaryarok.kfaryarokapp.updates;
 
-import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import io.github.kfaryarok.kfaryarokapp.R;
-import io.github.kfaryarok.kfaryarokapp.util.ScreenUtil;
+import io.github.kfaryarok.kfaryarokapp.util.PreferenceUtil;
 
 /**
  * Update adapter for creating cards to display in the recycler view.
@@ -49,30 +49,40 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.UpdateView
             tvClass.setText(R.string.global_update);
         } else {
             // appends all classes to the class textview
-            // TODO make so that your class is appended first
             if (update.getAffected() instanceof ClassesAffected) {
+                // get user's class
+                String userClazz = PreferenceUtil.getClassPreference(holder.itemView.getContext());
+
+                // get the affected instance
                 ClassesAffected affected = (ClassesAffected) update.getAffected();
-                tvClass.setText("");
+
+                // we know the update MUST affect the user, so put his class first
+                tvClass.setText(userClazz);
+
+                // get all affected classes
                 String[] classesAffected = affected.getClassesAffected();
-                for (int i = 0; i < classesAffected.length; i++) {
-                    // if class is in English, convert to Hebrew
-                    String clazz = classesAffected[i];
 
-                    tvClass.append(clazz);
+                String tag = getClass().getSimpleName();
 
-                    // once text length reaches certain size, stop appending and add 3 dots
-                    Rect bounds = new Rect();
-                    tvClass.getPaint().getTextBounds(tvClass.getText().toString(), 0, tvClass.getText().length(), bounds);
-                    if (ScreenUtil.pxToDp(bounds.width()) >= 120) {
-                        tvClass.append("...");
-                        break;
-                    }
-
-                    if (i != classesAffected.length - 1) {
-                        tvClass.append(", ");
-                    }
+                // if there're more classes than the users, put a comma
+                if (classesAffected.length > 1) {
+                    tvClass.append(", ");
                 }
 
+                for (int i = 0; i < classesAffected.length; i++) {
+                    String clazz = classesAffected[i];
+
+                    // if update's class is not the user's class (which is already appended)
+                    if (!clazz.equalsIgnoreCase(userClazz)) {
+                        // put it too
+                        tvClass.append(clazz);
+
+                        // if the last class isn't the user's class and we haven't reached the last class, put a comma
+                        if (!classesAffected[classesAffected.length - 1].equalsIgnoreCase(userClazz) && i != classesAffected.length - 1) {
+                            tvClass.append(", ");
+                        }
+                    }
+                }
             }
         }
     }
