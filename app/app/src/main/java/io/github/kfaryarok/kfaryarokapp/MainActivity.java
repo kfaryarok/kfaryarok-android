@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,9 +29,6 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter.Upd
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-
-//        prefs.edit().putBoolean(getString(R.string.pref_launched_before_bool), false).apply();
-        Log.i(getClass().getSimpleName(), "" + prefs.getBoolean(getString(R.string.pref_launched_before_bool), false));
 
         if (!prefs.getBoolean(getString(R.string.pref_launched_before_bool), false)) {
             // first launch!
