@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter.Upd
 
     @Override
     public void onClickOptions(Update update) {
-        // TODO show options, but i don't know what options
+        // TODO show options, but i don't know which options
     }
 
 }
