@@ -48,7 +48,7 @@ public class AboutActivity extends AppCompatActivity {
                         if (mToast != null) {
                             mToast.cancel();
                         }
-                        mToast = Toast.makeText(getApplicationContext(), "מצב מפתח הופעל", Toast.LENGTH_LONG);
+                        mToast = Toast.makeText(getApplicationContext(), getString(R.string.toast_devmode_enabled), Toast.LENGTH_LONG);
                         mToast.show();
 
                         btnEasterEgg.setBackgroundResource(android.R.drawable.btn_default);
@@ -61,7 +61,7 @@ public class AboutActivity extends AppCompatActivity {
                             if (mToast != null) {
                                 mToast.cancel();
                             }
-                            mToast = Toast.makeText(getApplicationContext(), (mClickCounterMax - mEasterEggClickCounter + 1) + " לחיצות נותרו", Toast.LENGTH_LONG);
+                            mToast = Toast.makeText(getApplicationContext(), (mClickCounterMax - mEasterEggClickCounter + 1) + getString(R.string.toast_devmode_clicks_remaining), Toast.LENGTH_LONG);
                             mToast.show();
                         }
                     }
@@ -74,7 +74,7 @@ public class AboutActivity extends AppCompatActivity {
                     if (mToast != null) {
                         mToast.cancel();
                     }
-                    mToast = Toast.makeText(getApplicationContext(), "מצב מפתח בוטל", Toast.LENGTH_LONG);
+                    mToast = Toast.makeText(getApplicationContext(), getString(R.string.toast_devmode_disabled), Toast.LENGTH_LONG);
                     mToast.show();
                 }
             }

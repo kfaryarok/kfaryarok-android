@@ -7,7 +7,7 @@ import android.util.AttributeSet;
 
 import java.util.Locale;
 
-import io.github.kfaryarok.kfaryarokapp.settings.SettingsActivity;
+import io.github.kfaryarok.kfaryarokapp.R;
 
 /**
  * Preference that, when clicked, shows a TimePicker dialog.
@@ -55,7 +55,7 @@ public class TimePreference extends DialogPreference {
         String value;
         if (restoreValue) {
             if (defaultValue == null) {
-                value = getPersistedString(SettingsActivity.TIMEPICKER_DEFAULT_TIME);
+                value = getPersistedString(getContext().getString(R.string.tv_firstlaunch_alerthour_def));
             } else {
                 value = getPersistedString(defaultValue.toString());
             }

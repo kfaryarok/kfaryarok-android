@@ -16,6 +16,13 @@
     <string name="cb_firstlaunch_globalalerts">התריע על עדכונים כלליים</string>
     <string name="tv_firstlaunch_alerthour_def" translatable="false">7:25</string>
 
+    <!-- Toast strings -->
+    <string name="toast_invalid_class">כיתה לא תקינה</string>
+    <string name="toast_firstlaunch_no_class">הכנס כיתה</string>
+    <string name="toast_devmode_enabled">מצב מפתח הופעל</string>
+    <string name="toast_devmode_disabled">מצב מפתח בוטל</string>
+    <string name="toast_devmode_clicks_remaining"> לחיצות נותרו</string>
+
     <!-- Menu strings -->
     <string name="menu_settings">הגדרות</string>
     <string name="menu_advanced">מצב מתקדם</string>
