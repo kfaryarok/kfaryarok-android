@@ -7,9 +7,9 @@ import java.util.List;
  * for creating new cards.
  *
  * Most of the class works by using different constructor for different updates.
- * You have {@link #UpdateImpl(String[], String, String)} and {@link #UpdateImpl(String[], String)} for
- * when you want to create an update for only some classes, and {@link #UpdateImpl(String)} and
- * {@link #UpdateImpl(String, String)} for when you want to create a global update.
+ * You have {@link #UpdateImpl(String[], String)} for when you want to create
+ * an update for only some classes, and {@link #UpdateImpl(String)} for when you want
+ * to create a global update.
  *
  * @author tbsc on 03/03/2017
  */
