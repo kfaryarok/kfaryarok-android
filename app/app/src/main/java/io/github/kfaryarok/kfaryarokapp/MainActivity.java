@@ -32,9 +32,7 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter.Upd
 
         if (!prefs.getBoolean(getString(R.string.pref_launched_before_bool), false)) {
             // first launch!
-            // mark in preferences that this is the first launch, and that it happened
-            prefs.edit().putBoolean(getString(R.string.pref_launched_before_bool), true).apply();
-
+            // open settings activity configured for first launch
             Intent firstLaunchActivity = new Intent(this, SettingsActivity.class).putExtra(Intent.EXTRA_TEXT, true);
             startActivity(firstLaunchActivity);
         }

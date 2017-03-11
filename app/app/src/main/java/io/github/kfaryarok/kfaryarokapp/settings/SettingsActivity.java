@@ -5,8 +5,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 
 import io.github.kfaryarok.kfaryarokapp.R;
@@ -16,20 +14,12 @@ import io.github.kfaryarok.kfaryarokapp.R;
  */
 public class SettingsActivity extends AppCompatActivity {
 
-    public static final String TIMEPICKER_DEFAULT_TIME = "7:25";
-
-    /**
-     * This activity is used both for the first launch of the app and for normal settings.
-     * This variable lets me change various things based of the use of this activity.
-     */
-    private boolean mFirstLaunchActivity = false;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        mFirstLaunchActivity = getIntent().getBooleanExtra(Intent.EXTRA_TEXT, false);
+        boolean mFirstLaunchActivity = getIntent().getBooleanExtra(Intent.EXTRA_TEXT, false);
 
         if (mFirstLaunchActivity) {
             ActionBar ab = getSupportActionBar();
@@ -47,26 +37,26 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        if (mFirstLaunchActivity) {
-            // first launch, then put the first launch menu
-            getMenuInflater().inflate(R.menu.first_launch, menu);
-            return true;
-        } else {
-            // normal settings, so show normal menu
-            return super.onCreateOptionsMenu(menu);
-        }
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        if (mFirstLaunchActivity) {
+//            // first launch, then put the first launch menu
+//            getMenuInflater().inflate(R.menu.first_launch, menu);
+//            return true;
+//        } else {
+//            // normal settings, so show normal menu
+//            return super.onCreateOptionsMenu(menu);
+//        }
+//    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.menu_firstlaunch_accept) {
-            finish();
-        }
 
-        return super.onOptionsItemSelected(item);
-    }
-
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        if (item.getItemId() == R.id.menu_firstlaunch_accept) {
+//            finish();
+//        }
+//
+//        return super.onOptionsItemSelected(item);
+//    }
 
 }
