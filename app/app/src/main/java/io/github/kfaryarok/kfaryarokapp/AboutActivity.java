@@ -61,7 +61,11 @@ public class AboutActivity extends AppCompatActivity {
                             if (mToast != null) {
                                 mToast.cancel();
                             }
-                            mToast = Toast.makeText(getApplicationContext(), (mClickCounterMax - mEasterEggClickCounter + 1) + getString(R.string.toast_devmode_clicks_remaining), Toast.LENGTH_LONG);
+                            // the extra space is because android removes spaces from strings
+                            mToast = Toast.makeText(getApplicationContext(),
+                                    (mClickCounterMax - mEasterEggClickCounter + 1) + " " +
+                                            getString(R.string.toast_devmode_clicks_remaining),
+                                    Toast.LENGTH_LONG);
                             mToast.show();
                         }
                     }
