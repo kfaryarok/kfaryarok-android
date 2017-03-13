@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <EditTextPreference
+        android:key="@string/pref_class_string"
+        android:selectAllOnFocus="true"
+        android:title="@string/settings_class" />
+
+    <android.support.v7.preference.PreferenceCategory
+        android:key="@string/settings_alerts_category"
+        android:title="@string/settings_alertcategory_title" >
+
+        <CheckBoxPreference
+            android:title="@string/settings_alertcategory_enabled"
+            android:key="@string/pref_alerts_enabled_bool"
+            android:defaultValue="true" />
+
+        <io.github.kfaryarok.kfaryarokapp.prefs.TimePreference
+            android:key="@string/pref_alerts_time_string"
+            android:title="@string/btn_firstlaunch_timepicker"
+            android:defaultValue="@string/tv_firstlaunch_alerthour_def"
+            android:summary="@string/debug_string" />
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/pref_globalalerts_enabled_bool"
+            android:title="@string/cb_firstlaunch_globalalerts" />
+    </android.support.v7.preference.PreferenceCategory>
+
+    <android.support.v7.preference.PreferenceCategory
+        android:key="@string/settings_advanced_category"
+        android:title="@string/settings_advancedcategory_title">
+
+        <EditTextPreference
+            android:title="@string/settings_advancedcategory_server"
+            android:key="@string/pref_updateserver_string" />
+        <CheckBoxPreference
+            android:title="@string/settings_advancedcategory_reset"
+            android:key="@string/pref_reset_on_next_launch_bool"
+            android:defaultValue="false" />
+    </android.support.v7.preference.PreferenceCategory>
+</android.support.v7.preference.PreferenceScreen>

@@ -1,9 +1,50 @@
 <resources>
+    <!-- General strings -->
     <string name="app_name">KfarYarok</string>
+    <string name="debug_string" translatable="false">placeholder</string>
+
+    <!-- Activity strings -->
+    <string name="act_update_details">עדכון</string>
+    <string name="act_settings">הגדרות</string>
+    <string name="act_firstlaunch">זמני</string> <!-- TODO figure out a title -->
+
+    <!-- View strings -->
+    <string name="global_update">עדכון כללי</string>
+    <string name="btn_devmode_easteregg">dev off</string>
+    <string name="cb_firstlaunch_alerts">הפעל התראות</string>
+    <string name="btn_firstlaunch_timepicker">שעת התראה</string>
+    <string name="cb_firstlaunch_globalalerts">התריע על עדכונים כלליים</string>
+    <string name="tv_firstlaunch_alerthour_def" translatable="false">7:25</string>
+
+    <!-- Toast strings -->
+    <string name="toast_invalid_class">כיתה לא תקינה</string>
+    <string name="toast_firstlaunch_no_class">הכנס כיתה</string>
+    <string name="toast_devmode_enabled">מצב מפתח הופעל</string>
+    <string name="toast_devmode_disabled">מצב מפתח בוטל</string>
+    <string name="toast_devmode_clicks_remaining"> לחיצות נותרו</string>
+
+    <!-- Menu strings -->
     <string name="menu_settings">הגדרות</string>
     <string name="menu_advanced">מצב מתקדם</string>
     <string name="menu_about">אודות</string>
-    <string name="debug_string">placeholder</string>
-    <string name="global_update">הודעה כללית</string>
-    <string name="act_update_details">עדכון</string>
+
+    <!-- Preference title strings -->
+    <string name="settings_alertcategory_title">התראות</string>
+    <string name="settings_alertcategory_enabled">פעיל</string>
+    <string name="settings_advancedcategory_title">הגדרות מתקדמות</string>
+    <string name="settings_advancedcategory_server">שרת עדכון</string>
+    <string name="settings_advancedcategory_reset">אפס הגדרות</string>
+    <string name="settings_class">כיתה</string>
+
+    <!-- Preference key strings -->
+    <string name="pref_class_string" translatable="false">class</string>
+    <string name="pref_updateserver_string" translatable="false">update_server</string>
+    <string name="pref_alerts_enabled_bool" translatable="false">alerts_enabled</string>
+    <string name="pref_globalalerts_enabled_bool" translatable="false">global_alerts_enabled</string>
+    <string name="pref_launched_before_bool" translatable="false">launched_before</string>
+    <string name="pref_advanced_mode_bool" translatable="false">advanced_mode</string>
+    <string name="pref_reset_on_next_launch_bool" translatable="false">reset_on_next_launch</string>
+    <string name="pref_alerts_time_string" translatable="false">alerts_time</string>
+    <string name="settings_alerts_category" translatable="false">settings_alerts_category</string>
+    <string name="settings_advanced_category" translatable="false">settings_advanced_category</string>
 </resources>

@@ -5,52 +5,45 @@ All updates will be sent to the app as [JSON](http://www.json.org/) (because of 
 - updates (object array): array of objects for non-global updates.
 
 Each update must contain the following tag:
-- short_text (string): the summary of the update
+- text (string): text for the update
 
 If the update is a non-global update, then it must also contain the following tag:
-- classes (string array): which classes this affects, and also who should see this
-
-If there's a need for longer text, then the following tag can be used:
-- long_text (string): longer text that will be displayed when clicking on the update card
+- classes (string array): which classes this affects, and also who should see this in Hebrew
 
 All of that information is in the following table (req = required, opt = optional):
 
 | global_updates (object array) | updates (object array)      |
 |-------------------------------|-----------------------------|
-| short_text (string, req)      | short_text (string, req)    |
-| long_text (string, opt)       | classes (string array, req) |
-|                               | long_text (string, opt)     |
+| text (string, req)            | text (string, req)          |
+|                               | classes (string array, req) |
 
 Actual example:
 
 	{
 		"global_updates": [
 			{
-				"short_text": "global update 1",
-				"long_text": "global update 1 long text"
+				"text": "global update 1",
 			},
 			{
-				"short_text": "global update 2"
+				"text": "global update 2"
 			}
 		],
 		"updates": [
 			{
-				"short_text": "update 1",
+				"text": "update 1",
 				"classes": [
-					"H4",
-					"I3"
-				],
-				"long_text": "update 1 long text"
+					"ח4",
+					"ט3"
+				]
 			},
 			{
-				"short_text": "update 2",
+				"text": "update 2",
 				"classes": 
 				[
-					"I2",
-					"K7",
-					"G11"
-				],
-				"long_text": "update 2 long text"
+					"ט2",
+					"יא7",
+					"ז11"
+				]
 			}
 		]
 	}

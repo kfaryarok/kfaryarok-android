@@ -32,13 +32,13 @@ public class ClassesAffected implements Affected {
     @Override
     public boolean affects(String clazz) {
         // daily null check
-        if (clazz == null) {
+        if (clazz == null || clazz.length() == 0) {
             return false;
         }
 
         // loop through array
-        for (String aMClassesAffected : mClassesAffected) {
-            if (aMClassesAffected.equals(clazz)) {
+        for (String clazzAffected : mClassesAffected) {
+            if (clazzAffected.equals(clazz)) {
                 // exists
                 return true;
             }
