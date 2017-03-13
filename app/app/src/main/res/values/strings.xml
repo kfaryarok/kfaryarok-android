@@ -22,18 +22,21 @@
     <string name="toast_devmode_enabled">מצב מפתח הופעל</string>
     <string name="toast_devmode_disabled">מצב מפתח בוטל</string>
     <string name="toast_devmode_clicks_remaining"> לחיצות נותרו</string>
+    <string name="toast_card_copiedtext">טקסט הועתק</string>
 
     <!-- Menu strings -->
     <string name="menu_settings">הגדרות</string>
     <string name="menu_advanced">מצב מתקדם</string>
     <string name="menu_about">אודות</string>
+    <string name="menu_card_copytext">העתק עדכון</string>
 
-    <!-- Preference title strings -->
+    <!-- Preference text strings -->
     <string name="settings_alertcategory_title">התראות</string>
     <string name="settings_alertcategory_enabled">פעיל</string>
     <string name="settings_advancedcategory_title">הגדרות מתקדמות</string>
     <string name="settings_advancedcategory_server">שרת עדכון</string>
     <string name="settings_advancedcategory_reset">אפס הגדרות</string>
+    <string name="settings_advancedcategory_reset_summary">מיד לאחר לחיצה על הכפתור, כל ההגדרות ימחקו!</string>
     <string name="settings_class">כיתה</string>
 
     <!-- Preference key strings -->
@@ -43,7 +46,9 @@
     <string name="pref_globalalerts_enabled_bool" translatable="false">global_alerts_enabled</string>
     <string name="pref_launched_before_bool" translatable="false">launched_before</string>
     <string name="pref_advanced_mode_bool" translatable="false">advanced_mode</string>
-    <string name="pref_reset_on_next_launch_bool" translatable="false">reset_on_next_launch</string>
+    <!-- reset key containing "on_next_launch" is a leftover from previous versions,
+     and because it's a preference key, it will not be changed-->
+    <string name="pref_reset_bool" translatable="false">reset_on_next_launch</string>
     <string name="pref_alerts_time_string" translatable="false">alerts_time</string>
     <string name="settings_alerts_category" translatable="false">settings_alerts_category</string>
     <string name="settings_advanced_category" translatable="false">settings_advanced_category</string>

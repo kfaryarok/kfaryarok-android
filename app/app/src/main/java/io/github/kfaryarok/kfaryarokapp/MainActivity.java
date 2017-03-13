@@ -1,5 +1,7 @@
 package io.github.kfaryarok.kfaryarokapp;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -7,10 +9,12 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -26,25 +30,41 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter.Upd
     private RecyclerView mUpdatesRecyclerView;
     private UpdateAdapter mUpdateAdapter;
 
+    private SharedPreferences prefs;
+
+    private Toast mToast;
+
+    public static boolean mResumeFromFirstLaunch = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
+        checkFirstLaunch();
+        setupLayoutDirection();
+
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        setupUpdates();
+    }
+
+    public void checkFirstLaunch() {
         if (!prefs.getBoolean(getString(R.string.pref_launched_before_bool), false)) {
             // first launch!
             // open settings activity configured for first launch
             Intent firstLaunchActivity = new Intent(this, SettingsActivity.class).putExtra(Intent.EXTRA_TEXT, true);
             startActivity(firstLaunchActivity);
         }
+    }
 
+    public void setupLayoutDirection() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
         }
+    }
 
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        // TODO fetch updates, filter unwanted ones and save into array
+    public void setupUpdates() {
         // temp until i get a json serving server up
         String response = TestUtil.getTestJsonString(); // UpdateFetcher.fetchUpdates();
 
@@ -67,6 +87,15 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter.Upd
 
         mUpdateAdapter = new UpdateAdapter(updates, this);
         mUpdatesRecyclerView.setAdapter(mUpdateAdapter);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mResumeFromFirstLaunch) {
+            mResumeFromFirstLaunch = false;
+            recreate();
+        }
     }
 
     @Override
@@ -95,8 +124,32 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter.Upd
     }
 
     @Override
-    public void onClickOptions(Update update) {
-        // TODO show options, but i don't know which options
+    public void onClickOptions(final Update update, Button buttonView) {
+        PopupMenu popupMenu = new PopupMenu(this, buttonView);
+        popupMenu.getMenuInflater().inflate(R.menu.update_card, popupMenu.getMenu());
+
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.menu_card_copytext:
+                        ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+                        clipboard.setPrimaryClip(ClipData.newPlainText("Update Text", update.getText()));
+
+                        if (mToast != null) {
+                            mToast.cancel();
+                        }
+                        mToast = Toast.makeText(MainActivity.this, getString(R.string.toast_card_copiedtext), Toast.LENGTH_LONG);
+                        mToast.show();
+                        break;
+                }
+                return false;
+            }
+
+        });
+
+        popupMenu.show();
     }
 
 }

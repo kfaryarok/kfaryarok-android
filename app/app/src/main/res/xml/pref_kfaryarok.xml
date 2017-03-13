@@ -35,7 +35,8 @@
             android:key="@string/pref_updateserver_string" />
         <CheckBoxPreference
             android:title="@string/settings_advancedcategory_reset"
-            android:key="@string/pref_reset_on_next_launch_bool"
+            android:summary="@string/settings_advancedcategory_reset_summary"
+            android:key="@string/pref_reset_bool"
             android:defaultValue="false" />
     </android.support.v7.preference.PreferenceCategory>
 </android.support.v7.preference.PreferenceScreen>

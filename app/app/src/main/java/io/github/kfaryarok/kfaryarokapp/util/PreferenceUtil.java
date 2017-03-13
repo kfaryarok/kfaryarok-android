@@ -15,6 +15,11 @@ public class PreferenceUtil {
 
     private static SharedPreferences prefs;
 
+    public static SharedPreferences getSharedPreferences(Context ctx) {
+        if (prefs == null) prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+        return prefs;
+    }
+
     /**
      * Returns the current class that's stored in the shared preferences.
      * @param ctx Context for getting preferences
@@ -23,6 +28,11 @@ public class PreferenceUtil {
     public static String getClassPreference(Context ctx) {
         if (prefs == null) prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         return prefs.getString(ctx.getString(R.string.pref_class_string), "");
+    }
+
+    public static boolean getAlertEnabledPreference(Context ctx) {
+        if (prefs == null) prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+        return prefs.getBoolean(ctx.getString(R.string.pref_alerts_enabled_bool), true);
     }
 
 }
