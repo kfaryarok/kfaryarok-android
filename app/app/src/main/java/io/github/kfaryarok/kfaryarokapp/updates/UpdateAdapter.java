@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import io.github.kfaryarok.kfaryarokapp.R;
@@ -107,7 +108,7 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.UpdateView
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    mClickHandler.onClickOptions(mUpdates[getAdapterPosition()]);
+                    mClickHandler.onClickOptions(mUpdates[getAdapterPosition()], (Button) v.findViewById(R.id.btn_updatecard_options));
                     return true;
                 }
             });
@@ -116,7 +117,7 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.UpdateView
             itemView.findViewById(R.id.btn_updatecard_options).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mClickHandler.onClickOptions(mUpdates[getAdapterPosition()]);
+                    mClickHandler.onClickOptions(mUpdates[getAdapterPosition()], (Button) v);
                 }
             });
         }
@@ -124,7 +125,7 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.UpdateView
 
     public interface UpdateAdapterOnClickHandler {
         void onClickCard(Update update);
-        void onClickOptions(Update update);
+        void onClickOptions(Update update, Button buttonView); /* bypassing limitations */
     }
 
 }
