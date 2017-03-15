@@ -1,4 +1,7 @@
 # kfaryarok-android
+
+[![Join the chat at https://gitter.im/kfaryarok-android/Lobby](https://badges.gitter.im/kfaryarok-android/Lobby.svg)](https://gitter.im/kfaryarok-android/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 אפליקציית הכפר הירוק הרשמית - גרסת אנדרואיד
 
 ### איך לעבוד על הקוד
