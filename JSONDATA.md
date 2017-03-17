@@ -48,4 +48,4 @@ Actual example:
 		]
 	}
 
-Feel free to try and improve this before I get it running.
+Feel free to try and improve this before it's released.
