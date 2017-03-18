@@ -51,38 +51,13 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.UpdateView
             // appends all classes to the class textview
             if (update.getAffected() instanceof ClassesAffected) {
                 // get user's class
-                String userClazz = PreferenceUtil.getClassPreference(holder.itemView.getContext());
+                String userClass = PreferenceUtil.getClassPreference(holder.itemView.getContext());
 
                 // get the affected instance
                 ClassesAffected affected = (ClassesAffected) update.getAffected();
 
-                // we know the update MUST affect the user, so put his class first
-                tvClass.setText(userClazz);
-
-                // get all affected classes
-                String[] classesAffected = affected.getClassesAffected();
-
-                String tag = getClass().getSimpleName();
-
-                // if there're more classes than the users, put a comma
-                if (classesAffected.length > 1) {
-                    tvClass.append(", ");
-                }
-
-                for (int i = 0; i < classesAffected.length; i++) {
-                    String clazz = classesAffected[i];
-
-                    // if update's class is not the user's class (which is already appended)
-                    if (!clazz.equalsIgnoreCase(userClazz)) {
-                        // put it too
-                        tvClass.append(clazz);
-
-                        // if the last class isn't the user's class and we haven't reached the last class, put a comma
-                        if (!classesAffected[classesAffected.length - 1].equalsIgnoreCase(userClazz) && i != classesAffected.length - 1) {
-                            tvClass.append(", ");
-                        }
-                    }
-                }
+                // set class textview to show affected classes, with user's class first
+                tvClass.setText(UpdateHelper.formatClassString(affected.getClassesAffected(), userClass));
             }
         }
     }

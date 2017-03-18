@@ -17,13 +17,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import org.json.JSONException;
-
 import io.github.kfaryarok.kfaryarokapp.settings.SettingsActivity;
 import io.github.kfaryarok.kfaryarokapp.updates.Update;
 import io.github.kfaryarok.kfaryarokapp.updates.UpdateAdapter;
-import io.github.kfaryarok.kfaryarokapp.updates.UpdateParser;
-import io.github.kfaryarok.kfaryarokapp.util.TestUtil;
+import io.github.kfaryarok.kfaryarokapp.updates.UpdateHelper;
 
 public class MainActivity extends AppCompatActivity implements UpdateAdapter.UpdateAdapterOnClickHandler {
 
@@ -46,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter.Upd
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        setupUpdates();
+        setupUpdateRecyclerView();
     }
 
     public void checkFirstLaunch() {
@@ -64,29 +61,30 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter.Upd
         }
     }
 
-    public void setupUpdates() {
-        // temp until i get a json serving server up
-        String response = TestUtil.getTestJsonString(); // UpdateFetcher.fetchUpdates();
-
-        Update[] updates = new Update[0];
-        try {
-            // parse updates from JSON, then filter to only have updates relevent
-            updates = UpdateParser.filterUpdates(UpdateParser.parseUpdates(response), prefs.getString(getString(R.string.pref_class_string), ""));
-        } catch (JSONException e) {
-            // just in case something errors, exit
-            e.printStackTrace();
-            Toast.makeText(this, "כישלון בעיבוד נתונים.", Toast.LENGTH_LONG).show();
-            finish();
-        }
-
+    public void setupUpdateRecyclerView() {
         mUpdatesRecyclerView = (RecyclerView) findViewById(R.id.rv_updates);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mUpdatesRecyclerView.setLayoutManager(layoutManager);
         mUpdatesRecyclerView.setHasFixedSize(true);
 
-        mUpdateAdapter = new UpdateAdapter(updates, this);
+        setupUpdateAdapter();
+    }
+
+    public void setupUpdateAdapter() {
+        mUpdateAdapter = new UpdateAdapter(setupUpdates(), this);
         mUpdatesRecyclerView.setAdapter(mUpdateAdapter);
+    }
+
+    public Update[] setupUpdates() {
+        Update[] updates = UpdateHelper.getUpdates(this);
+        if (updates.length == 0) {
+            // failed somewhere along the line of getting the updates so notify user and exit
+            Toast.makeText(this, "כישלון בעיבוד נתונים.", Toast.LENGTH_LONG).show();
+            finish();
+            return null;
+        }
+        return updates;
     }
 
     @Override
