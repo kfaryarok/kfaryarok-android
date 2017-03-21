@@ -26,7 +26,7 @@ public class TestUtil {
 
         JSONObject testJson = new JSONObject();
         try {
-            JSONObject globalUpdate1 = new JSONObject().put(UpdateParser.TEXT_STRING, "עדכון רגיל 1 \n ל");
+            JSONObject globalUpdate1 = new JSONObject().put(UpdateParser.TEXT_STRING, "עדכון רגיל 1 \nל");
             JSONObject globalUpdate2 = new JSONObject().put(UpdateParser.TEXT_STRING, "עדכון רגיל 2");
             JSONArray globalUpdates = new JSONArray().put(globalUpdate1).put(globalUpdate2);
 

@@ -39,8 +39,7 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.UpdateView
 
         // set text
         TextView tvText = (TextView) itemView.findViewById(R.id.tv_updatecard_text);
-        String text = " " + update.getText();
-        tvText.setText(text); // so android studio won't complain about concatenation
+        tvText.setText(update.getText());
 
         // set class
         TextView tvClass = (TextView) itemView.findViewById(R.id.tv_updatecard_class);
