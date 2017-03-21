@@ -30,7 +30,7 @@ public class TestUtil {
             JSONObject globalUpdate2 = new JSONObject().put(UpdateParser.TEXT_STRING, "עדכון רגיל 2");
             JSONArray globalUpdates = new JSONArray().put(globalUpdate1).put(globalUpdate2);
 
-            JSONObject update1 = new JSONObject().put(UpdateParser.TEXT_STRING, "רגיל הרבה כיתות 1").put(UpdateParser.CLASSES_ARRAY, new JSONArray().put("ח4").put("ט3").put("ט4").put("ז11").put("יא11").put("י6").put("י5").put("יב15").put("י11").put("ח11").put("ח5").put("ז1").put("ז2").put("ז3").put("ז4").put("ז5"));
+            JSONObject update1 = new JSONObject().put(UpdateParser.TEXT_STRING, "רגיל הרבה כיתות 1").put(UpdateParser.CLASSES_ARRAY, new JSONArray().put("ח4")/*.put("ט3").put("ט4").put("ז11").put("יא11").put("י6").put("י5").put("יב15").put("י11").put("ח11").put("ח5").put("ז1").put("ז2").put("ז3").put("ז4").put("ז5")*/);
             JSONObject update2 = new JSONObject().put(UpdateParser.TEXT_STRING, "רגיל 2").put(UpdateParser.CLASSES_ARRAY, new JSONArray().put("ט2").put("יא7"));
             JSONObject update3 = new JSONObject().put(UpdateParser.TEXT_STRING, "רגיל 3").put(UpdateParser.CLASSES_ARRAY, new JSONArray().put("ט5").put("ח4"));
             JSONObject update4 = new JSONObject().put(UpdateParser.TEXT_STRING, "רגיל 4").put(UpdateParser.CLASSES_ARRAY, new JSONArray().put("ט2"));

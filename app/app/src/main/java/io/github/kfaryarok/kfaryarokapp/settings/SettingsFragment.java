@@ -1,11 +1,13 @@
 package io.github.kfaryarok.kfaryarokapp.settings;
 
+import android.annotation.SuppressLint;
+import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v7.preference.CheckBoxPreference;
 import android.support.v7.preference.EditTextPreference;
 import android.support.v7.preference.Preference;
@@ -14,13 +16,14 @@ import android.support.v7.preference.PreferenceFragmentCompat;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import io.github.kfaryarok.kfaryarokapp.MainActivity;
 import io.github.kfaryarok.kfaryarokapp.R;
-import io.github.kfaryarok.kfaryarokapp.alerts.AlertBootReceiver;
+import io.github.kfaryarok.kfaryarokapp.alerts.AlertHelper;
+import io.github.kfaryarok.kfaryarokapp.alerts.BootReceiver;
 import io.github.kfaryarok.kfaryarokapp.prefs.TimePreference;
-import io.github.kfaryarok.kfaryarokapp.prefs.TimePreferenceDialogFragmentCompat;
 import io.github.kfaryarok.kfaryarokapp.util.ClassUtil;
 import io.github.kfaryarok.kfaryarokapp.util.PreferenceUtil;
 
@@ -32,6 +35,7 @@ import io.github.kfaryarok.kfaryarokapp.util.PreferenceUtil;
  */
 public class SettingsFragment extends PreferenceFragmentCompat {
 
+    private SharedPreferences prefs;
     private CheckBoxPreference mCbAlerts;
     private TimePreference mTpAlertTime;
     private CheckBoxPreference mCbGlobalAlerts;
@@ -52,7 +56,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         addPreferencesFromResource(R.xml.pref_kfaryarok);
         setHasOptionsMenu(true);
 
-        final SharedPreferences pref = getPreferenceManager().getSharedPreferences();
+        prefs = getPreferenceManager().getSharedPreferences();
 
         mFirstLaunchActivity = getActivity().getIntent().getBooleanExtra(Intent.EXTRA_TEXT, false);
 
@@ -63,38 +67,34 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         mEtpUpdateServer = (EditTextPreference) findPreference(getString(R.string.pref_updateserver_string));
         mCbReset = (CheckBoxPreference) findPreference(getString(R.string.pref_reset_bool));
 
-        boolean alertsEnabled = pref.getBoolean(mCbAlerts.getKey(), true);
+        boolean alertsEnabled = PreferenceUtil.getAlertEnabledPreference(getContext());
         mTpAlertTime.setEnabled(alertsEnabled);
         mCbGlobalAlerts.setEnabled(alertsEnabled);
 
         mCbAlerts.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
-                boolean newBool = (boolean) newValue;
-                mTpAlertTime.setEnabled(newBool);
-                mCbGlobalAlerts.setEnabled(newBool);
-                return true;
-            }
-        });
-
-        mCbGlobalAlerts.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                ComponentName receiver = new ComponentName(getContext(), AlertBootReceiver.class);
+                ComponentName receiver = new ComponentName(getContext(), BootReceiver.class);
                 PackageManager pm = getContext().getPackageManager();
+                boolean newBool = (boolean) newValue;
 
-                if ((boolean) newValue) {
-                    // alerts are enabled, then enable the boot receiver
+                if (newBool) {
+                    // alerts are enabled, enable alert and boot receiver
+                    AlertHelper.enableAlert(getContext());
                     pm.setComponentEnabledSetting(receiver,
                             PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
                             PackageManager.DONT_KILL_APP);
                 } else {
-                    // alerts are disabled, disable boot receiver
+                    // alerts are disabled, disable alert and boot receiver
+                    AlertHelper.disableAlert();
                     pm.setComponentEnabledSetting(receiver,
                             PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
                             PackageManager.DONT_KILL_APP);
                 }
-                return false;
+
+                mTpAlertTime.setEnabled(newBool);
+                mCbGlobalAlerts.setEnabled(newBool);
+                return true;
             }
         });
 
@@ -116,22 +116,23 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         });
 
         // set summary to contain current value
-        mEtpClass.setSummary(pref.getString(mEtpClass.getKey(), ""));
+        mEtpClass.setSummary(prefs.getString(mEtpClass.getKey(), ""));
 
         // set advanced settings prefscreen category's visibility based on prefs
         PreferenceCategory prefCategoryAdvanced = (PreferenceCategory) findPreference(getString(R.string.settings_advanced_category));
-        prefCategoryAdvanced.setVisible(pref.getBoolean(getString(R.string.pref_advanced_mode_bool), false));
-        if (!pref.getBoolean(getString(R.string.pref_advanced_mode_bool), false)) {
+        prefCategoryAdvanced.setVisible(prefs.getBoolean(getString(R.string.pref_advanced_mode_bool), false));
+        if (!prefs.getBoolean(getString(R.string.pref_advanced_mode_bool), false)) {
             prefCategoryAdvanced.removeAll();
         }
 
         mCbReset.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
 
+            @SuppressLint("ApplySharedPref")
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
-                // TODO figure out why prefs aren't being reset by this
-                // when changed, clear SharedPreferences
-                pref.edit().clear().apply();
+                // clear prefs
+                // because app quits immediately, we need to clear prefs immediately
+                prefs.edit().clear().commit();
                 // relaunch app
                 System.exit(0);
                 return true;
@@ -141,18 +142,26 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     }
 
     @Override
-    public void onDisplayPreferenceDialog(Preference preference) {
-        DialogFragment dialogFragment = null;
+    public void onDisplayPreferenceDialog(final Preference preference) {
+        Dialog dialog = null;
         if (preference instanceof TimePreference) {
-            dialogFragment = new TimePreferenceDialogFragmentCompat();
-            Bundle bundle = new Bundle(1);
-            bundle.putString("key", preference.getKey());
-            dialogFragment.setArguments(bundle);
+            dialog = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
+                @Override
+                public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                    SharedPreferences prefs = PreferenceUtil.getSharedPreferences(getContext());
+                    String time = TimePreference.timeToString(hourOfDay, minute);
+                    prefs.edit()
+                            .putString(getString(R.string.pref_alerts_time_string), time)
+                            .apply();
+                    preference.setSummary(time);
+                    // let it know alert time was changed
+                    AlertHelper.enableAlert(getContext());
+                }
+            }, PreferenceUtil.parseAlertHour(getContext()), PreferenceUtil.parseAlertMinute(getContext()), true);
         }
 
-        if (dialogFragment != null) {
-            dialogFragment.setTargetFragment(this, 0);
-            dialogFragment.show(this.getFragmentManager(), "android.support.v7.preference.PreferenceFragment.DIALOG");
+        if (dialog != null) {
+            dialog.show();
         } else {
             super.onDisplayPreferenceDialog(preference);
         }

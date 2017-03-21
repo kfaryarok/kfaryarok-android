@@ -55,7 +55,7 @@ public class TimePreference extends DialogPreference {
         String value;
         if (restoreValue) {
             if (defaultValue == null) {
-                value = getPersistedString(getContext().getString(R.string.tv_firstlaunch_alerthour_def));
+                value = getPersistedString(getContext().getString(R.string.pref_alerts_time_string_def));
             } else {
                 value = getPersistedString(defaultValue.toString());
             }

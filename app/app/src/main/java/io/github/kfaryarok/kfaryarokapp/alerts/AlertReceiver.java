@@ -5,13 +5,16 @@ import android.content.Context;
 import android.content.Intent;
 
 /**
- * @author tbsc on 11/03/2017
+ * Receiver class for knowing when an alert was triggered.
+ *
+ * @author tbsc on 13/03/2017
  */
-public class AlertBootReceiver extends BroadcastReceiver {
+public class AlertReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-
+        // alert called, show notification
+        AlertHelper.showNotification(context, true);
     }
 
 }

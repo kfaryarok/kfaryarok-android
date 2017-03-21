@@ -17,7 +17,7 @@
         <io.github.kfaryarok.kfaryarokapp.prefs.TimePreference
             android:key="@string/pref_alerts_time_string"
             android:title="@string/btn_firstlaunch_timepicker"
-            android:defaultValue="@string/tv_firstlaunch_alerthour_def"
+            android:defaultValue="@string/pref_alerts_time_string_def"
             android:summary="@string/debug_string" />
 
         <CheckBoxPreference

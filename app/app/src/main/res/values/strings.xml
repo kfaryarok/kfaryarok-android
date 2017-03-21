@@ -8,13 +8,15 @@
     <string name="act_settings">הגדרות</string>
     <string name="act_firstlaunch">זמני</string> <!-- TODO figure out a title -->
 
+    <!-- Alert strings -->
+    <string name="alert_updates_title">עדכונים חדשים</string>
+
     <!-- View strings -->
     <string name="global_update">עדכון כללי</string>
     <string name="btn_devmode_easteregg">dev off</string>
     <string name="cb_firstlaunch_alerts">הפעל התראות</string>
     <string name="btn_firstlaunch_timepicker">שעת התראה</string>
     <string name="cb_firstlaunch_globalalerts">התריע על עדכונים כלליים</string>
-    <string name="tv_firstlaunch_alerthour_def" translatable="false">7:25</string>
 
     <!-- Toast strings -->
     <string name="toast_invalid_class">כיתה לא תקינה</string>
@@ -52,4 +54,14 @@
     <string name="pref_alerts_time_string" translatable="false">alerts_time</string>
     <string name="settings_alerts_category" translatable="false">settings_alerts_category</string>
     <string name="settings_advanced_category" translatable="false">settings_advanced_category</string>
+
+    <!-- Preference default value strings -->
+    <string name="pref_class_string_def" translatable="false" /> <!-- def is no class -->
+    <string name="pref_updateserver_string_def" translatable="false" />
+    <string name="pref_alerts_enabled_bool_def" translatable="false">true</string>
+    <string name="pref_globalalerts_enabled_bool_def" translatable="false">true</string>
+    <string name="pref_launched_before_bool_def" translatable="false">false</string>
+    <string name="pref_advanced_mode_bool_def" translatable="false">false</string>
+    <string name="pref_reset_bool_def" translatable="false">false</string>
+    <string name="pref_alerts_time_string_def" translatable="false">7:25</string>
 </resources>

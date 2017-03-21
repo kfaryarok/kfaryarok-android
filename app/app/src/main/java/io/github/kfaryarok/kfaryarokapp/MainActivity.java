@@ -21,6 +21,7 @@ import io.github.kfaryarok.kfaryarokapp.settings.SettingsActivity;
 import io.github.kfaryarok.kfaryarokapp.updates.Update;
 import io.github.kfaryarok.kfaryarokapp.updates.UpdateAdapter;
 import io.github.kfaryarok.kfaryarokapp.updates.UpdateHelper;
+import io.github.kfaryarok.kfaryarokapp.util.PreferenceUtil;
 
 public class MainActivity extends AppCompatActivity implements UpdateAdapter.UpdateAdapterOnClickHandler {
 
@@ -47,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter.Upd
     }
 
     public void checkFirstLaunch() {
-        if (!prefs.getBoolean(getString(R.string.pref_launched_before_bool), false)) {
+        if (!PreferenceUtil.getLaunchedBeforePreference(this)) {
             // first launch!
             // open settings activity configured for first launch
             Intent firstLaunchActivity = new Intent(this, SettingsActivity.class).putExtra(Intent.EXTRA_TEXT, true);

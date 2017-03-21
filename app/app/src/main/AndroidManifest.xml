@@ -37,12 +37,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
-        <receiver android:name=".alerts.AlertBootReceiver"
-            android:enabled="false">
+        <receiver android:name=".alerts.BootReceiver"
+            android:enabled="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+        <receiver android:name=".alerts.AlertReceiver"
+            android:enabled="true" />
     </application>
 
 </manifest>
