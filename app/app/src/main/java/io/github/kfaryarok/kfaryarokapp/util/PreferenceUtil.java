@@ -59,4 +59,9 @@ public class PreferenceUtil {
         return prefs.getBoolean(ctx.getString(R.string.pref_launched_before_bool), Boolean.parseBoolean(ctx.getString(R.string.pref_launched_before_bool_def)));
     }
 
+    public static boolean getDeveloperModePreference(Context ctx) {
+        if (prefs == null) prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+        return prefs.getBoolean(ctx.getString(R.string.pref_advanced_mode_bool), Boolean.parseBoolean(ctx.getString(R.string.pref_advanced_mode_bool_def)));
+    }
+
 }
