@@ -19,9 +19,9 @@ import io.github.kfaryarok.kfaryarokapp.updates.UpdateHelper;
 import io.github.kfaryarok.kfaryarokapp.util.PreferenceUtil;
 
 /**
- * TODO setup alert when needed
  * This class is used to configure update alerts based on preferences and other things;
  * you do not need to give it any values.
+ *
  * @author tbsc on 11/03/2017
  */
 public class AlertHelper {
