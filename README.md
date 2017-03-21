@@ -11,3 +11,5 @@
 
     Android Studio -> Check out from Version Control -> Git -> URL: https://github.com/kfaryarok/kfaryarok-android -> New Studio Project: NO -> Import Project -> Select *repo*\app Folder
 העיקר הוא שפותחים את תיקיית&#x202b; app כשעובדים על הקוד!
+
+TRAVIS TEST
