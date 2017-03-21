@@ -11,4 +11,4 @@ android:
 
 script:
   - cd app
-  - gradle build connectedCheck
+  - ./gradlew build connectedCheck
