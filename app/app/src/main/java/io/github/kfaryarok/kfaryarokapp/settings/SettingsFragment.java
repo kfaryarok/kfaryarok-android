@@ -150,9 +150,12 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
                 String server = (String) newValue;
+
+                // check if it's a valid url
                 try {
-                    // check if it's a valid url
-                    new URL(server);
+                    // allow empty url, so reverting to default server is possible
+                    if (!"".equals(server))
+                        new URL(server);
                 } catch (MalformedURLException e) {
                     // invalid
                     if (mToast != null) {
@@ -209,7 +212,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_firstlaunch_accept) {
             // if there's a class stored in prefs already
-            if (!PreferenceUtil.getClassPreference(getContext()).equalsIgnoreCase("")) {
+            if (!"".equals(PreferenceUtil.getClassPreference(getContext()))) {
                 // allow continuing
                 getActivity().finish();
                 // mark in preferences that first launch just finished
