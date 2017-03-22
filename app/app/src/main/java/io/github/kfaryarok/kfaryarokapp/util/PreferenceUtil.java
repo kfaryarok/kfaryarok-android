@@ -6,6 +6,7 @@ import android.preference.PreferenceManager;
 
 import io.github.kfaryarok.kfaryarokapp.R;
 import io.github.kfaryarok.kfaryarokapp.prefs.TimePreference;
+import io.github.kfaryarok.kfaryarokapp.updates.UpdateFetcher;
 
 /**
  * Utility class for getting values of various preferences.
@@ -62,6 +63,11 @@ public class PreferenceUtil {
     public static boolean getDeveloperModePreference(Context ctx) {
         if (prefs == null) prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         return prefs.getBoolean(ctx.getString(R.string.pref_advanced_mode_bool), Boolean.parseBoolean(ctx.getString(R.string.pref_advanced_mode_bool_def)));
+    }
+
+    public static String getUpdateServerPreference(Context ctx) {
+        if (prefs == null) prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+        return prefs.getString(ctx.getString(R.string.pref_updateserver_string), UpdateFetcher.DEFAULT_UPDATE_URL);
     }
 
 }
