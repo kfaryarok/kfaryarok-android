@@ -38,7 +38,7 @@ public class UpdateFetcher extends AsyncTask<Context, Void, String> {
             // TODO debug - remove after default server is setup
             if (buildUrl(ctx) == null)
                 return TestUtil.getTestJsonString();
-            return getResponseFromHttpUrl(buildUrl(ctx), ctx);
+            return getResponseFromHttpUrl(buildUrl(ctx));
         } catch (IOException e) {
             e.printStackTrace();
             return "";
@@ -61,7 +61,7 @@ public class UpdateFetcher extends AsyncTask<Context, Void, String> {
      * @return The contents of the HTTP response.
      * @throws IOException Related to network and stream reading
      */
-    public static String getResponseFromHttpUrl(URL url, Context ctx) throws IOException {
+    public static String getResponseFromHttpUrl(URL url) throws IOException {
         if (url == null)
             return "";
 
