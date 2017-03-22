@@ -19,6 +19,9 @@ import android.view.MenuItem;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import io.github.kfaryarok.kfaryarokapp.MainActivity;
 import io.github.kfaryarok.kfaryarokapp.R;
 import io.github.kfaryarok.kfaryarokapp.alerts.AlertHelper;
@@ -35,7 +38,6 @@ import io.github.kfaryarok.kfaryarokapp.util.PreferenceUtil;
  */
 public class SettingsFragment extends PreferenceFragmentCompat {
 
-    private SharedPreferences prefs;
     private CheckBoxPreference mCbAlerts;
     private TimePreference mTpAlertTime;
     private CheckBoxPreference mCbGlobalAlerts;
@@ -55,8 +57,6 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         addPreferencesFromResource(R.xml.pref_kfaryarok);
         setHasOptionsMenu(true);
-
-        prefs = getPreferenceManager().getSharedPreferences();
 
         mFirstLaunchActivity = getActivity().getIntent().getBooleanExtra(Intent.EXTRA_TEXT, false);
 
@@ -104,7 +104,11 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             public boolean onPreferenceChange(Preference preference, Object newValue) {
                 // if entered class name isn't valid, prevent saving it
                 if (!ClassUtil.checkValidHebrewClassName((String) newValue)) {
-                    Toast.makeText(getContext(), getString(R.string.toast_invalid_class), Toast.LENGTH_LONG).show();
+                    if (mToast != null) {
+                        mToast.cancel();
+                    }
+                    mToast = Toast.makeText(getContext(), getString(R.string.toast_invalid_class), Toast.LENGTH_LONG);
+                    mToast.show();
                     return false;
                 }
 
@@ -116,12 +120,14 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         });
 
         // set summary to contain current value
-        mEtpClass.setSummary(prefs.getString(mEtpClass.getKey(), ""));
+        mEtpClass.setSummary(PreferenceUtil.getClassPreference(getContext()));
 
         // set advanced settings prefscreen category's visibility based on prefs
         PreferenceCategory prefCategoryAdvanced = (PreferenceCategory) findPreference(getString(R.string.settings_advanced_category));
-        prefCategoryAdvanced.setVisible(prefs.getBoolean(getString(R.string.pref_advanced_mode_bool), false));
-        if (!prefs.getBoolean(getString(R.string.pref_advanced_mode_bool), false)) {
+
+        boolean devModeActive = PreferenceUtil.getDeveloperModePreference(getContext());
+        prefCategoryAdvanced.setVisible(devModeActive);
+        if (!devModeActive) {
             prefCategoryAdvanced.removeAll();
         }
 
@@ -132,13 +138,37 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             public boolean onPreferenceChange(Preference preference, Object newValue) {
                 // clear prefs
                 // because app quits immediately, we need to clear prefs immediately
-                prefs.edit().clear().commit();
+                PreferenceUtil.getSharedPreferences(getContext()).edit().clear().commit();
                 // relaunch app
                 System.exit(0);
                 return true;
             }
 
         });
+
+        mEtpUpdateServer.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                String server = (String) newValue;
+                try {
+                    // check if it's a valid url
+                    new URL(server);
+                } catch (MalformedURLException e) {
+                    // invalid
+                    if (mToast != null) {
+                        mToast.cancel();
+                    }
+                    mToast = Toast.makeText(getContext(), getString(R.string.toast_devmode_invalid_server), Toast.LENGTH_LONG);
+                    mToast.show();
+                    return false;
+                }
+
+                mEtpUpdateServer.setSummary(server);
+                return true;
+            }
+        });
+
+        mEtpUpdateServer.setSummary(PreferenceUtil.getUpdateServerPreference(getContext()));
     }
 
     @Override
