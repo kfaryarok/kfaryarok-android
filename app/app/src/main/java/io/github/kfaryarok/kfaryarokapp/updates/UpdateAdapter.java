@@ -22,7 +22,7 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.UpdateView
     private final UpdateAdapterOnClickHandler mClickHandler;
 
     public UpdateAdapter(Update[] updates, UpdateAdapterOnClickHandler clickHandler) {
-        this.mItemCount = updates.length;
+        this.mItemCount = updates == null ? 0 : updates.length;
         this.mUpdates = updates;
         this.mClickHandler = clickHandler;
     }
