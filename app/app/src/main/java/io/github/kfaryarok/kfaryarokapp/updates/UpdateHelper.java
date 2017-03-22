@@ -2,8 +2,6 @@ package io.github.kfaryarok.kfaryarokapp.updates;
 
 import android.content.Context;
 
-import org.json.JSONException;
-
 import java.util.concurrent.ExecutionException;
 
 import io.github.kfaryarok.kfaryarokapp.R;
@@ -24,7 +22,7 @@ public class UpdateHelper {
     public static Update[] getUpdates(Context ctx) {
         try {
             return UpdateParser.filterUpdates(UpdateParser.parseUpdates(new UpdateFetcher().execute(ctx).get()), PreferenceUtil.getClassPreference(ctx));
-        } catch (JSONException | InterruptedException | ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
             return new Update[0];
         }
