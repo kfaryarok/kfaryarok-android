@@ -20,6 +20,7 @@ import android.widget.Toast;
 import io.github.kfaryarok.kfaryarokapp.settings.SettingsActivity;
 import io.github.kfaryarok.kfaryarokapp.updates.Update;
 import io.github.kfaryarok.kfaryarokapp.updates.UpdateAdapter;
+import io.github.kfaryarok.kfaryarokapp.updates.UpdateFetcher;
 import io.github.kfaryarok.kfaryarokapp.updates.UpdateHelper;
 import io.github.kfaryarok.kfaryarokapp.util.PreferenceUtil;
 
@@ -80,8 +81,25 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter.Upd
     public Update[] setupUpdates() {
         Update[] updates = UpdateHelper.getUpdates(this);
         if (updates.length == 0) {
+            if (!PreferenceUtil.getUpdateServerPreference(this).equals(UpdateFetcher.DEFAULT_UPDATE_URL)) {
+                // it failed and it doesn't use the default update url, so switch to default and retry
+                PreferenceUtil.getSharedPreferences(this).edit()
+                        .putString(getString(R.string.pref_updateserver_string), getString(R.string.pref_updateserver_string_def))
+                        .apply();
+                if (mToast != null) {
+                    mToast.cancel();
+                }
+                mToast = Toast.makeText(this, "כישלון בעיבוד נתונים, מחזיר לשרת עדכון רגיל", Toast.LENGTH_LONG);
+                mToast.show();
+                recreate();
+                return null;
+            }
             // failed somewhere along the line of getting the updates so notify user and exit
-            Toast.makeText(this, "כישלון בעיבוד נתונים.", Toast.LENGTH_LONG).show();
+            if (mToast != null) {
+                mToast.cancel();
+            }
+            mToast = Toast.makeText(this, "כישלון בעיבוד נתונים.", Toast.LENGTH_LONG);
+            mToast.show();
             finish();
             return null;
         }
