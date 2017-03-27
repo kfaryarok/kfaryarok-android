@@ -42,7 +42,7 @@ public class AlertHelper {
         }
         if (mPendingAlertReceiver == null) {
             // init pendingintent if null
-            mPendingAlertReceiver = PendingIntent.getBroadcast(ctx, 0, new Intent(ctx, AlertReceiver.class), 0);
+            mPendingAlertReceiver = PendingIntent.getBroadcast(ctx, 0, new Intent(ctx, AlertReceiver.class), PendingIntent.FLAG_UPDATE_CURRENT);
         }
 
         String alertTime = PreferenceUtil.getAlertTimePreference(ctx);
