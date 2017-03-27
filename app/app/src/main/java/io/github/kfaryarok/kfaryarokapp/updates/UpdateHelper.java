@@ -2,11 +2,10 @@ package io.github.kfaryarok.kfaryarokapp.updates;
 
 import android.content.Context;
 
-import org.json.JSONException;
+import java.util.concurrent.ExecutionException;
 
 import io.github.kfaryarok.kfaryarokapp.R;
 import io.github.kfaryarok.kfaryarokapp.util.PreferenceUtil;
-import io.github.kfaryarok.kfaryarokapp.util.TestUtil;
 
 /**
  * Allows me to centralize update-getting to one place, and changing it throughout the app
@@ -17,14 +16,13 @@ import io.github.kfaryarok.kfaryarokapp.util.TestUtil;
 public class UpdateHelper {
 
     /**
-     * TODO currently uses test data!
      * Fetches updates, parses them and filters them.
      * @return List of relavant updates, or an empty array if failed parsing
      */
     public static Update[] getUpdates(Context ctx) {
         try {
-            return UpdateParser.filterUpdates(UpdateParser.parseUpdates(TestUtil.getTestJsonString() /* UpdateFetcher.fetchUpdates() */), PreferenceUtil.getClassPreference(ctx));
-        } catch (JSONException e) {
+            return UpdateParser.filterUpdates(UpdateParser.parseUpdates(new UpdateFetcher().execute(ctx).get()), PreferenceUtil.getClassPreference(ctx));
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
             return new Update[0];
         }
