@@ -24,7 +24,7 @@
     <string name="toast_devmode_enabled">מצב מפתח הופעל</string>
     <string name="toast_devmode_disabled">מצב מפתח בוטל</string>
     <string name="toast_devmode_clicks_remaining"> לחיצות נותרו</string>
-    <string name="toast_devmode_invalid_server">לינק לא תקין</string>
+    <string name="toast_devmode_invalid_server">קישור לא תקין</string>
     <string name="toast_card_copiedtext">טקסט הועתק</string>
 
     <!-- Menu strings -->
