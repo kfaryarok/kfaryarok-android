@@ -19,6 +19,8 @@ import io.github.kfaryarok.kfaryarokapp.util.TestUtil;
  *
  * I (Tbsc) have a personal test server, you can use it for testing if you want:
  * https://tbscdev.xyz/update.json
+ * There's a testing update file on the project's github.io website:
+ * https://kfaryarok.github.io/update.json
  * Just put exactly that into the update server devmode preference
  *
  * |---------------------------------------------------------------------------------|

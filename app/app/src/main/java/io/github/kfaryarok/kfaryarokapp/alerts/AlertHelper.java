@@ -22,6 +22,11 @@ import io.github.kfaryarok.kfaryarokapp.util.PreferenceUtil;
  * This class is used to configure update alerts based on preferences and other things;
  * you do not need to give it any values.
  *
+ * BUGS:
+ * - TODO Alert going of at random times
+ * - DONE Disabling alert doesn't turn if off
+ * - TODO Figure out a way to cache data to reduce traffic
+ *
  * @author tbsc on 11/03/2017
  */
 public class AlertHelper {
@@ -36,14 +41,7 @@ public class AlertHelper {
      * @param ctx Context, used to create a pending intent for receiving alarm and setting the alarm
      */
     public static void enableAlert(Context ctx) {
-        if (mAlarmManager == null) {
-            // cache alarm manager if null
-            mAlarmManager = (AlarmManager) ctx.getSystemService(Context.ALARM_SERVICE);
-        }
-        if (mPendingAlertReceiver == null) {
-            // init pendingintent if null
-            mPendingAlertReceiver = PendingIntent.getBroadcast(ctx, 0, new Intent(ctx, AlertReceiver.class), PendingIntent.FLAG_UPDATE_CURRENT);
-        }
+        initiateFields(ctx);
 
         String alertTime = PreferenceUtil.getAlertTimePreference(ctx);
         int alertHour = TimePreference.parseHour(alertTime);
@@ -59,16 +57,38 @@ public class AlertHelper {
     }
 
     /**
-     * Takes the current set alert and disable it
+     * Cancels the current alert. If the alert wasn't set with {@link #createIntent(Context)}, then
+     * it won't be able to cancel the alert.
      */
-    public static void disableAlert() {
-        if (mPendingAlertReceiver != null) {
-            // if the pending intent isn't null, then the alarm manager can't be null too
-            if (mAlarmManager != null) {
-                // but there's no downside to being more safe
-                mAlarmManager.cancel(mPendingAlertReceiver);
-            }
+    public static void disableAlert(Context ctx) {
+        initiateFields(ctx);
+
+        mAlarmManager.cancel(mPendingAlertReceiver);
+    }
+
+    /**
+     * Initiates the alarm manager field and the pending intent field, in case they're null.
+     * @param ctx Used to get the alarm manager instance and to create the pending intent
+     */
+    private static void initiateFields(Context ctx) {
+        if (mAlarmManager == null) {
+            // cache alarm manager if null
+            mAlarmManager = (AlarmManager) ctx.getSystemService(Context.ALARM_SERVICE);
         }
+        if (mPendingAlertReceiver == null) {
+            // init pendingintent if null
+            mPendingAlertReceiver = createIntent(ctx);
+        }
+    }
+
+    /**
+     * Creates an instance of the pending intent that is used to fire the receiver after
+     * the alarm was called.
+     * @param ctx For creating the intent
+     * @return A pending intent that calls {@link AlertReceiver}
+     */
+    private static PendingIntent createIntent(Context ctx) {
+        return PendingIntent.getBroadcast(ctx, 0, new Intent(ctx, AlertReceiver.class), PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     /**

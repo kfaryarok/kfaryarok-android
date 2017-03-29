@@ -19,25 +19,25 @@ All of that information is in the following table (req = required, opt = optiona
 
 Actual example:
 
-	{
+	 {
 		"global_updates": [
 			{
-				"text": "global update 1",
+				"text": "עדכון כללי 1"
 			},
 			{
-				"text": "global update 2"
+				"text": "עדכון כללי 2"
 			}
 		],
 		"updates": [
 			{
-				"text": "update 1",
+				"text": "עדכון 1",
 				"classes": [
 					"ח4",
 					"ט3"
 				]
 			},
 			{
-				"text": "update 2",
+				"text": "עדכון 2",
 				"classes": 
 				[
 					"ט2",
@@ -47,5 +47,6 @@ Actual example:
 			}
 		]
 	}
+
 
 Feel free to try and improve this before it's released.

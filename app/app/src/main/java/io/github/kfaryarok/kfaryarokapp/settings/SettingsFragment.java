@@ -86,7 +86,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                             PackageManager.DONT_KILL_APP);
                 } else {
                     // alerts are disabled, disable alert and boot receiver
-                    AlertHelper.disableAlert();
+                    AlertHelper.disableAlert(getContext());
                     pm.setComponentEnabledSetting(receiver,
                             PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
                             PackageManager.DONT_KILL_APP);
