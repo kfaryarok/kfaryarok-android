@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.preference.CheckBoxPreference;
 import android.support.v7.preference.EditTextPreference;
 import android.support.v7.preference.Preference;
@@ -26,8 +27,9 @@ import io.github.kfaryarok.kfaryarokapp.MainActivity;
 import io.github.kfaryarok.kfaryarokapp.R;
 import io.github.kfaryarok.kfaryarokapp.alerts.AlertHelper;
 import io.github.kfaryarok.kfaryarokapp.alerts.BootReceiver;
+import io.github.kfaryarok.kfaryarokapp.prefs.ClassPreference;
+import io.github.kfaryarok.kfaryarokapp.prefs.ClassPreferenceDialogFragmentCompat;
 import io.github.kfaryarok.kfaryarokapp.prefs.TimePreference;
-import io.github.kfaryarok.kfaryarokapp.util.ClassUtil;
 import io.github.kfaryarok.kfaryarokapp.util.PreferenceUtil;
 
 /**
@@ -41,7 +43,8 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     private CheckBoxPreference mCbAlerts;
     private TimePreference mTpAlertTime;
     private CheckBoxPreference mCbGlobalAlerts;
-    private EditTextPreference mEtpClass;
+    private ClassPreference mCdClass;
+    // private EditTextPreference mEtpClass;
     private EditTextPreference mEtpUpdateServer;
     private CheckBoxPreference mCbReset;
 
@@ -63,7 +66,8 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         mCbAlerts = (CheckBoxPreference) findPreference(getString(R.string.pref_alerts_enabled_bool));
         mTpAlertTime = (TimePreference) findPreference(getString(R.string.pref_alerts_time_string));
         mCbGlobalAlerts = (CheckBoxPreference) findPreference(getString(R.string.pref_globalalerts_enabled_bool));
-        mEtpClass = (EditTextPreference) findPreference(getString(R.string.pref_class_string));
+        mCdClass = (ClassPreference) findPreference(getString(R.string.pref_class_string));
+        // mEtpClass = (EditTextPreference) findPreference(getString(R.string.pref_class_string));
         mEtpUpdateServer = (EditTextPreference) findPreference(getString(R.string.pref_updateserver_string));
         mCbReset = (CheckBoxPreference) findPreference(getString(R.string.pref_reset_bool));
 
@@ -98,29 +102,31 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             }
         });
 
-        mEtpClass.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+        mCdClass.setSummary(PreferenceUtil.getClassPreference(getContext()));
 
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                // if entered class name isn't valid, prevent saving it
-                if (!ClassUtil.checkValidHebrewClassName((String) newValue)) {
-                    if (mToast != null) {
-                        mToast.cancel();
-                    }
-                    mToast = Toast.makeText(getContext(), getString(R.string.toast_invalid_class), Toast.LENGTH_LONG);
-                    mToast.show();
-                    return false;
-                }
-
-                // update summary
-                mEtpClass.setSummary((String) newValue);
-                return true;
-            }
-
-        });
-
-        // set summary to contain current value
-        mEtpClass.setSummary(PreferenceUtil.getClassPreference(getContext()));
+//        mEtpClass.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+//
+//            @Override
+//            public boolean onPreferenceChange(Preference preference, Object newValue) {
+//                // if entered class name isn't valid, prevent saving it
+//                if (!ClassUtil.checkValidHebrewClassName((String) newValue)) {
+//                    if (mToast != null) {
+//                        mToast.cancel();
+//                    }
+//                    mToast = Toast.makeText(getContext(), getString(R.string.toast_invalid_class), Toast.LENGTH_LONG);
+//                    mToast.show();
+//                    return false;
+//                }
+//
+//                // update summary
+//                mEtpClass.setSummary((String) newValue);
+//                return true;
+//            }
+//
+//        });
+//
+//        // set summary to contain current value
+//        mEtpClass.setSummary(PreferenceUtil.getClassPreference(getContext()));
 
         // set advanced settings prefscreen category's visibility based on prefs
         PreferenceCategory prefCategoryAdvanced = (PreferenceCategory) findPreference(getString(R.string.settings_advanced_category));
@@ -177,6 +183,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     @Override
     public void onDisplayPreferenceDialog(final Preference preference) {
         Dialog dialog = null;
+        DialogFragment dialogFragment = null;
         if (preference instanceof TimePreference) {
             dialog = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
                 @Override
@@ -191,9 +198,17 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                     AlertHelper.enableAlert(getContext());
                 }
             }, PreferenceUtil.parseAlertHour(getContext()), PreferenceUtil.parseAlertMinute(getContext()), true);
+        } else if (preference instanceof ClassPreference) {
+            dialogFragment = new ClassPreferenceDialogFragmentCompat();
+            Bundle bundle = new Bundle(1);
+            bundle.putString("key", preference.getKey());
+            dialogFragment.setArguments(bundle);
         }
 
-        if (dialog != null) {
+        if (dialogFragment != null) {
+            dialogFragment.setTargetFragment(this, 0);
+            dialogFragment.show(this.getFragmentManager(), "android.support.v7.preference.PreferenceFragment.DIALOG");
+        } else if (dialog != null) {
             dialog.show();
         } else {
             super.onDisplayPreferenceDialog(preference);
