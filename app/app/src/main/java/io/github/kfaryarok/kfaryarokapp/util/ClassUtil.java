@@ -1,5 +1,7 @@
 package io.github.kfaryarok.kfaryarokapp.util;
 
+import android.util.Log;
+
 /**
  * Various utility methods for converting class names from English to Hebrew.
  * ie: I3 -> י3
@@ -66,6 +68,108 @@ public class ClassUtil {
         }
 
         return sb.toString();
+    }
+
+    /**
+     * Takes the class string, and return only the grade, both in Hebrew.
+     * @param clazz The class string
+     * @return Only the grade
+     */
+    public static String parseHebrewGrade(String clazz) {
+        // invalid string object
+        if (clazz == null || clazz.length() == 0) {
+            return "";
+        }
+
+        // invalid hebrew class name
+        if (!checkValidHebrewClassName(clazz)) {
+            return "";
+        }
+
+        // by this stage, i know it's a class name in hebrew
+        // i can assume various things with class names
+
+        // check length to know some things about class
+        switch (clazz.length()) {
+            case 2:
+                // if class length is 2 chars, then grade is 1 letter
+
+                // return only it
+                return String.valueOf(clazz.charAt(0));
+            case 3:
+                // 1st char must be part of grade
+                // 2nd char is either a letter or a digit
+                // 3rd char must be a digit
+
+                // if 2nd char is a letter, parse the 2-char grade
+                if (isHebrewLetter(clazz.charAt(1))) {
+                    return clazz.substring(0, 1);
+                }
+
+                // otherwise, grade is only 1 letter
+                return String.valueOf(clazz.charAt(0));
+            case 4:
+                // 1st & 2nd chars must be letters
+                // 3rd & 4th chars must be digits
+
+                // just return the first 2 chars
+                return clazz.substring(0, 1);
+            default:
+                // it passed the validity check, this can't be reached
+                Log.wtf("ClassUtil", "Somehow class length is invalid? Something's been tampered with!");
+                return "";
+        }
+    }
+
+    /**
+     * Takes the class string, and return only the grade, both in Hebrew.
+     * @param clazz The class string
+     * @return Only the grade
+     */
+    public static int parseHebrewClassNumber(String clazz) {
+        // invalid string object
+        if (clazz == null || clazz.length() == 0) {
+            return 0;
+        }
+
+        // invalid hebrew class name
+        if (!checkValidHebrewClassName(clazz)) {
+            return 0;
+        }
+
+        // by this stage, i know it's a class name in hebrew
+        // i can assume various things with class names
+
+        // check length to know some things about class
+        switch (clazz.length()) {
+            case 2:
+                // if class length is 2 chars, then class num is 1 digit
+
+                // return only it
+                return Integer.parseInt(String.valueOf(clazz.charAt(1)));
+            case 3:
+                // 1st char must be part of grade
+                // 2nd char is either a letter or a digit
+                // 3rd char must be a digit
+
+                // if 2nd char is a letter, parse the 1-digit class num
+                if (isHebrewLetter(clazz.charAt(1))) {
+                    return Integer.parseInt(String.valueOf(clazz.charAt(2)));
+                }
+
+                // otherwise, class num is 2 digits
+                return Integer.parseInt(clazz.substring(1, 2));
+            case 4:
+                // 1st & 2nd chars must be letters
+                // 3rd & 4th chars must be digits
+
+                // just return the last 2 chars
+                return Integer.parseInt(clazz.substring(2, 3));
+            default:
+                // it passed the validity check, this can't be reached
+                Log.wtf("ClassUtil", "Somehow class length is invalid? Something's been tampered with!");
+                return 0;
+        }
     }
 
     /**
@@ -236,6 +340,21 @@ public class ClassUtil {
             default:
                 return ' ';
         }
+    }
+
+    /**
+     * Checks if the given Hebrew grade string is valid (if it's any of the 6 accepted grades)
+     * @param hebrewGrade Grade in Hebrew
+     * @return is it an valid, accepted grade
+     */
+    public static boolean isValidHebrewGrade(String hebrewGrade) {
+        return !(hebrewGrade == null || hebrewGrade.length() == 0) && // validity check
+                (hebrewGrade.equals("ז") ||  // check if equal to any valid grades
+                 hebrewGrade.equals("ח") ||
+                 hebrewGrade.equals("ט") ||
+                 hebrewGrade.equals("י") ||
+                 hebrewGrade.equals("יא") ||
+                 hebrewGrade.equals("יב"));
     }
 
 }
