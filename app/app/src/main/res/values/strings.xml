@@ -11,6 +11,9 @@
     <!-- Alert strings -->
     <string name="alert_updates_title">עדכונים חדשים</string>
 
+    <!-- Dialog strings -->
+    <string name="dialog_pref_class_title">בחר כיתה</string>
+
     <!-- View strings -->
     <string name="global_update">עדכון כללי</string>
     <string name="btn_devmode_easteregg">dev off</string>
@@ -65,4 +68,12 @@
     <string name="pref_advanced_mode_bool_def" translatable="false">false</string>
     <string name="pref_reset_bool_def" translatable="false">false</string>
     <string name="pref_alerts_time_string_def" translatable="false">7:25</string>
+
+    <!-- Grade strings -->
+    <string name="grade_g">ז</string>
+    <string name="grade_h">ח</string>
+    <string name="grade_i">ט</string>
+    <string name="grade_j">י</string>
+    <string name="grade_k">יא</string>
+    <string name="grade_l">יב</string>
 </resources>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="250dp"
+    android:layout_height="wrap_content"
+    android:gravity="center">
+
+    <RadioGroup
+        android:id="@+id/rg_dialog_grade"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="40dp"
+        android:layout_marginEnd="40dp"
+        android:layout_gravity="center" >
+
+        <RadioButton
+            android:id="@+id/rb_dialog_grade_g"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/grade_g"
+            android:textSize="18sp" />
+
+        <RadioButton
+            android:id="@+id/rb_dialog_grade_h"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/grade_h"
+            android:textSize="18sp" />
+
+        <RadioButton
+            android:id="@+id/rb_dialog_grade_i"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/grade_i"
+            android:textSize="18sp" />
+
+        <RadioButton
+            android:id="@+id/rb_dialog_grade_j"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/grade_j"
+            android:textSize="18sp" />
+
+        <RadioButton
+            android:id="@+id/rb_dialog_grade_k"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/grade_k"
+            android:textSize="18sp" />
+
+        <RadioButton
+            android:id="@+id/rb_dialog_grade_l"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/grade_l"
+            android:textSize="18sp" />
+    </RadioGroup>
+
+    <View
+        android:id="@+id/view_dialog_class_divider"
+        android:layout_width="1dp"
+        android:layout_height="230dp"
+        android:background="#E0E0E0"
+        android:layout_gravity="center"/>
+
+    <NumberPicker
+        android:id="@+id/np_dialog_class_num"
+        android:layout_width="71dp"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="40dp"
+        android:layout_marginStart="40dp"
+        android:layout_gravity="center"/>
+
+</LinearLayout>
