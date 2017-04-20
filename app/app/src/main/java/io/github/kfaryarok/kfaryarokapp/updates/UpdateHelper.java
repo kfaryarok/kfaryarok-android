@@ -77,6 +77,18 @@ public class UpdateHelper {
      * @return Formatted string detailing the update
      */
     public static String formatUpdate(Update update, Context ctx) {
+        return formatUpdate(update, ctx.getString(R.string.global_update), PreferenceUtil.getClassPreference(ctx));
+    }
+
+    /**
+     * Separated the actual work from the main method to make it easier for me to create a unit
+     * test for this.
+     * @param update The update object
+     * @param globalUpdateString What text to show if it's global
+     * @param userClass The user's class
+     * @return Formatted string detailing the update
+     */
+    public static String formatUpdate(Update update, String globalUpdateString, String userClass) {
         if (update == null) {
             // your daily null check!
             return null;
@@ -86,11 +98,11 @@ public class UpdateHelper {
 
         if (update.getAffected().isGlobal()) {
             // global update; set affects string to global_update
-            affects = ctx.getString(R.string.global_update);
+            affects = globalUpdateString;
         } else if (update.getAffected() instanceof ClassesAffected) {
             // normal update; get formatted class string
             ClassesAffected affected = (ClassesAffected) update.getAffected();
-            affects = formatClassString(affected.getClassesAffected(), PreferenceUtil.getClassPreference(ctx));
+            affects = formatClassString(affected.getClassesAffected(), userClass);
         }
 
         // return formatted string like in this example (in english): I7, K5: blah blah
