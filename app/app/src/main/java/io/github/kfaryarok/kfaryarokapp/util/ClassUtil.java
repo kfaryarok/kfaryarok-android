@@ -4,7 +4,7 @@ import android.util.Log;
 
 /**
  * Various utility methods for converting class names from English to Hebrew.
- * ie: I3 -> י3
+ * ie: J3 -> י3
  * (and for some reason android studio renders hebrew incorrectly in comments)
  *
  * @author tbsc on 03/03/2017
@@ -55,14 +55,14 @@ public class ClassUtil {
             } else {
                 // grade is 2 letters
                 // convert grade in first 2 chars to english and append
-                sb.append(convertHebrewGradeToEnglish(clazz.substring(0, 1)));
+                sb.append(convertHebrewGradeToEnglish(clazz.substring(0, 2)));
                 // append single-digit class number
                 sb.append(clazz.charAt(2));
             }
         } else {
             // double letter grade and double digit class num
             // convert grade in first 2 chars to english and append
-            sb.append(convertHebrewGradeToEnglish(clazz.substring(0, 1)));
+            sb.append(convertHebrewGradeToEnglish(clazz.substring(0, 2)));
             // append double-digit class number
             sb.append(clazz.substring(2));
         }
