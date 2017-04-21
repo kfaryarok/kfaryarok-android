@@ -42,17 +42,71 @@ public class ClassUtilUnitTest {
 
     @Test
     public void correctTranslationHebrewGradeToEnglish() {
+        // grade G
+        assertThat(ClassUtil.convertHebrewGradeToEnglish("ז"), is('G'));
 
+        // grade H
+        assertThat(ClassUtil.convertHebrewGradeToEnglish("ח"), is('H'));
+
+        // grade I
+        assertThat(ClassUtil.convertHebrewGradeToEnglish("ט"), is('I'));
+
+        // grade J
+        assertThat(ClassUtil.convertHebrewGradeToEnglish("י"), is('J'));
+
+        // grade K
+        assertThat(ClassUtil.convertHebrewGradeToEnglish("יא"), is('K'));
+
+        // grade L
+        assertThat(ClassUtil.convertHebrewGradeToEnglish("יב"), is('L'));
     }
 
     @Test
     public void correctTranslationEnglishClassToHebrew() {
+        // grade G
+        assertThat(ClassUtil.convertEnglishClassToHebrew("G3"), is("ז3"));
+        assertThat(ClassUtil.convertEnglishClassToHebrew("G11"), is("ז11"));
 
+        // grade H
+        assertThat(ClassUtil.convertEnglishClassToHebrew("H4"), is("ח4"));
+        assertThat(ClassUtil.convertEnglishClassToHebrew("H10"), is("ח10"));
+
+        // grade I
+        assertThat(ClassUtil.convertEnglishClassToHebrew("I5"), is("ט5"));
+        assertThat(ClassUtil.convertEnglishClassToHebrew("I12"), is("ט12"));
+
+        // grade J
+        assertThat(ClassUtil.convertEnglishClassToHebrew("J2"), is("י2"));
+        assertThat(ClassUtil.convertEnglishClassToHebrew("J11"), is("י11"));
+
+        // grade K
+        assertThat(ClassUtil.convertEnglishClassToHebrew("K2"), is("יא2"));
+        assertThat(ClassUtil.convertEnglishClassToHebrew("K10"), is("יא10"));
+
+        // grade L
+        assertThat(ClassUtil.convertEnglishClassToHebrew("L2"), is("יב2"));
+        assertThat(ClassUtil.convertEnglishClassToHebrew("L12"), is("יב12"));
     }
 
     @Test
     public void correctTranslationEnglishGradeToHebrew() {
+        // grade G
+        assertThat(ClassUtil.convertEnglishGradeToHebrew('G'), is("ז"));
 
+        // grade H
+        assertThat(ClassUtil.convertEnglishGradeToHebrew('H'), is("ח"));
+
+        // grade I
+        assertThat(ClassUtil.convertEnglishGradeToHebrew('I'), is("ט"));
+
+        // grade J
+        assertThat(ClassUtil.convertEnglishGradeToHebrew('J'), is("י"));
+
+        // grade K
+        assertThat(ClassUtil.convertEnglishGradeToHebrew('K'), is("יא"));
+
+        // grade L
+        assertThat(ClassUtil.convertEnglishGradeToHebrew('L'), is("יב"));
     }
 
 }
