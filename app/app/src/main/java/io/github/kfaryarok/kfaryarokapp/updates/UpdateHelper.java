@@ -2,6 +2,8 @@ package io.github.kfaryarok.kfaryarokapp.updates;
 
 import android.content.Context;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.concurrent.ExecutionException;
 
 import io.github.kfaryarok.kfaryarokapp.R;
@@ -43,26 +45,30 @@ public class UpdateHelper {
         // string builder for creating the class string
         StringBuilder classBuilder = new StringBuilder();
 
-        // we know the update MUST affect the user, so put his class first
+        // user's class is always there, and always first
         classBuilder.append(userClass);
 
-        // if there're more classes than the users, put a comma
-        if (classes.length > 1) {
-            classBuilder.append(", ");
+        // convert to array list so to remove the user's class from the list
+        ArrayList<String> classList = new ArrayList<>();
+        Collections.addAll(classList, classes);
+        classList.remove(userClass);
+
+        // if no more classes, just return current string
+        if (classList.isEmpty()) {
+            return classBuilder.toString();
         }
 
-        for (int i = 0; i < classes.length; i++) {
-            String clazz = classes[i];
+        // there are more classes, put a comma
+        classBuilder.append(", ");
 
-            // if update's class is not the user's class (which is already appended)
-            if (!clazz.equalsIgnoreCase(userClass)) {
-                // put it too
-                classBuilder.append(clazz);
+        for (int i = 0; i < classList.size(); i++) {
+            // put the class
+            String clazz = classList.get(i);
+            classBuilder.append(clazz);
 
-                // if the last class isn't the user's class and we haven't reached the last class, put a comma
-                if (!classes[classes.length - 1].equalsIgnoreCase(userClass) && i != classes.length - 1) {
-                    classBuilder.append(", ");
-                }
+            // if not the last class, put a comma
+            if (i < classList.size() - 1) {
+                classBuilder.append(", ");
             }
         }
 
