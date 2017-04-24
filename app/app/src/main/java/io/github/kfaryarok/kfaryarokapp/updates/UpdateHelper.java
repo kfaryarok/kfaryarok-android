@@ -2,6 +2,8 @@ package io.github.kfaryarok.kfaryarokapp.updates;
 
 import android.content.Context;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.concurrent.ExecutionException;
 
 import io.github.kfaryarok.kfaryarokapp.R;
@@ -57,30 +59,30 @@ public class UpdateHelper {
         // string builder for creating the class string
         StringBuilder classBuilder = new StringBuilder();
 
-        // Step 1: we know the update MUST affect the user, so put his class first
+        // user's class is always there, and always first
         classBuilder.append(userClass);
 
-        // Step 2: if there is more than one class, put a comma
-        if (classes.length > 1) {
-            classBuilder.append(", ");
+        // convert to array list so to remove the user's class from the list
+        ArrayList<String> classList = new ArrayList<>();
+        Collections.addAll(classList, classes);
+        classList.remove(userClass);
+
+        // if no more classes, just return current string
+        if (classList.isEmpty()) {
+            return classBuilder.toString();
         }
 
-        // Step 3: Loop
-        for (int i = 0; i < classes.length; i++) {
-            String clazz = classes[i];
+        // there are more classes, put a comma
+        classBuilder.append(", ");
 
-            // Step 4: if update's class is not the user's class (which is already appended)
-            if (!clazz.equalsIgnoreCase(userClass)) {
-                // Step 5: append it too
-                classBuilder.append(clazz);
+        for (int i = 0; i < classList.size(); i++) {
+            // put the class
+            String clazz = classList.get(i);
+            classBuilder.append(clazz);
 
-                // Step 6: if we haven't reached the last class
-                if (i < classes.length - 1) {
-                    // and if not at second last class and last class is user class, add a comma
-                    if (!(classes[classes.length - 1].equalsIgnoreCase(userClass) && i == classes.length - 2)) {
-                        classBuilder.append(", ");
-                    }
-                }
+            // if not the last class, put a comma
+            if (i < classList.size() - 1) {
+                classBuilder.append(", ");
             }
         }
 
@@ -95,6 +97,18 @@ public class UpdateHelper {
      * @return Formatted string detailing the update
      */
     public static String formatUpdate(Update update, Context ctx) {
+        return formatUpdate(update, ctx.getString(R.string.global_update), PreferenceUtil.getClassPreference(ctx));
+    }
+
+    /**
+     * Separated the actual work from the main method to make it easier for me to create a unit
+     * test for this.
+     * @param update The update object
+     * @param globalUpdateString What text to show if it's global
+     * @param userClass The user's class
+     * @return Formatted string detailing the update
+     */
+    public static String formatUpdate(Update update, String globalUpdateString, String userClass) {
         if (update == null) {
             // your daily null check!
             return null;
@@ -104,11 +118,11 @@ public class UpdateHelper {
 
         if (update.getAffected().isGlobal()) {
             // global update; set affects string to global_update
-            affects = ctx.getString(R.string.global_update);
+            affects = globalUpdateString;
         } else if (update.getAffected() instanceof ClassesAffected) {
             // normal update; get formatted class string
             ClassesAffected affected = (ClassesAffected) update.getAffected();
-            affects = formatClassString(affected.getClassesAffected(), PreferenceUtil.getClassPreference(ctx));
+            affects = formatClassString(affected.getClassesAffected(), userClass);
         }
 
         // return formatted string like in this example (in english): I7, K5: blah blah
