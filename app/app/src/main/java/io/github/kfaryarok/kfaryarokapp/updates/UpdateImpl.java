@@ -19,6 +19,20 @@ public class UpdateImpl implements Update {
     private String mSummary;
 
     /**
+     * Constructor for creating an update, that affects only one class.
+     *
+     * @param affectedClass Name of class that this update affects.
+     *                      If, for example, I'm in E7, and this update affects
+     *                      E6, I'm not one of the affected classes. But if it
+     *                      affects E7, then I should see this update.
+     * @param text A short text explaining the update
+     */
+    public UpdateImpl(String affectedClass, String text) {
+        this.mAffected = new ClassesAffected(affectedClass);
+        this.mSummary = text;
+    }
+
+    /**
      * Constructor for creating an update, that affects only certain classes.
      *
      * @param affectedClasses Array of classes that this update affects.
