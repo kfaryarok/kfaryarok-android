@@ -33,6 +33,20 @@ public class UpdateHelper {
     /**
      * Creates a string of the classes in the array, with the user's current class first and
      * other classes afterwards, comma-separated.
+     *
+     * I'll try to explain how it works, because it's not simple at first glance.
+     * It assumes that the array contains the user's class, because it is supposed to have it, but
+     * it won't cause it to error.
+     * 1. Add the user's class first, always.
+     * 2. If there is more than one class, add a comma for the next classes
+     * 3. Loop through the classes
+     * 4. Continue to next class if it's the user's class (because it's always there)
+     * 5. Append the class
+     * Now, deciding whether to put a comma here is tricky.
+     * 6. Append comma, unless:
+     * - we're at last class
+     * - we're at second last class AND last class is the user's class (to prevent putting unnecessary commas)
+     *
      * @param classes The array of classes to format
      * @param userClass To know which class to put first. If the classes array doesn't have it, then it will not be reordered.
      * @return Class array in string form, comma-separated.
