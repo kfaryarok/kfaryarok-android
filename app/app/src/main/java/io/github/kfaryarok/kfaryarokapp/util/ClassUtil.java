@@ -357,4 +357,34 @@ public class ClassUtil {
                  hebrewGrade.equals("יב"));
     }
 
+    /**
+     * Number used by {@link #getClassesInHebrewGrade(String)} if I don't know it.
+     */
+    private static int UNKNOWN_GRADE_CLASSES = 12;
+
+    /**
+     * Tries to get the (current) number of classes in the given grade.
+     * I.e.: In grade H there are 9 classes (H1-9), so it'll return 9.
+     * @param grade Hebrew grade
+     * @return The number of classes in that grade. If invalid returns 0
+     */
+    public static int getClassesInHebrewGrade(String grade) {
+        switch (grade) {
+            case "ז":
+                return 10; // not sure, need to check
+            case "ח":
+                return 9;
+            case "ט":
+                return UNKNOWN_GRADE_CLASSES; // don't know
+            case "י":
+                return UNKNOWN_GRADE_CLASSES;
+            case "יא":
+                return UNKNOWN_GRADE_CLASSES;
+            case "יב":
+                return UNKNOWN_GRADE_CLASSES;
+            default:
+                return 0;
+        }
+    }
+
 }

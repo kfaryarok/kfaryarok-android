@@ -50,12 +50,21 @@ public class ClassPreferenceDialogFragmentCompat extends PreferenceDialogFragmen
 
         mGradeRadioGroup = (RadioGroup) v.findViewById(R.id.rg_dialog_grade);
         mClassNumPicker = (NumberPicker) v.findViewById(R.id.np_dialog_class_num);
-        ClassPreference pref = (ClassPreference) getPreference();
+        final ClassPreference pref = (ClassPreference) getPreference();
 
         // set options and set current selected entries
         mGradeRadioGroup.check(convertGradeStringToRadioButtonRes(pref.mGrade));
+        // used to change the number picker's max value based on the selected grade
+        mGradeRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
+                mClassNumPicker.setMaxValue(ClassUtil.getClassesInHebrewGrade(convertGradeRadioButtonResToString(getContext(), checkedId)));
+            }
+
+        });
         mClassNumPicker.setMinValue(1);
-        mClassNumPicker.setMaxValue(12);
+        mClassNumPicker.setMaxValue(ClassUtil.getClassesInHebrewGrade(pref.mGrade));
         mClassNumPicker.setWrapSelectorWheel(false);
         mClassNumPicker.setValue(pref.mClassNum);
     }
