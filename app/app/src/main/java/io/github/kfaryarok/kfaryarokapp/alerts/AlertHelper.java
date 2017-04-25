@@ -10,6 +10,7 @@ import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.NotificationCompat;
 
 import java.util.Calendar;
+import java.util.Date;
 
 import io.github.kfaryarok.kfaryarokapp.MainActivity;
 import io.github.kfaryarok.kfaryarokapp.R;
@@ -47,11 +48,21 @@ public class AlertHelper {
         int alertHour = TimePreference.parseHour(alertTime);
         int alertMinute = TimePreference.parseMinute(alertTime);
 
+        // create calendar instance for calculating alert time
         Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.setTime(new Date());
+
+        // set alert time fields
         calendar.set(Calendar.HOUR_OF_DAY, alertHour);
         calendar.set(Calendar.MINUTE, alertMinute);
         calendar.set(Calendar.SECOND, 0);
+
+        // if alert hour is before current time, push it forward by a day
+        Calendar now = Calendar.getInstance();
+        now.setTime(new Date());
+        if (calendar.before(now)) {
+            calendar.add(Calendar.DATE, 1);
+        }
 
         mAlarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, mPendingAlertReceiver);
     }
