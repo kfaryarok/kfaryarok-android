@@ -103,7 +103,7 @@ public class ClassUtil {
 
                 // if 2nd char is a letter, parse the 2-char grade
                 if (isHebrewLetter(clazz.charAt(1))) {
-                    return clazz.substring(0, 1);
+                    return clazz.substring(0, 2);
                 }
 
                 // otherwise, grade is only 1 letter
@@ -113,7 +113,7 @@ public class ClassUtil {
                 // 3rd & 4th chars must be digits
 
                 // just return the first 2 chars
-                return clazz.substring(0, 1);
+                return clazz.substring(0, 2);
             default:
                 // it passed the validity check, this can't be reached
                 Log.wtf("ClassUtil", "Somehow class length is invalid? Something's been tampered with!");
@@ -158,13 +158,13 @@ public class ClassUtil {
                 }
 
                 // otherwise, class num is 2 digits
-                return Integer.parseInt(clazz.substring(1, 2));
+                return Integer.parseInt(clazz.substring(1, 3));
             case 4:
                 // 1st & 2nd chars must be letters
                 // 3rd & 4th chars must be digits
 
                 // just return the last 2 chars
-                return Integer.parseInt(clazz.substring(2, 3));
+                return Integer.parseInt(clazz.substring(2, 4));
             default:
                 // it passed the validity check, this can't be reached
                 Log.wtf("ClassUtil", "Somehow class length is invalid? Something's been tampered with!");
