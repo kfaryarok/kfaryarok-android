@@ -368,7 +368,7 @@ public class ClassUtil {
         if (grade == null) {
             return 11;
         }
-
+      
         switch (grade) {
             case "ז":
                 return 10;
