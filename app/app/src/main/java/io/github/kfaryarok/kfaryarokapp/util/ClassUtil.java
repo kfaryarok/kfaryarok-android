@@ -378,7 +378,7 @@ public class ClassUtil {
             case "יב":
                 return 11;
             default:
-                return 0;
+                return 11; // just incase grade is null (if no grade is selected)
         }
     }
 
