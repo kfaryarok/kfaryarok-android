@@ -29,7 +29,7 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.UpdateView
 
     @Override
     public UpdateViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new UpdateViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.update_list_item, parent, false));
+        return new UpdateViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.update_list_item_relative, parent, false));
     }
 
     @Override
