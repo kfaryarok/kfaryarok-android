@@ -31,7 +31,7 @@ public class TestUtil {
 
             JSONObject update1 = new JSONObject().put(UpdateParser.TEXT_STRING, "שיעור 7 מבוטל").put(UpdateParser.CLASSES_ARRAY, new JSONArray().put("ח4"));
             JSONObject update2 = new JSONObject().put(UpdateParser.TEXT_STRING, "שיעור 5 עם משה").put(UpdateParser.CLASSES_ARRAY, new JSONArray().put("ט2"));
-            JSONObject update3 = new JSONObject().put(UpdateParser.TEXT_STRING, "שיעורים 1-2 עם מבוטלים").put(UpdateParser.CLASSES_ARRAY, new JSONArray().put("י3"));
+            JSONObject update3 = new JSONObject().put(UpdateParser.TEXT_STRING, "שיעורים 1-2 מבוטלים").put(UpdateParser.CLASSES_ARRAY, new JSONArray().put("י3"));
             JSONObject update4 = new JSONObject().put(UpdateParser.TEXT_STRING, "שיעור 11 עם בני").put(UpdateParser.CLASSES_ARRAY, new JSONArray().put("יא11"));
             JSONArray updatesJson = new JSONArray().put(update1).put(update2).put(update3).put(update4);
 
