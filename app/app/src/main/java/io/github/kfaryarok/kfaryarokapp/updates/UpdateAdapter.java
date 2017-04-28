@@ -34,12 +34,30 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.UpdateView
 
     @Override
     public void onBindViewHolder(UpdateViewHolder holder, int position) {
-        View itemView = holder.itemView;
+        final View itemView = holder.itemView;
         Update update = mUpdates[position];
 
         // set text
-        TextView tvText = (TextView) itemView.findViewById(R.id.tv_updatecard_text);
+        final TextView tvText = (TextView) itemView.findViewById(R.id.tv_updatecard_text);
         tvText.setText(update.getText());
+
+        // messy hack that android forces me to use
+        // i can't get the line count without queuing a runnable, because it isn't known yet
+        // and will only be known once the layout is drawn
+        // queuing a runnable will make sure that it's called after drawing
+        tvText.post(new Runnable() {
+
+            @Override
+            public void run() {
+                // if line count is more than the max
+                if (tvText.getLineCount() > 3) {
+                    // set expand view to be visible
+                    View viewExpand = itemView.findViewById(R.id.view_updatecard_expand);
+                    viewExpand.setVisibility(View.VISIBLE);
+                }
+            }
+
+        });
 
         // set class
         TextView tvClass = (TextView) itemView.findViewById(R.id.tv_updatecard_class);
@@ -75,14 +93,14 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.UpdateView
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mClickHandler.onClickCard(mUpdates[getAdapterPosition()]);
+                    mClickHandler.onClickCard(v, mUpdates[getAdapterPosition()]);
                 }
             });
 
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    mClickHandler.onClickOptions(mUpdates[getAdapterPosition()], (Button) v.findViewById(R.id.btn_updatecard_options));
+                    mClickHandler.onClickOptions(v, mUpdates[getAdapterPosition()], (Button) v.findViewById(R.id.btn_updatecard_options));
                     return true;
                 }
             });
@@ -91,15 +109,15 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.UpdateView
             itemView.findViewById(R.id.btn_updatecard_options).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mClickHandler.onClickOptions(mUpdates[getAdapterPosition()], (Button) v);
+                    mClickHandler.onClickOptions(v, mUpdates[getAdapterPosition()], (Button) v);
                 }
             });
         }
     }
 
     public interface UpdateAdapterOnClickHandler {
-        void onClickCard(Update update);
-        void onClickOptions(Update update, Button buttonView); /* bypassing limitations */
+        void onClickCard(View v, Update update);
+        void onClickOptions(View v, Update update, Button buttonView); /* bypassing limitations */
     }
 
 }

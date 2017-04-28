@@ -21,10 +21,19 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_alignTop="@+id/tv_updatecard_text"
-            android:layout_marginTop="4dp"
             android:layout_marginLeft="10dp"
             android:layout_marginStart="10dp"
+            android:layout_marginTop="4dp"
             android:background="@drawable/ic_more_vert_black_24dp"/>
+
+        <View
+            android:id="@+id/view_updatecard_expand"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_below="@+id/tv_updatecard_text"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/ic_arrow_drop_down_grey_600_24dp"
+            android:visibility="invisible"/>
 
         <TextView
             android:id="@+id/tv_updatecard_text"
@@ -34,12 +43,12 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:layout_marginEnd="12dp"
-            android:layout_marginRight="12dp"
-            android:layout_marginTop="8dp"
             android:layout_marginLeft="8dp"
+            android:layout_marginRight="12dp"
             android:layout_marginStart="8dp"
-            android:layout_toRightOf="@+id/btn_updatecard_options"
+            android:layout_marginTop="8dp"
             android:layout_toEndOf="@+id/btn_updatecard_options"
+            android:layout_toRightOf="@+id/btn_updatecard_options"
             android:maxLines="3"
             android:text="@string/debug_string"
             android:textSize="20sp"/>
@@ -48,14 +57,14 @@
             android:id="@+id/tv_updatecard_class"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/tv_updatecard_text"
+            android:layout_alignRight="@+id/tv_updatecard_text"
+            android:layout_below="@+id/tv_updatecard_text"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="6dp"
             android:maxLines="3"
             android:text="@string/debug_string"
-            android:textSize="16sp"
-            android:layout_marginTop="6dp"
-            android:layout_marginBottom="10dp"
-            android:layout_below="@+id/tv_updatecard_text"
-            android:layout_alignRight="@+id/tv_updatecard_text"
-            android:layout_alignEnd="@+id/tv_updatecard_text"/>
+            android:textSize="16sp"/>
 
     </RelativeLayout>
 

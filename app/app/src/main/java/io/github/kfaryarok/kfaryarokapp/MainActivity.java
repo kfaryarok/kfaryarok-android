@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.widget.TextViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import io.github.kfaryarok.kfaryarokapp.settings.SettingsActivity;
@@ -136,12 +138,25 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter.Upd
     }
 
     @Override
-    public void onClickCard(Update update) {
-        // really nothing to do here as of now
+    public void onClickCard(View v, Update update) {
+        // if card is clicked and the line count is bigger than 3 (meaning it can be expanded/"dexpanded")
+        TextView tvText = (TextView) v.findViewById(R.id.tv_updatecard_text);
+        View viewExpand = v.findViewById(R.id.view_updatecard_expand);
+        if (tvText.getLineCount() > 3) {
+            // if current max lines is 3, expand to 100 lines, and else "dexpand" back to 3
+            // it uses TextViewCompat instead of the given method for API 15 compatibility
+            if (TextViewCompat.getMaxLines(tvText) == 3) {
+                tvText.setMaxLines(100);
+                viewExpand.setBackgroundResource(R.drawable.ic_arrow_drop_up_grey_600_24dp);
+            } else {
+                tvText.setMaxLines(3);
+                viewExpand.setBackgroundResource(R.drawable.ic_arrow_drop_down_grey_600_24dp);
+            }
+        }
     }
 
     @Override
-    public void onClickOptions(final Update update, Button buttonView) {
+    public void onClickOptions(View v, final Update update, Button buttonView) {
         PopupMenu popupMenu = new PopupMenu(this, buttonView);
         popupMenu.getMenuInflater().inflate(R.menu.update_card, popupMenu.getMenu());
 

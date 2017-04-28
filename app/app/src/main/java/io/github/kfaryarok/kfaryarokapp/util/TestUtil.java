@@ -26,7 +26,7 @@ public class TestUtil {
 
         JSONObject testJson = new JSONObject();
         try {
-            JSONObject globalUpdate1 = new JSONObject().put(UpdateParser.TEXT_STRING, "טקס יום הזיכרון בשעה 9:30 בחדר האוכל");
+            JSONObject globalUpdate1 = new JSONObject().put(UpdateParser.TEXT_STRING, "טקס יום הזיכרון בשעה 9:30 בחדר האוכל הןןחלח חל רהחילריהח לירקי הרק הרק החרהירחה רחהי חה חרל החר יהרה");
             JSONArray globalUpdates = new JSONArray().put(globalUpdate1);
 
             JSONObject update1 = new JSONObject().put(UpdateParser.TEXT_STRING, "שיעור 7 מבוטל").put(UpdateParser.CLASSES_ARRAY, new JSONArray().put("ח4"));
