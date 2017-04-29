@@ -364,6 +364,11 @@ public class ClassUtil {
      * @return The number of classes in that grade. If invalid returns 0
      */
     public static int getClassesInHebrewGrade(String grade) {
+        // just incase grade is null (if no grade is selected)
+        if (grade == null) {
+            return 11;
+        }
+      
         switch (grade) {
             case "ז":
                 return 10;
@@ -378,7 +383,7 @@ public class ClassUtil {
             case "יב":
                 return 11;
             default:
-                return 11; // just incase grade is null (if no grade is selected)
+                return 11;
         }
     }
 
