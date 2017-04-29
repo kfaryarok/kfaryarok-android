@@ -6,7 +6,7 @@
     <!-- Activity strings -->
     <string name="act_update_details">עדכון</string>
     <string name="act_settings">הגדרות</string>
-    <string name="act_firstlaunch">זמני</string> <!-- TODO figure out a title -->
+    <string name="act_firstlaunch">הגדרות ראשוניות</string>
 
     <!-- Alert strings -->
     <string name="alert_updates_title">עדכונים חדשים</string>
@@ -23,7 +23,7 @@
 
     <!-- Toast strings -->
     <string name="toast_invalid_class">כיתה לא תקינה</string>
-    <string name="toast_firstlaunch_no_class">הכנס כיתה</string>
+    <string name="toast_firstlaunch_no_class">בחר כיתה</string>
     <string name="toast_devmode_enabled">מצב מפתח הופעל</string>
     <string name="toast_devmode_disabled">מצב מפתח בוטל</string>
     <string name="toast_devmode_clicks_remaining"> לחיצות נותרו</string>

@@ -21,7 +21,7 @@ public class ClassUtil {
      * @return Hebrew class name
      */
     public static String convertEnglishClassToHebrew(String clazz) {
-        return (clazz == null || clazz.length() == 0) ? "" : convertEnglishGradeToHebrew(clazz.charAt(0)) + clazz.substring(1);
+        return !checkValidEnglishClassName(clazz) ? "" : convertEnglishGradeToHebrew(clazz.charAt(0)) + clazz.substring(1);
     }
 
     /**
@@ -33,8 +33,8 @@ public class ClassUtil {
     public static String convertHebrewClassToEnglish(String clazz) {
         StringBuilder sb = new StringBuilder();
 
-        if (clazz == null || clazz.length() == 0) {
-            // invalid, so return null
+        if (clazz == null || clazz.length() == 0 || !checkValidHebrewClassName(clazz)) {
+            // invalid, so return an empty string
             return "";
         }
 
@@ -103,7 +103,7 @@ public class ClassUtil {
 
                 // if 2nd char is a letter, parse the 2-char grade
                 if (isHebrewLetter(clazz.charAt(1))) {
-                    return clazz.substring(0, 1);
+                    return clazz.substring(0, 2);
                 }
 
                 // otherwise, grade is only 1 letter
@@ -113,7 +113,7 @@ public class ClassUtil {
                 // 3rd & 4th chars must be digits
 
                 // just return the first 2 chars
-                return clazz.substring(0, 1);
+                return clazz.substring(0, 2);
             default:
                 // it passed the validity check, this can't be reached
                 Log.wtf("ClassUtil", "Somehow class length is invalid? Something's been tampered with!");
@@ -158,13 +158,13 @@ public class ClassUtil {
                 }
 
                 // otherwise, class num is 2 digits
-                return Integer.parseInt(clazz.substring(1, 2));
+                return Integer.parseInt(clazz.substring(1, 3));
             case 4:
                 // 1st & 2nd chars must be letters
                 // 3rd & 4th chars must be digits
 
                 // just return the last 2 chars
-                return Integer.parseInt(clazz.substring(2, 3));
+                return Integer.parseInt(clazz.substring(2, 4));
             default:
                 // it passed the validity check, this can't be reached
                 Log.wtf("ClassUtil", "Somehow class length is invalid? Something's been tampered with!");
@@ -192,7 +192,7 @@ public class ClassUtil {
         }
 
         // first char must always be a letter, so check it
-        if ((clazz.charAt(0) <= 'a' && clazz.charAt(0) >= 'z') || (clazz.charAt(0) <= 'A' && clazz.charAt(0) >= 'Z')) {
+        if (!((clazz.charAt(0) >= 'a' && clazz.charAt(0) <= 'z') || (clazz.charAt(0) >= 'A' && clazz.charAt(0) <= 'Z'))) {
             // i do it like this because i want to make sure its an english letter specifically
             // 1st char is not an english letter
             return false;
@@ -360,6 +360,8 @@ public class ClassUtil {
     /**
      * Tries to get the (current) number of classes in the given grade.
      * I.e.: In grade H there are 9 classes (H1-9), so it'll return 9.
+     *
+     * Not creating a unit test for this one, as there isn't really anything to test here
      * @param grade Hebrew grade
      * @return The number of classes in that grade. If invalid returns 0
      */
@@ -368,7 +370,7 @@ public class ClassUtil {
         if (grade == null) {
             return 11;
         }
-      
+
         switch (grade) {
             case "ז":
                 return 10;

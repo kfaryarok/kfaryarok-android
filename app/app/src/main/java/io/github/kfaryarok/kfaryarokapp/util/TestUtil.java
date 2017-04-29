@@ -26,13 +26,14 @@ public class TestUtil {
 
         JSONObject testJson = new JSONObject();
         try {
-            JSONObject globalUpdate1 = new JSONObject().put(UpdateParser.TEXT_STRING, "עדכון רגיל 1");
-            JSONObject globalUpdate2 = new JSONObject().put(UpdateParser.TEXT_STRING, "עדכון רגיל 2");
-            JSONArray globalUpdates = new JSONArray().put(globalUpdate1).put(globalUpdate2);
+            JSONObject globalUpdate1 = new JSONObject().put(UpdateParser.TEXT_STRING, "טקס יום הזיכרון בשעה 9:30 בחדר האוכל הןןחלח חל רהחילריהח לירקי הרק הרק החרהירחה רחהי חה חרל החר יהרה");
+            JSONArray globalUpdates = new JSONArray().put(globalUpdate1);
 
-            JSONObject update1 = new JSONObject().put(UpdateParser.TEXT_STRING, "רגיל 1").put(UpdateParser.CLASSES_ARRAY, new JSONArray().put("ח4"));
-            JSONObject update2 = new JSONObject().put(UpdateParser.TEXT_STRING, "רגיל 2").put(UpdateParser.CLASSES_ARRAY, new JSONArray().put("ט2").put("יא7"));
-            JSONArray updatesJson = new JSONArray().put(update1).put(update2);
+            JSONObject update1 = new JSONObject().put(UpdateParser.TEXT_STRING, "שיעור 7 מבוטל").put(UpdateParser.CLASSES_ARRAY, new JSONArray().put("ח4"));
+            JSONObject update2 = new JSONObject().put(UpdateParser.TEXT_STRING, "שיעור 5 עם משה").put(UpdateParser.CLASSES_ARRAY, new JSONArray().put("ט2"));
+            JSONObject update3 = new JSONObject().put(UpdateParser.TEXT_STRING, "שיעורים 1-2 מבוטלים").put(UpdateParser.CLASSES_ARRAY, new JSONArray().put("י3"));
+            JSONObject update4 = new JSONObject().put(UpdateParser.TEXT_STRING, "שיעור 11 עם בני").put(UpdateParser.CLASSES_ARRAY, new JSONArray().put("יא11"));
+            JSONArray updatesJson = new JSONArray().put(update1).put(update2).put(update3).put(update4);
 
             testJson.put(UpdateParser.GLOBAL_UPDATES_ARRAY, globalUpdates);
             testJson.put(UpdateParser.UPDATES_ARRAY, updatesJson);
