@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="kfaryarok-android_classes" pattern="src[app-app]:io.github.kfaryarok.kfaryarokapp..*||src[app-app]:build||src[app]:build||src[app]:settings||test[app-app]:io.github.kfaryarok.kfaryarokapp..*" />
+</component>
