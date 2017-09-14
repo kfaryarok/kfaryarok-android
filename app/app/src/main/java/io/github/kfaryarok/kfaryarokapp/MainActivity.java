@@ -98,8 +98,9 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter.Upd
     }
 
     public Update[] setupUpdates() {
+        // TODO: Fetch update only if internet is available
         Update[] updates = UpdateHelper.getUpdates(this);
-        if (updates.length == 0) {
+        if (updates == null) {
             if (!PreferenceUtil.getUpdateServerPreference(this).equals(UpdateFetcher.DEFAULT_UPDATE_URL)) {
                 // it failed and it doesn't use the default update url, so switch to default and retry
                 PreferenceUtil.getSharedPreferences(this).edit()

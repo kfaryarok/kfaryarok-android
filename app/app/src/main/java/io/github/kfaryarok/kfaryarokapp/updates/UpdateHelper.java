@@ -40,10 +40,19 @@ public class UpdateHelper {
      */
     public static Update[] getUpdates(Context ctx) {
         try {
-            return UpdateParser.filterUpdates(UpdateParser.parseUpdates(new UpdateFetcher().execute(ctx).get()), PreferenceUtil.getClassPreference(ctx));
+            String json = new UpdateFetcher().execute(ctx).get();
+            Update[] parsed;
+            if ("".equals(json)) {
+                parsed = new Update[] {
+                        new UpdateImpl("", "טעינת עדכונים נכשלה")
+                };
+            } else {
+                parsed = UpdateParser.parseUpdates(json);
+            }
+            return UpdateParser.filterUpdates(parsed, PreferenceUtil.getClassPreference(ctx));
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
-            return new Update[0];
+            return null;
         }
     }
 
