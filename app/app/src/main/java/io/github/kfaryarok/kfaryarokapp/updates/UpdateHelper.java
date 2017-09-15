@@ -41,15 +41,14 @@ public class UpdateHelper {
     public static Update[] getUpdates(Context ctx) {
         try {
             String json = new UpdateFetcher().execute(ctx).get();
-            Update[] parsed;
             if ("".equals(json)) {
-                parsed = new Update[] {
-                        new UpdateImpl("", "טעינת עדכונים נכשלה")
+                return new Update[] {
+                        new UpdateImpl(new String[0], "טעינת עדכונים נכשלה")
                 };
             } else {
-                parsed = UpdateParser.parseUpdates(json);
+                return UpdateParser.filterUpdates(UpdateParser.parseUpdates(json), PreferenceUtil.getClassPreference(ctx));
             }
-            return UpdateParser.filterUpdates(parsed, PreferenceUtil.getClassPreference(ctx));
+
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
             return null;
@@ -85,30 +84,29 @@ public class UpdateHelper {
         // string builder for creating the class string
         StringBuilder classBuilder = new StringBuilder();
 
-        // user's class is always there, and always first
-        classBuilder.append(userClass);
-
         // convert to array list so to remove the user's class from the list
         ArrayList<String> classList = new ArrayList<>();
         Collections.addAll(classList, classes);
-        classList.remove(userClass);
 
-        // if no more classes, just return current string
-        if (classList.isEmpty()) {
-            return classBuilder.toString();
+        if (classList.contains(userClass)) {
+            // don't assume about user class, first check if it's even there
+            classBuilder.append(userClass);
+            classList.remove(userClass);
         }
 
-        // there are more classes, put a comma
-        classBuilder.append(", ");
+        if (!classList.isEmpty()) {
+            // there are more classes, put a comma
+            classBuilder.append(", ");
 
-        for (int i = 0; i < classList.size(); i++) {
-            // put the class
-            String clazz = classList.get(i);
-            classBuilder.append(clazz);
+            for (int i = 0; i < classList.size(); i++) {
+                // put the class
+                String clazz = classList.get(i);
+                classBuilder.append(clazz);
 
-            // if not the last class, put a comma
-            if (i < classList.size() - 1) {
-                classBuilder.append(", ");
+                // if not the last class, put a comma
+                if (i < classList.size() - 1) {
+                    classBuilder.append(", ");
+                }
             }
         }
 
