@@ -19,6 +19,7 @@ package io.github.kfaryarok.kfaryarokapp.updates;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -50,7 +51,7 @@ import io.github.kfaryarok.kfaryarokapp.util.TestUtil;
 public class UpdateFetcher extends AsyncTask<Context, Void, String> {
 
     // TODO actual data for fetching
-    public static final String DEFAULT_UPDATE_URL = "";
+    public static final String DEFAULT_UPDATE_URL = "https://tbscdev.xyz/update.json";
 
     public static String fetchUpdates(Context ctx) {
         try {
@@ -59,7 +60,7 @@ public class UpdateFetcher extends AsyncTask<Context, Void, String> {
                 return TestUtil.getTestJsonString();
             return getResponseFromHttpUrl(buildUrl(ctx));
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.i("UpdateFetcher", "Fetching updates failed; probably no internet access, using cached updates instead (" + e.getMessage() + ")");
             return "";
         }
     }

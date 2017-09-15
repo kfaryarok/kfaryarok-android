@@ -29,6 +29,7 @@ import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateFormat;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,17 +37,24 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Date;
+
 import io.github.kfaryarok.kfaryarokapp.settings.SettingsActivity;
 import io.github.kfaryarok.kfaryarokapp.updates.Update;
 import io.github.kfaryarok.kfaryarokapp.updates.UpdateAdapter;
 import io.github.kfaryarok.kfaryarokapp.updates.UpdateFetcher;
 import io.github.kfaryarok.kfaryarokapp.updates.UpdateHelper;
+import io.github.kfaryarok.kfaryarokapp.updates.UpdateParser;
 import io.github.kfaryarok.kfaryarokapp.util.PreferenceUtil;
 
 public class MainActivity extends AppCompatActivity implements UpdateAdapter.UpdateAdapterOnClickHandler {
 
     private RecyclerView mUpdatesRecyclerView;
     private UpdateAdapter mUpdateAdapter;
+    private TextView mInfoTextView;
+    private TextView mOutdatedWarningTextView;
 
     private SharedPreferences prefs;
 
@@ -93,13 +101,57 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter.Upd
     }
 
     public void setupUpdateAdapter() {
+        mOutdatedWarningTextView = (TextView) findViewById(R.id.tv_main_outdated_warning);
+
         mUpdateAdapter = new UpdateAdapter(setupUpdates(), this);
+
+        Date lastUpdated = UpdateHelper.getWhenLastCached(this);
+        String lastUpdatedString;
+        if (lastUpdated.equals(new Date(0))) {
+            lastUpdatedString = "אף פעם";
+        } else {
+            lastUpdatedString = (String) DateFormat.format("kk:mm:ss dd/MM/yyyy", lastUpdated);
+        }
+
+        // only show the outdated TextView if the cached data is older than 3 hours
+
+
+        mInfoTextView = (TextView) findViewById(R.id.tv_main_info);
+        mInfoTextView.setText(String.format("עודכן לאחרונה: %s", lastUpdatedString));
+
         mUpdatesRecyclerView.setAdapter(mUpdateAdapter);
     }
 
     public Update[] setupUpdates() {
-        // TODO: Fetch update only if internet is available
-        Update[] updates = UpdateHelper.getUpdates(this);
+        Update[] updates;
+
+        // TODO: i18n a lot of things here
+
+        // once again, nested try-catch blocks
+        // really ugly
+        try {
+            updates = UpdateHelper.getUpdates(this);
+        } catch (IOException e) {
+            try {
+                Update[] ups = UpdateParser.filterUpdates(UpdateParser.parseUpdates(UpdateHelper.getLastSyncedUpdates(this)), PreferenceUtil.getClassPreference(this));
+                mToast = Toast.makeText(this, "התחברות לשרת נכשלה, מציג את העדכונים האחרונים שהורדו", Toast.LENGTH_LONG);
+                mToast.show();
+                long threeHours = 10800000;
+                if (System.currentTimeMillis() - UpdateHelper.getWhenLastCached(this).getTime() > threeHours) {
+                    mOutdatedWarningTextView.setVisibility(View.VISIBLE);
+                    mOutdatedWarningTextView.setTextColor(0xFFFF0000);
+                    mOutdatedWarningTextView.append("ייתכן שהמידע לא מעודכן!");
+                }
+                return ups;
+            } catch (FileNotFoundException e1) {
+                mToast = Toast.makeText(this, "התחברות לשרת נכשלה ואין עדכונים שמורים, התחבר לאינטרנט", Toast.LENGTH_LONG);
+                mToast.show();
+                return null;
+            }
+
+            // e.printStackTrace();
+        }
+
         if (updates == null) {
             if (!PreferenceUtil.getUpdateServerPreference(this).equals(UpdateFetcher.DEFAULT_UPDATE_URL)) {
                 // it failed and it doesn't use the default update url, so switch to default and retry
@@ -120,9 +172,10 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter.Upd
             }
             mToast = Toast.makeText(this, "כישלון בעיבוד נתונים.", Toast.LENGTH_LONG);
             mToast.show();
-            finish();
+            // finish();
             return null;
         }
+
         return updates;
     }
 

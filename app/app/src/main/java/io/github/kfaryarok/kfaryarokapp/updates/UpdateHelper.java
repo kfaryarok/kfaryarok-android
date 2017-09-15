@@ -18,9 +18,16 @@
 package io.github.kfaryarok.kfaryarokapp.updates;
 
 import android.content.Context;
+import android.util.Log;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
+import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
 
 import io.github.kfaryarok.kfaryarokapp.R;
@@ -38,17 +45,20 @@ public class UpdateHelper {
      * Fetches updates, parses them and filters them.
      * @return List of relavant updates, or an empty array if failed parsing
      */
-    public static Update[] getUpdates(Context ctx) {
+    public static Update[] getUpdates(Context ctx) throws IOException {
         try {
             String json = new UpdateFetcher().execute(ctx).get();
             if ("".equals(json)) {
-                return new Update[] {
-                        new UpdateImpl(new String[0], "טעינת עדכונים נכשלה")
-                };
+                throw new IOException();
             } else {
+                // I know all of these try blocks are ugly but that's how it's gotta be done
+                try {
+                    setLastSyncedUpdates(ctx, json);
+                } catch (IOException e) {
+                    Log.w("UpdateHelper", "Failed caching updates: " + e.getMessage());
+                }
                 return UpdateParser.filterUpdates(UpdateParser.parseUpdates(json), PreferenceUtil.getClassPreference(ctx));
             }
-
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
             return null;
@@ -151,6 +161,44 @@ public class UpdateHelper {
 
         // return formatted string like in this example (in english): I7, K5: blah blah
         return affects + ": " + update.getText();
+    }
+
+    /**
+     * Retrieves the last downloaded JSON file from the app's cache directory.
+     * @param ctx Used to access the cache directory
+     * @return Cached updates
+     * @throws FileNotFoundException If file wasn't found, meaning no cache is available
+     */
+    public static String getLastSyncedUpdates(Context ctx) throws FileNotFoundException {
+        File appDir = ctx.getCacheDir();
+        File lastSynced = new File(appDir, "update.json");
+        return new Scanner(lastSynced).useDelimiter("\\Z").next();
+    }
+
+    /**
+     * Caches the given JSON string data to a file in the app's cache directory.
+     * @param ctx Used to access the cache directory
+     * @param data What to cache
+     * @throws IOException if file creation/writing fails
+     */
+    public static void setLastSyncedUpdates(Context ctx, String data) throws IOException {
+        File appDir = ctx.getCacheDir();
+        File lastSynced = new File(appDir, "update.json");
+        lastSynced.createNewFile();
+        FileWriter writer = new FileWriter(lastSynced);
+        writer.write(data);
+        writer.close();
+    }
+
+    /**
+     * Checks when were the updates cached last time.
+     * @param ctx Used to get cache directory
+     * @return {@link java.util.Date} object of when it happened
+     */
+    public static Date getWhenLastCached(Context ctx) {
+        File appDir = ctx.getCacheDir();
+        File lastSynced = new File(appDir, "update.json");
+        return new Date(lastSynced.lastModified());
     }
 
 }
