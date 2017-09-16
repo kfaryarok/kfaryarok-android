@@ -34,8 +34,8 @@ import io.github.kfaryarok.kfaryarokapp.util.PreferenceUtil;
  */
 public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.UpdateViewHolder> {
 
-    private Update[] mUpdates;
-    private int mItemCount;
+    public Update[] mUpdates;
+    public int mItemCount;
     private final UpdateAdapterOnClickHandler mClickHandler;
 
     public UpdateAdapter(Update[] updates, UpdateAdapterOnClickHandler clickHandler) {

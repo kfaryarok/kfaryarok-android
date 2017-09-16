@@ -23,7 +23,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.TextViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
@@ -59,7 +58,6 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter.Upd
     private UpdateAdapter mUpdateAdapter;
     private TextView mInfoTextView;
     public TextView mOutdatedWarningTextView;
-    private SwipeRefreshLayout mSwipeRefreshUpdates;
 
     private SharedPreferences prefs;
 
@@ -77,7 +75,9 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter.Upd
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        setupMisc();
         setupUpdateRecyclerView();
+        updateInfoTextView();
     }
 
     public void checkFirstLaunch() {
@@ -102,35 +102,16 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter.Upd
         mUpdatesRecyclerView.setLayoutManager(layoutManager);
         mUpdatesRecyclerView.setHasFixedSize(true);
 
-        mSwipeRefreshUpdates = (SwipeRefreshLayout) findViewById(R.id.srl_updates);
-        mSwipeRefreshUpdates.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                forceRefresh();
-                mSwipeRefreshUpdates.setRefreshing(false);
-            }
-        });
-
         setupUpdateAdapter();
     }
 
     public void setupUpdateAdapter() {
-        mOutdatedWarningTextView = (TextView) findViewById(R.id.tv_main_outdated_warning);
-
         mUpdateAdapter = new UpdateAdapter(setupUpdates(), this);
-
-        Date lastUpdated = UpdateHelper.getWhenLastCached(this);
-        String lastUpdatedString;
-        if (lastUpdated.equals(new Date(0))) {
-            lastUpdatedString = "אף פעם";
-        } else {
-            lastUpdatedString = (String) DateFormat.format("kk:mm:ss dd/MM/yyyy", lastUpdated);
-        }
-
-        mInfoTextView = (TextView) findViewById(R.id.tv_main_info);
-        mInfoTextView.setText(String.format("עודכן לאחרונה: %s", lastUpdatedString));
-
         mUpdatesRecyclerView.setAdapter(mUpdateAdapter);
+    }
+
+    public void setupMisc() {
+        mOutdatedWarningTextView = (TextView) findViewById(R.id.tv_main_outdated_warning);
     }
 
     public Update[] setupUpdates() {
@@ -204,12 +185,17 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter.Upd
         }
     }
 
-    /**
-     * Deletes the cache and refreshes, essentially causing it to download from server again
-     */
-    public void forceRefresh() {
-        UpdateHelper.deleteCache(this);
-        setupUpdateAdapter();
+    public void updateInfoTextView() {
+        Date lastUpdated = UpdateHelper.getWhenLastCached(this);
+        String lastUpdatedString;
+        if (lastUpdated.equals(new Date(0))) {
+            lastUpdatedString = "אף פעם";
+        } else {
+            lastUpdatedString = (String) DateFormat.format("kk:mm:ss dd/MM/yyyy", lastUpdated);
+        }
+
+        mInfoTextView = (TextView) findViewById(R.id.tv_main_info);
+        mInfoTextView.setText(String.format("עודכן לאחרונה: %s", lastUpdatedString));
     }
 
     public Update[] getUpdatesFromCache() throws FileNotFoundException, JSONException {
@@ -260,11 +246,6 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter.Upd
                 break;
             case R.id.menu_about:
                 startActivity(new Intent(this, AboutActivity.class));
-                break;
-            case R.id.menu_refresh:
-                mSwipeRefreshUpdates.setRefreshing(true);
-                forceRefresh();
-                mSwipeRefreshUpdates.setRefreshing(false);
                 break;
         }
 

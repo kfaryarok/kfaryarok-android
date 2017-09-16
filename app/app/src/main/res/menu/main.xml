@@ -3,13 +3,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:title=""
-        android:id="@+id/menu_refresh"
-        android:icon="@drawable/ic_refresh_black_24dp"
-        android:orderInCategory="1"
-        app:showAsAction="always" />
-
-    <item
         android:title="@string/menu_settings"
         android:orderInCategory="2"
         android:id="@+id/menu_settings" />
