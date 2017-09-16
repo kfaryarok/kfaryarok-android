@@ -23,6 +23,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.TextViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
@@ -57,7 +58,8 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter.Upd
     private RecyclerView mUpdatesRecyclerView;
     private UpdateAdapter mUpdateAdapter;
     private TextView mInfoTextView;
-    private TextView mOutdatedWarningTextView;
+    public TextView mOutdatedWarningTextView;
+    private SwipeRefreshLayout mSwipeRefreshUpdates;
 
     private SharedPreferences prefs;
 
@@ -100,6 +102,15 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter.Upd
         mUpdatesRecyclerView.setLayoutManager(layoutManager);
         mUpdatesRecyclerView.setHasFixedSize(true);
 
+        mSwipeRefreshUpdates = (SwipeRefreshLayout) findViewById(R.id.srl_updates);
+        mSwipeRefreshUpdates.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                forceRefresh();
+                mSwipeRefreshUpdates.setRefreshing(false);
+            }
+        });
+
         setupUpdateAdapter();
     }
 
@@ -115,9 +126,6 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter.Upd
         } else {
             lastUpdatedString = (String) DateFormat.format("kk:mm:ss dd/MM/yyyy", lastUpdated);
         }
-
-        // only show the outdated TextView if the cached data is older than 3 hours
-
 
         mInfoTextView = (TextView) findViewById(R.id.tv_main_info);
         mInfoTextView.setText(String.format("עודכן לאחרונה: %s", lastUpdatedString));
@@ -196,8 +204,16 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter.Upd
         }
     }
 
+    /**
+     * Deletes the cache and refreshes, essentially causing it to download from server again
+     */
+    public void forceRefresh() {
+        UpdateHelper.deleteCache(this);
+        setupUpdateAdapter();
+    }
+
     public Update[] getUpdatesFromCache() throws FileNotFoundException, JSONException {
-        return UpdateParser.filterUpdates(UpdateParser.parseUpdates(UpdateHelper.getLastSyncedUpdates(this)), PreferenceUtil.getClassPreference(this));
+        return UpdateParser.filterUpdates(UpdateParser.parseUpdates(UpdateHelper.getUpdatesCache(this)), PreferenceUtil.getClassPreference(this));
     }
 
     /**
@@ -244,6 +260,11 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter.Upd
                 break;
             case R.id.menu_about:
                 startActivity(new Intent(this, AboutActivity.class));
+                break;
+            case R.id.menu_refresh:
+                mSwipeRefreshUpdates.setRefreshing(true);
+                forceRefresh();
+                mSwipeRefreshUpdates.setRefreshing(false);
                 break;
         }
 

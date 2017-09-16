@@ -55,7 +55,7 @@ public class UpdateHelper {
             } else {
                 // I know all of these try blocks are ugly but that's how it's gotta be done
                 try {
-                    setLastSyncedUpdates(ctx, json);
+                    setUpdatesCache(ctx, json);
                 } catch (IOException e) {
                     Log.w("UpdateHelper", "Failed caching updates: " + e.getMessage());
                 }
@@ -171,7 +171,7 @@ public class UpdateHelper {
      * @return Cached updates
      * @throws FileNotFoundException If file wasn't found, meaning no cache is available
      */
-    public static String getLastSyncedUpdates(Context ctx) throws FileNotFoundException {
+    public static String getUpdatesCache(Context ctx) throws FileNotFoundException {
         File appDir = ctx.getCacheDir();
         File lastSynced = new File(appDir, "update.json");
         return new Scanner(lastSynced).useDelimiter("\\Z").next();
@@ -183,7 +183,7 @@ public class UpdateHelper {
      * @param data What to cache
      * @throws IOException if file creation/writing fails
      */
-    public static void setLastSyncedUpdates(Context ctx, String data) throws IOException {
+    public static void setUpdatesCache(Context ctx, String data) throws IOException {
         File appDir = ctx.getCacheDir();
         File lastSynced = new File(appDir, "update.json");
         lastSynced.createNewFile();
@@ -212,6 +212,18 @@ public class UpdateHelper {
         File appDir = ctx.getCacheDir();
         File lastSynced = new File(appDir, "update.json");
         return lastSynced.exists();
+    }
+
+    /**
+     * If exists, deletes update.json in the cache directory
+     * @param ctx Used to access the cache directory
+     */
+    public static void deleteCache(Context ctx) {
+        File appDir = ctx.getCacheDir();
+        File lastSynced = new File(appDir, "update.json");
+        if (lastSynced.exists()) {
+            lastSynced.delete();
+        }
     }
 
 }
