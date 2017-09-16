@@ -20,6 +20,7 @@
     <string name="cb_firstlaunch_alerts">הפעל התראות</string>
     <string name="btn_firstlaunch_timepicker">שעת התראה</string>
     <string name="cb_firstlaunch_globalalerts">התריע על עדכונים כלליים</string>
+    <string name="tv_main_warning_outdated">ייתכן שהמידע לא מעודכן!</string>
 
     <!-- Toast strings -->
     <string name="toast_invalid_class">כיתה לא תקינה</string>
@@ -29,6 +30,10 @@
     <string name="toast_devmode_clicks_remaining"> לחיצות נותרו</string>
     <string name="toast_devmode_invalid_server">קישור לא תקין</string>
     <string name="toast_card_copiedtext">טקסט הועתק</string>
+    <string name="toast_load_nocache_nointernet">התחברות לשרת נכשלה ואין עדכונים שמורים, התחבר לאינטרנט</string>
+    <string name="toast_load_defaultserver_revert">כישלון בעיבוד נתונים, מחזיר לשרת עדכון רגיל</string>
+    <string name="toast_load_nointernet_usingcache">התחברות לשרת נכשלה, מציג את העדכונים האחרונים שהורדו</string>
+    <string name="toast_load_failure">כישלון בעיבוד נתונים</string>
 
     <!-- Menu strings -->
     <string name="menu_settings">הגדרות</string>

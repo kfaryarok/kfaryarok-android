@@ -26,6 +26,9 @@ import android.content.Intent;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.NotificationCompat;
 
+import org.json.JSONException;
+
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -132,7 +135,13 @@ public class AlertHelper {
         builder.setContentTitle(context.getString(R.string.alert_updates_title))
                 .setSmallIcon(R.mipmap.ic_launcher);
 
-        Update[] updates = UpdateHelper.getUpdates(context);
+        Update[] updates = new Update[0];
+        try {
+            updates = UpdateHelper.getUpdates(context);
+        } catch (IOException | JSONException e) {
+            // TODO: Replace sync system here too
+            e.printStackTrace();
+        }
         if (updates.length == 0)
             // no updates, so no notification to show then exit
             return null;

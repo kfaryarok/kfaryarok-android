@@ -20,6 +20,8 @@ package io.github.kfaryarok.kfaryarokapp.updates;
 import android.content.Context;
 import android.util.Log;
 
+import org.json.JSONException;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -45,7 +47,7 @@ public class UpdateHelper {
      * Fetches updates, parses them and filters them.
      * @return List of relavant updates, or an empty array if failed parsing
      */
-    public static Update[] getUpdates(Context ctx) throws IOException {
+    public static Update[] getUpdates(Context ctx) throws IOException, JSONException {
         try {
             String json = new UpdateFetcher().execute(ctx).get();
             if ("".equals(json)) {
@@ -199,6 +201,17 @@ public class UpdateHelper {
         File appDir = ctx.getCacheDir();
         File lastSynced = new File(appDir, "update.json");
         return new Date(lastSynced.lastModified());
+    }
+
+    /**
+     * Checks if there's a cached file.
+     * @param ctx Used to access the cache directory
+     * @return Does update.json exist in the cache directory
+     */
+    public static boolean isCached(Context ctx) {
+        File appDir = ctx.getCacheDir();
+        File lastSynced = new File(appDir, "update.json");
+        return lastSynced.exists();
     }
 
 }
