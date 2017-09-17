@@ -116,7 +116,7 @@ public class UpdateHelper {
             try {
                 // first trying to get updates from cache
                 return getUpdatesFromCache(ctx);
-            } catch (FileNotFoundException | JSONException cacheException) {
+            } catch (FileNotFoundException cacheException) {
                 // failed getting data from cache
                 try {
                     // trying to get updates from server
@@ -129,6 +129,10 @@ public class UpdateHelper {
                     }
                     return null;
                 }
+            } catch (JSONException e) {
+                // whatever's in cache is invalid, delete it and retry
+                deleteCache(ctx);
+                return getUpdates(ctx, notifyUi);
             }
         } else {
             Update[] updates;
@@ -154,12 +158,16 @@ public class UpdateHelper {
                     }
 
                     return updates;
-                } catch (FileNotFoundException | JSONException cacheException) {
+                } catch (FileNotFoundException cacheException) {
                     // loading from cache failed too, just error out and tell user
                     if (notifyUi) {
                         main.showNoCacheAndNoInternetError(serverException, cacheException);
                     }
                     return null;
+                } catch (JSONException e) {
+                    // whatever's in cache is invalid, delete it and retry
+                    deleteCache(ctx);
+                    return getUpdates(ctx, notifyUi);
                 }
             }
 
@@ -180,9 +188,6 @@ public class UpdateHelper {
                 if (notifyUi) {
                     main.showToast(ctx.getString(R.string.toast_load_failure));
                 }
-                // commented main out because it might lock the user out of the app
-                // finish();
-                return null;
             }
 
             return updates;
