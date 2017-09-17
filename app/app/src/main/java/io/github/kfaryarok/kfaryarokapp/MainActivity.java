@@ -19,6 +19,7 @@ package io.github.kfaryarok.kfaryarokapp;
 
 import android.content.ClipData;
 import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -29,7 +30,6 @@ import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
-import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -38,18 +38,10 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONException;
-
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.Date;
-
 import io.github.kfaryarok.kfaryarokapp.settings.SettingsActivity;
 import io.github.kfaryarok.kfaryarokapp.updates.Update;
 import io.github.kfaryarok.kfaryarokapp.updates.UpdateAdapter;
-import io.github.kfaryarok.kfaryarokapp.updates.UpdateFetcher;
 import io.github.kfaryarok.kfaryarokapp.updates.UpdateHelper;
-import io.github.kfaryarok.kfaryarokapp.updates.UpdateParser;
 import io.github.kfaryarok.kfaryarokapp.util.PreferenceUtil;
 
 public class MainActivity extends AppCompatActivity implements UpdateAdapter.UpdateAdapterOnClickHandler {
@@ -106,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter.Upd
     }
 
     public void setupUpdateAdapter() {
-        mUpdateAdapter = new UpdateAdapter(setupUpdates(), this);
+        mUpdateAdapter = new UpdateAdapter(UpdateHelper.getUpdates(this, true), this);
         mUpdatesRecyclerView.setAdapter(mUpdateAdapter);
     }
 
@@ -114,96 +106,14 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter.Upd
         mOutdatedWarningTextView = (TextView) findViewById(R.id.tv_main_outdated_warning);
     }
 
-    public Update[] setupUpdates() {
-        // TODO: Look into Android's sync adapters
-
-        // if last sync was less than an hour ago, use cache instead of syncing again
-        long oneHourInMillis = 3600000;
-        if (UpdateHelper.isCached(this) && System.currentTimeMillis() - UpdateHelper.getWhenLastCached(this).getTime() < oneHourInMillis) {
-            try {
-                // first trying to get updates from cache
-                return getUpdatesFromCache();
-            } catch (FileNotFoundException | JSONException cacheException) {
-                // failed getting data from cache
-                try {
-                    // trying to get updates from server
-                    Log.i("MainActivity", "No cache saved, syncing from server");
-                    return UpdateHelper.getUpdates(this);
-                } catch (IOException | JSONException serverException) {
-                    // failed getting data from server too, error out
-                    return showNoCacheAndNoInternetError(serverException, cacheException);
-                }
-            }
-        } else {
-            Update[] updates;
-
-            // last sync was more than an hour ago, try syncing from server first
-            try {
-                updates = UpdateHelper.getUpdates(this);
-            } catch (IOException | JSONException serverException) {
-                // loading from server failed
-                try {
-                    // try showing cached data
-                    updates = getUpdatesFromCache();
-
-                    showToast(getString(R.string.toast_load_nointernet_usingcache));
-
-                    // if cached data is older than 3 hours tell user it might be outdated
-                    long threeHoursInMillis = 10800000;
-                    if (UpdateHelper.isCached(this) && System.currentTimeMillis() - UpdateHelper.getWhenLastCached(this).getTime() > threeHoursInMillis) {
-                        mOutdatedWarningTextView.setVisibility(View.VISIBLE);
-                        mOutdatedWarningTextView.setText(R.string.tv_main_warning_outdated);
-                    }
-
-                    return updates;
-                } catch (FileNotFoundException | JSONException cacheException) {
-                    // loading from cache failed too, just error out and tell user
-                    return showNoCacheAndNoInternetError(serverException, cacheException);
-                }
-            }
-
-            // some fail-safes to help user in case he entered an invalid custom update server
-            if (updates == null) {
-                if (!PreferenceUtil.getUpdateServerPreference(this).equals(UpdateFetcher.DEFAULT_UPDATE_URL)) {
-                    // it failed and it doesn't use the default update url, so switch to default and retry
-                    PreferenceUtil.getSharedPreferences(this).edit()
-                            .putString(getString(R.string.pref_updateserver_string), getString(R.string.pref_updateserver_string_def))
-                            .apply();
-                    showToast(getString(R.string.toast_load_defaultserver_revert));
-                    // this recreates the entire activity, but now with the default update server
-                    recreate();
-                    return null;
-                }
-                // failed somewhere along the line of getting the updates so notify user
-                showToast(getString(R.string.toast_load_failure));
-                // commented this out because it might lock the user out of the app
-                // finish();
-                return null;
-            }
-
-            return updates;
-        }
-    }
-
     public void updateInfoTextView() {
-        Date lastUpdated = UpdateHelper.getWhenLastCached(this);
-        String lastUpdatedString;
-        if (lastUpdated.equals(new Date(0))) {
-            lastUpdatedString = "אף פעם";
-        } else {
-            lastUpdatedString = (String) DateFormat.format("kk:mm:ss dd/MM/yyyy", lastUpdated);
-        }
-
         mInfoTextView = (TextView) findViewById(R.id.tv_main_info);
-        mInfoTextView.setText(String.format("עודכן לאחרונה: %s", lastUpdatedString));
-    }
-
-    public Update[] getUpdatesFromCache() throws FileNotFoundException, JSONException {
-        return UpdateParser.filterUpdates(UpdateParser.parseUpdates(UpdateHelper.getUpdatesCache(this)), PreferenceUtil.getClassPreference(this));
+        mInfoTextView.setText(String.format("עודכן לאחרונה: %s", UpdateHelper.getWhenLastCachedFormatted(this)));
     }
 
     /**
-     * @return *ALWAYS* returns null! Meant to be used with {@link #setupUpdates()} failures.
+     * Meant to be used with {@link UpdateHelper#getUpdates(Context, boolean)} failures.
+     * @return *ALWAYS* returns null!
      */
     public Update[] showNoCacheAndNoInternetError(Exception serverException, Exception cacheException) {
         showToast(getString(R.string.toast_load_nocache_nointernet));
@@ -284,11 +194,7 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter.Upd
                         ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
                         clipboard.setPrimaryClip(ClipData.newPlainText("Update Text", update.getText()));
 
-                        if (mToast != null) {
-                            mToast.cancel();
-                        }
-                        mToast = Toast.makeText(MainActivity.this, getString(R.string.toast_card_copiedtext), Toast.LENGTH_LONG);
-                        mToast.show();
+                        showToast(getString(R.string.toast_card_copiedtext));
                         break;
                 }
                 return false;

@@ -18,7 +18,9 @@
 package io.github.kfaryarok.kfaryarokapp.updates;
 
 import android.content.Context;
+import android.text.format.DateFormat;
 import android.util.Log;
+import android.view.View;
 
 import org.json.JSONException;
 
@@ -32,6 +34,7 @@ import java.util.Date;
 import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
 
+import io.github.kfaryarok.kfaryarokapp.MainActivity;
 import io.github.kfaryarok.kfaryarokapp.R;
 import io.github.kfaryarok.kfaryarokapp.util.PreferenceUtil;
 
@@ -46,8 +49,10 @@ public class UpdateHelper {
     /**
      * Fetches updates, parses them and filters them.
      * @return List of relavant updates, or an empty array if failed parsing
+     * @throws IOException Failed retrieving updates from server
+     * @throws JSONException Invalid JSON retrieved
      */
-    public static Update[] getUpdates(Context ctx) throws IOException, JSONException {
+    public static Update[] getUpdatesFromServer(Context ctx) throws IOException, JSONException {
         try {
             String json = new UpdateFetcher().execute(ctx).get();
             if ("".equals(json)) {
@@ -62,8 +67,125 @@ public class UpdateHelper {
                 return UpdateParser.filterUpdates(UpdateParser.parseUpdates(json), PreferenceUtil.getClassPreference(ctx));
             }
         } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
+            Log.w("UpdateHelper", "Update fetcher thread interrupted (" + e.getMessage() + ")");
             return null;
+        }
+    }
+
+    /**
+     * Parses cached updates and filters them.
+     * @param ctx Used to access cache directory
+     * @return Parsed, filtered updates from cache
+     * @throws FileNotFoundException Nothing is cached
+     * @throws JSONException Cache is invalid
+     */
+    public static Update[] getUpdatesFromCache(Context ctx) throws FileNotFoundException, JSONException {
+        return UpdateParser.filterUpdates(UpdateParser.parseUpdates(UpdateHelper.getUpdatesCache(ctx)), PreferenceUtil.getClassPreference(ctx));
+    }
+
+    /**
+     * Based on when was cache last updated, decided whether cache or server data should be used.
+     * It then parses and filters it.
+     *
+     * If the cached data is older than an hour, it fetches new data, and if it's older than 3 hours,
+     * it shows a warning to the user that it's outdated.
+     *
+     * @param ctx Used to get cache, get strings, and update UI if enabled
+     * @param notifyUi Should this method update {@link MainActivity}'s UI
+     *                 If this is true, ctx ***MUST*** be the instance of {@link MainActivity}!
+     * @return Parsed filtered updates from either cache/server
+     */
+    public static Update[] getUpdates(Context ctx, boolean notifyUi) {
+        // TODO: Look into Android's sync adapters
+
+        // This method is called in MainActivity and in AlertHelper.
+        // In order to show toasts, access to MainActivity's showToast method is needed.
+        // AlertHelper doesn't show any toasts, so access to MainActivity isn't needed.
+        // I don't want to have duplicate methods, so when notifyUi is true,
+        // ctx is assumed to be an instance of MainActivity.
+        // If notifyUi is true but ctx isn't an instance of MainActivity, an NPE will be thrown.
+
+        MainActivity main = null;
+        if (notifyUi && ctx instanceof MainActivity) {
+            main = (MainActivity) ctx;
+        }
+
+        // if last sync was less than an hour ago, use cache instead of syncing again
+        long oneHourInMillis = 3600000;
+        if (UpdateHelper.isCached(ctx) && System.currentTimeMillis() - UpdateHelper.getWhenLastCached(ctx).getTime() < oneHourInMillis) {
+            try {
+                // first trying to get updates from cache
+                return getUpdatesFromCache(ctx);
+            } catch (FileNotFoundException | JSONException cacheException) {
+                // failed getting data from cache
+                try {
+                    // trying to get updates from server
+                    Log.i("UpdateHelper", "No cache saved, syncing from server");
+                    return UpdateHelper.getUpdatesFromServer(ctx);
+                } catch (IOException | JSONException serverException) {
+                    // failed getting data from server too, error out
+                    if (notifyUi) {
+                        main.showNoCacheAndNoInternetError(serverException, cacheException);
+                    }
+                    return null;
+                }
+            }
+        } else {
+            Update[] updates;
+
+            // last sync was more than an hour ago, try syncing from server first
+            try {
+                updates = UpdateHelper.getUpdatesFromServer(ctx);
+            } catch (IOException | JSONException serverException) {
+                // loading from server failed
+                try {
+                    // try showing cached data
+                    updates = getUpdatesFromCache(ctx);
+
+                    if (notifyUi) {
+                        main.showToast(ctx.getString(R.string.toast_load_nointernet_usingcache));
+
+                        // if cached data is older than 3 hours tell user it might be outdated
+                        long threeHoursInMillis = 10800000;
+                        if (UpdateHelper.isCached(ctx) && System.currentTimeMillis() - UpdateHelper.getWhenLastCached(ctx).getTime() > threeHoursInMillis) {
+                            main.mOutdatedWarningTextView.setVisibility(View.VISIBLE);
+                            main.mOutdatedWarningTextView.setText(R.string.tv_main_warning_outdated);
+                        }
+                    }
+
+                    return updates;
+                } catch (FileNotFoundException | JSONException cacheException) {
+                    // loading from cache failed too, just error out and tell user
+                    if (notifyUi) {
+                        main.showNoCacheAndNoInternetError(serverException, cacheException);
+                    }
+                    return null;
+                }
+            }
+
+            // some fail-safes to help user in case he entered an invalid custom update server
+            if (updates == null) {
+                if (!PreferenceUtil.getUpdateServerPreference(ctx).equals(UpdateFetcher.DEFAULT_UPDATE_URL)) {
+                    // it failed and it doesn't use the default update url, so switch to default and retry
+                    PreferenceUtil.getSharedPreferences(ctx).edit()
+                            .putString(ctx.getString(R.string.pref_updateserver_string), ctx.getString(R.string.pref_updateserver_string_def))
+                            .apply();
+                    if (notifyUi) {
+                        main.showToast(ctx.getString(R.string.toast_load_defaultserver_revert));
+                    }
+                    // re-run this method, but now with default server
+                    return getUpdates(ctx, notifyUi);
+                }
+                // failed somewhere along the line of getting the updates so notify user
+                if (notifyUi) {
+                    main.showToast(ctx.getString(R.string.toast_load_failure));
+                }
+                // commented main out because it might lock the user out of the app
+                // finish();
+                return null;
+            }
+
+            return updates;
         }
     }
 
@@ -201,6 +323,21 @@ public class UpdateHelper {
         File appDir = ctx.getCacheDir();
         File lastSynced = new File(appDir, "update.json");
         return new Date(lastSynced.lastModified());
+    }
+
+    /**
+     * Sees when cache was last updated and formats it, in "HH:mm:ss dd/MM/yyyy" format.
+     * If cache was never updated, it returns "אף פעם".
+     * @param ctx Used to see when cache was last updated as a {@link Date}
+     * @return formatted string of the date returned by {@link #getWhenLastCached(Context)}
+     */
+    public static String getWhenLastCachedFormatted(Context ctx) {
+        Date lastUpdated = getWhenLastCached(ctx);
+        if (lastUpdated.equals(new Date(0))) {
+            return "אף פעם";
+        } else {
+            return (String) DateFormat.format("kk:mm:ss dd/MM/yyyy", lastUpdated);
+        }
     }
 
     /**

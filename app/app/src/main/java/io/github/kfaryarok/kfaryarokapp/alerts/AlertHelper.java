@@ -26,9 +26,6 @@ import android.content.Intent;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.NotificationCompat;
 
-import org.json.JSONException;
-
-import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -44,9 +41,9 @@ import io.github.kfaryarok.kfaryarokapp.util.PreferenceUtil;
  * you do not need to give it any values.
  *
  * BUGS:
- * - TODO Alert going of at random times
+ * - DONE Alert going of at random times
  * - DONE Disabling alert doesn't turn if off
- * - TODO Figure out a way to cache data to reduce traffic
+ * - DONE Figure out a way to cache data to reduce traffic
  *
  * @author tbsc on 11/03/2017
  */
@@ -131,35 +128,32 @@ public class AlertHelper {
      * @return The notification created
      */
     public static Notification showNotification(Context context, boolean show) {
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
-        builder.setContentTitle(context.getString(R.string.alert_updates_title))
-                .setSmallIcon(R.mipmap.ic_launcher);
-
-        Update[] updates = new Update[0];
-        try {
-            updates = UpdateHelper.getUpdates(context);
-        } catch (IOException | JSONException e) {
-            // TODO: Replace sync system here too
-            e.printStackTrace();
-        }
-        if (updates.length == 0)
+        Update[] updates = UpdateHelper.getUpdates(context, false);
+        if (updates == null || updates.length == 0) {
             // no updates, so no notification to show then exit
             return null;
+        }
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+        builder.setContentTitle(context.getString(R.string.alert_updates_title) + " (" + UpdateHelper.getWhenLastCachedFormatted(context) + ")")
+                .setSmallIcon(R.mipmap.ic_launcher);
 
         NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
 
         for (Update update : updates) {
-            if (!PreferenceUtil.getGlobalAlertsPreference(context))
+            if (!PreferenceUtil.getGlobalAlertsPreference(context)) {
                 // if set to not show global updates
-                if (update.getAffected().isGlobal())
+                if (update.getAffected().isGlobal()) {
                     // and it's a global update, skip
                     continue;
+                }
+            }
             // add update as line to the notification
             inboxStyle.addLine(UpdateHelper.formatUpdate(update, context));
         }
 
         // give style to builder
-        inboxStyle.setBigContentTitle("עדכונים:");
+        inboxStyle.setBigContentTitle("עדכונים" + " (" + UpdateHelper.getWhenLastCachedFormatted(context) + "):");
         builder.setStyle(inboxStyle);
 
         // create explicit intent to main activity
