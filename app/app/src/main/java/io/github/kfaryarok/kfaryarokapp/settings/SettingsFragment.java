@@ -47,6 +47,8 @@ import io.github.kfaryarok.kfaryarokapp.alerts.BootReceiver;
 import io.github.kfaryarok.kfaryarokapp.prefs.ClassPreference;
 import io.github.kfaryarok.kfaryarokapp.prefs.ClassPreferenceDialogFragmentCompat;
 import io.github.kfaryarok.kfaryarokapp.prefs.TimePreference;
+import io.github.kfaryarok.kfaryarokapp.updates.UpdateFetcher;
+import io.github.kfaryarok.kfaryarokapp.updates.UpdateHelper;
 import io.github.kfaryarok.kfaryarokapp.util.PreferenceUtil;
 
 /**
@@ -170,26 +172,42 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         });
 
         mEtpUpdateServer.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @SuppressLint("ApplySharedPref")
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
                 String server = (String) newValue;
 
-                // check if it's a valid url
-                try {
-                    // allow empty url, so reverting to default server is possible
-                    if (!"".equals(server))
-                        new URL(server);
-                } catch (MalformedURLException e) {
-                    // invalid
+                if ("".equals(server)) {
+                    server = UpdateFetcher.DEFAULT_UPDATE_URL;
+                    PreferenceUtil.getSharedPreferences(getContext()).edit()
+                            .putString(getString(R.string.pref_updateserver_string), getString(R.string.pref_updateserver_string_def))
+                            .commit();
                     if (mToast != null) {
                         mToast.cancel();
                     }
-                    mToast = Toast.makeText(getContext(), getString(R.string.toast_devmode_invalid_server), Toast.LENGTH_LONG);
+                    mToast = Toast.makeText(getContext(), getString(R.string.toast_devmode_defaultserver_revert), Toast.LENGTH_LONG);
                     mToast.show();
-                    return false;
+                } else {
+                    // check if it's a valid url
+                    try {
+                        // use URL to see if the url is valid
+                        new URL(server);
+                    } catch (MalformedURLException e) {
+                        // invalid
+                        if (mToast != null) {
+                            mToast.cancel();
+                        }
+                        mToast = Toast.makeText(getContext(), getString(R.string.toast_devmode_invalid_server), Toast.LENGTH_LONG);
+                        mToast.show();
+                        return false;
+                    }
                 }
 
                 mEtpUpdateServer.setSummary(server);
+
+                // if changing server, than delete cache so new data from new server is fetched
+                UpdateHelper.deleteCache(getContext());
+
                 return true;
             }
         });

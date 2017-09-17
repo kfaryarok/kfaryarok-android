@@ -84,7 +84,8 @@ public class PreferenceUtil {
 
     public static String getUpdateServerPreference(Context ctx) {
         if (prefs == null) prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-        return prefs.getString(ctx.getString(R.string.pref_updateserver_string), UpdateFetcher.DEFAULT_UPDATE_URL);
+        String server = prefs.getString(ctx.getString(R.string.pref_updateserver_string), UpdateFetcher.DEFAULT_UPDATE_URL);
+        return "".equals(server) ? UpdateFetcher.DEFAULT_UPDATE_URL : server;
     }
 
 }

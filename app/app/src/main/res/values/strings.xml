@@ -29,6 +29,7 @@
     <string name="toast_devmode_disabled">מצב מפתח בוטל</string>
     <string name="toast_devmode_clicks_remaining"> לחיצות נותרו</string>
     <string name="toast_devmode_invalid_server">קישור לא תקין</string>
+    <string name="toast_devmode_defaultserver_revert">מחזיר לשרת עדכון רגיל</string>
     <string name="toast_card_copiedtext">טקסט הועתק</string>
     <string name="toast_load_nocache_nointernet">התחברות לשרת נכשלה ואין עדכונים שמורים, התחבר לאינטרנט</string>
     <string name="toast_load_defaultserver_revert">כישלון בעיבוד נתונים, מחזיר לשרת עדכון רגיל</string>
