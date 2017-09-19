@@ -65,7 +65,8 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     private ClassPreference mCdClass;
     // private EditTextPreference mEtpClass;
     private EditTextPreference mEtpUpdateServer;
-    private CheckBoxPreference mCbReset;
+    private Preference mForceFetch;
+    private Preference mResetApp;
 
     private Toast mToast;
 
@@ -88,7 +89,8 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         mCdClass = (ClassPreference) findPreference(getString(R.string.pref_class_string));
         // mEtpClass = (EditTextPreference) findPreference(getString(R.string.pref_class_string));
         mEtpUpdateServer = (EditTextPreference) findPreference(getString(R.string.pref_updateserver_string));
-        mCbReset = (CheckBoxPreference) findPreference(getString(R.string.pref_reset_bool));
+        mForceFetch = findPreference(getString(R.string.pref_forcefetch));
+        mResetApp = findPreference(getString(R.string.pref_reset_bool));
 
         boolean alertsEnabled = PreferenceUtil.getAlertEnabledPreference(getContext());
         mTpAlertTime.setEnabled(alertsEnabled);
@@ -156,11 +158,11 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             prefCategoryAdvanced.removeAll();
         }
 
-        mCbReset.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+        mResetApp.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 
             @SuppressLint("ApplySharedPref")
             @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
+            public boolean onPreferenceClick(Preference preference) {
                 // clear prefs
                 // because app quits immediately, we need to clear prefs immediately
                 PreferenceUtil.getSharedPreferences(getContext()).edit().clear().commit();
@@ -169,6 +171,21 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 return true;
             }
 
+        });
+
+        mForceFetch.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                UpdateHelper.deleteCache(getContext());
+                // calling and ignoring to cause caching
+                UpdateHelper.getUpdates(getContext(), false);
+                if (mToast != null) {
+                    mToast.cancel();
+                }
+                mToast = Toast.makeText(getContext(), getString(R.string.toast_devmode_forcefetch), Toast.LENGTH_LONG);
+                mToast.show();
+                return true;
+            }
         });
 
         mEtpUpdateServer.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {

@@ -37,10 +37,12 @@
         <EditTextPreference
             android:title="@string/settings_advancedcategory_server"
             android:key="@string/pref_updateserver_string" />
-        <CheckBoxPreference
+        <Preference
+            android:title="@string/settings_advancedcategory_forcefetch"
+            android:key="@string/pref_forcefetch" />
+        <Preference
             android:title="@string/settings_advancedcategory_reset"
             android:summary="@string/settings_advancedcategory_reset_summary"
-            android:key="@string/pref_reset_bool"
-            android:defaultValue="false" />
+            android:key="@string/pref_reset_bool" />
     </android.support.v7.preference.PreferenceCategory>
 </android.support.v7.preference.PreferenceScreen>

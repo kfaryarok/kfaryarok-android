@@ -30,6 +30,7 @@
     <string name="toast_devmode_clicks_remaining"> לחיצות נותרו</string>
     <string name="toast_devmode_invalid_server">קישור לא תקין</string>
     <string name="toast_devmode_defaultserver_revert">מחזיר לשרת עדכון רגיל</string>
+    <string name="toast_devmode_forcefetch">הורדו עדכונים מהשרת בהצלחה</string>
     <string name="toast_card_copiedtext">טקסט הועתק</string>
     <string name="toast_load_nocache_nointernet">התחברות לשרת נכשלה ואין עדכונים שמורים, התחבר לאינטרנט</string>
     <string name="toast_load_defaultserver_revert">כישלון בעיבוד נתונים, מחזיר לשרת עדכון רגיל</string>
@@ -47,6 +48,7 @@
     <string name="settings_alertcategory_enabled">פעיל</string>
     <string name="settings_advancedcategory_title">הגדרות מתקדמות</string>
     <string name="settings_advancedcategory_server">שרת עדכון</string>
+    <string name="settings_advancedcategory_forcefetch">כפה הורדת עדכונים מחדש</string>
     <string name="settings_advancedcategory_reset">אפס הגדרות</string>
     <string name="settings_advancedcategory_reset_summary">מיד לאחר לחיצה על הכפתור, כל ההגדרות ימחקו!</string>
     <string name="settings_class">כיתה</string>
@@ -54,6 +56,7 @@
     <!-- Preference key strings -->
     <string name="pref_class_string" translatable="false">class</string>
     <string name="pref_updateserver_string" translatable="false">update_server</string>
+    <string name="pref_forcefetch">force_fetch</string>
     <string name="pref_alerts_enabled_bool" translatable="false">alerts_enabled</string>
     <string name="pref_globalalerts_enabled_bool" translatable="false">global_alerts_enabled</string>
     <string name="pref_launched_before_bool" translatable="false">launched_before</string>
