@@ -56,9 +56,10 @@ public class UpdateFetcher extends AsyncTask<Context, Void, String> {
     public static String fetchUpdates(Context ctx) {
         try {
             // TODO debug - remove after default server is setup
-            if (buildUrl(ctx) == null)
+            URL url = buildUrl(ctx);
+            if (url == null)
                 return TestUtil.getTestJsonString();
-            return getResponseFromHttpUrl(buildUrl(ctx));
+            return getResponseFromHttpUrl(url);
         } catch (IOException e) {
             Log.i("UpdateFetcher", "Fetching updates failed; probably no internet access, using cached updates instead (" + e.getMessage() + ")");
             return "";

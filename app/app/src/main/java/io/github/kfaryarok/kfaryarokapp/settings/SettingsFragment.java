@@ -31,6 +31,7 @@ import android.support.v7.preference.EditTextPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceCategory;
 import android.support.v7.preference.PreferenceFragmentCompat;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -39,6 +40,7 @@ import android.widget.Toast;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.concurrent.ExecutionException;
 
 import io.github.kfaryarok.kfaryarokapp.MainActivity;
 import io.github.kfaryarok.kfaryarokapp.R;
@@ -47,8 +49,11 @@ import io.github.kfaryarok.kfaryarokapp.alerts.BootReceiver;
 import io.github.kfaryarok.kfaryarokapp.prefs.ClassPreference;
 import io.github.kfaryarok.kfaryarokapp.prefs.ClassPreferenceDialogFragmentCompat;
 import io.github.kfaryarok.kfaryarokapp.prefs.TimePreference;
+import io.github.kfaryarok.kfaryarokapp.updates.Update;
 import io.github.kfaryarok.kfaryarokapp.updates.UpdateFetcher;
 import io.github.kfaryarok.kfaryarokapp.updates.UpdateHelper;
+import io.github.kfaryarok.kfaryarokapp.updates.UpdateTask;
+import io.github.kfaryarok.kfaryarokapp.util.functional.Consumer;
 import io.github.kfaryarok.kfaryarokapp.util.PreferenceUtil;
 
 /**
@@ -177,13 +182,28 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 UpdateHelper.deleteCache(getContext());
-                // calling and ignoring to cause caching
-                UpdateHelper.getUpdates(getContext(), false);
-                if (mToast != null) {
-                    mToast.cancel();
+                Update[] updates = new Update[0];
+                try {
+                    updates = new UpdateTask(new Consumer<String>() {
+                        @Override
+                        public void accept(String s) {
+                            if (mToast != null) {
+                                mToast.cancel();
+                            }
+                            mToast = Toast.makeText(getContext(), s, Toast.LENGTH_LONG);
+                            mToast.show();
+                        }
+                    }).execute(getContext()).get();
+                } catch (InterruptedException | ExecutionException e) {
+                    Log.e("SettingsFragment", "UpdateTask interrupted: " + e.getMessage());
                 }
-                mToast = Toast.makeText(getContext(), getString(R.string.toast_devmode_forcefetch), Toast.LENGTH_LONG);
-                mToast.show();
+                if (updates != null) {
+                    if (mToast != null) {
+                        mToast.cancel();
+                    }
+                    mToast = Toast.makeText(getContext(), getString(R.string.toast_devmode_forcefetch), Toast.LENGTH_LONG);
+                    mToast.show();
+                }
                 return true;
             }
         });

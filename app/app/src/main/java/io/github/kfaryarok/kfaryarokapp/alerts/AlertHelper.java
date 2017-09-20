@@ -25,15 +25,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.NotificationCompat;
+import android.util.Log;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.concurrent.ExecutionException;
 
 import io.github.kfaryarok.kfaryarokapp.MainActivity;
 import io.github.kfaryarok.kfaryarokapp.R;
 import io.github.kfaryarok.kfaryarokapp.prefs.TimePreference;
 import io.github.kfaryarok.kfaryarokapp.updates.Update;
 import io.github.kfaryarok.kfaryarokapp.updates.UpdateHelper;
+import io.github.kfaryarok.kfaryarokapp.updates.UpdateTask;
 import io.github.kfaryarok.kfaryarokapp.util.PreferenceUtil;
 
 /**
@@ -128,9 +131,15 @@ public class AlertHelper {
      * @return The notification created
      */
     public static Notification showNotification(Context context, boolean show) {
-        Update[] updates = UpdateHelper.getUpdates(context, false);
-        if (updates == null || updates.length == 0) {
-            // no updates, so no notification to show then exit
+        Update[] updates;
+        try {
+            updates = new UpdateTask().execute(context).get();
+        } catch (InterruptedException | ExecutionException e) {
+            Log.e("AlertHelper", "UpdateTask interrupted: " + e.getMessage());
+            return null;
+        }
+        if (updates == null) {
+            // error; exit
             return null;
         }
 
@@ -150,6 +159,10 @@ public class AlertHelper {
             }
             // add update as line to the notification
             inboxStyle.addLine(UpdateHelper.formatUpdate(update, context));
+        }
+
+        if (updates.length == 0) {
+            inboxStyle.addLine("אין עדכונים");
         }
 
         // give style to builder
