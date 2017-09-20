@@ -38,8 +38,7 @@ Actual example:
 			},
 			{
 				"text": "עדכון 2",
-				"classes": 
-				[
+				"classes": [
 					"ט2",
 					"יא7",
 					"ז11"
