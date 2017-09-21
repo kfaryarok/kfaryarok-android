@@ -21,9 +21,9 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.TextViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
@@ -43,10 +43,10 @@ import android.widget.ViewSwitcher;
 import java.util.concurrent.ExecutionException;
 
 import io.github.kfaryarok.kfaryarokapp.settings.SettingsActivity;
-import io.github.kfaryarok.kfaryarokapp.updates.api.Update;
 import io.github.kfaryarok.kfaryarokapp.updates.UpdateAdapter;
 import io.github.kfaryarok.kfaryarokapp.updates.UpdateHelper;
 import io.github.kfaryarok.kfaryarokapp.updates.UpdateTask;
+import io.github.kfaryarok.kfaryarokapp.updates.api.Update;
 import io.github.kfaryarok.kfaryarokapp.util.PreferenceUtil;
 import io.github.kfaryarok.kfaryarokapp.util.functional.Consumer;
 
@@ -110,9 +110,11 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter.Upd
     }
 
     public void setupLayoutDirection() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
-        }
+        ViewCompat.setLayoutDirection(getWindow().getDecorView(), ViewCompat.LAYOUT_DIRECTION_LTR);
+        // previous way of setting layout direction, the new one works below API 17 so that's good
+        // if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+        //     getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+        // }
     }
 
     public void setupUpdateRecyclerView() {
