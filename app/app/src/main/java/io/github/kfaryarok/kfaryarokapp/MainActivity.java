@@ -35,7 +35,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
@@ -57,7 +56,6 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter.Upd
     private ViewSwitcher mViewSwitcher;
     private TextView mInfoTextView;
     public TextView mOutdatedWarningTextView;
-    private ProgressBar mLoadProgressBar;
 
     private SharedPreferences prefs;
 
@@ -86,15 +84,13 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter.Upd
 
     public void showLoadingScreen() {
         mViewSwitcher = (ViewSwitcher) findViewById(R.id.vs_main_loading_data);
-        mLoadProgressBar = (ProgressBar) findViewById(R.id.pb_main_loading);
-        mViewSwitcher.showNext();
     }
 
     public void hideLoadingScreen() {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                mViewSwitcher.showPrevious();
+                mViewSwitcher.showNext();
             }
         }, 150); // artificial delay
     }
