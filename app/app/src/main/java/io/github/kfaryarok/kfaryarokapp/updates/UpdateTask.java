@@ -55,7 +55,7 @@ public class UpdateTask extends AsyncTask<Context, String, Update[]> {
 
     @Override
     protected Update[] doInBackground(Context... params) {
-        return getUpdates(params[0], mShowToast);
+        return getUpdates(params[0]);
     }
 
     @Override
@@ -71,10 +71,9 @@ public class UpdateTask extends AsyncTask<Context, String, Update[]> {
      * it shows a warning to the user that it's outdated.
      *
      * @param ctx Used to get cache, get strings, and update UI if enabled
-     * @param showToast Let callers of this method define how/if showing toasts should be done
      * @return Parsed filtered updates from either cache/server
      */
-    public Update[] getUpdates(Context ctx, Consumer<String> showToast) {
+    public Update[] getUpdates(Context ctx) {
         // TODO: Look into Android's sync adapters
 
         // if last sync was less than an hour ago, use cache instead of syncing again
@@ -83,20 +82,25 @@ public class UpdateTask extends AsyncTask<Context, String, Update[]> {
                 // first trying to get updates from cache
                 return UpdateHelper.getUpdatesFromCache(ctx);
             } catch (FileNotFoundException cacheException) {
-                // failed getting data from cache
+                // failed getting data from cache; no cache
                 try {
                     // trying to get updates from server
                     Log.i("UpdateHelper", "No cache saved, syncing from server");
                     return UpdateHelper.getUpdatesFromServer(ctx);
-                } catch (IOException | JSONException serverException) {
+                } catch (IOException serverException) {
                     // failed getting data from server too, error out
                     showNoCacheAndNoInternetError(ctx, serverException, cacheException);
                     return null;
+                } catch (JSONException e) {
+                    // got stuff from server, but invalid data
+                    // try changing to default server and retrying
+                    resetToDefaultServerAndNotify(ctx);
+                    return getUpdates(ctx);
                 }
             } catch (JSONException e) {
                 // whatever's in cache is invalid, delete it and retry
                 UpdateHelper.deleteCache(ctx);
-                return getUpdates(ctx, showToast);
+                return getUpdates(ctx);
             }
         } else {
             Update[] updates;
@@ -104,12 +108,12 @@ public class UpdateTask extends AsyncTask<Context, String, Update[]> {
             // last sync was more than an hour ago, try syncing from server first
             try {
                 updates = UpdateHelper.getUpdatesFromServer(ctx);
-            } catch (IOException | JSONException serverException) {
+            } catch (IOException serverException) {
                 // loading from server failed
                 try {
                     // try showing cached data
                     updates = UpdateHelper.getUpdatesFromCache(ctx);
-                    showToast.accept(ctx.getString(R.string.toast_load_nointernet_usingcache));
+                    publishProgress(ctx.getString(R.string.toast_load_nointernet_usingcache));
                     return updates;
                 } catch (FileNotFoundException cacheException) {
                     // loading from cache failed too, just error out and tell user
@@ -117,24 +121,13 @@ public class UpdateTask extends AsyncTask<Context, String, Update[]> {
                 } catch (JSONException e) {
                     // whatever's in cache is invalid, delete it and retry
                     UpdateHelper.deleteCache(ctx);
-                    return getUpdates(ctx, showToast);
+                    return getUpdates(ctx);
                 }
-            }
-
-            // some fail-safes to help user in case he entered an invalid custom update server
-            // TODO: This can't ever be reached, make sure it can
-            if (updates == null) {
-                if (!PreferenceUtil.getUpdateServerPreference(ctx).equals(UpdateFetcher.DEFAULT_UPDATE_URL)) {
-                    // it failed and it doesn't use the default update url, so switch to default and retry
-                    PreferenceUtil.getSharedPreferences(ctx).edit()
-                            .putString(ctx.getString(R.string.pref_updateserver_string), ctx.getString(R.string.pref_updateserver_string_def))
-                            .apply();
-                    showToast.accept(ctx.getString(R.string.toast_load_defaultserver_revert));
-                    // re-run this method, but now with default server
-                    return getUpdates(ctx, showToast);
-                }
-                // failed somewhere along the line of getting the updates so notify user
-                showToast.accept(ctx.getString(R.string.toast_load_failure));
+            } catch (JSONException e) {
+                // got stuff from server but it's invalid
+                // change update server to default and retry
+                resetToDefaultServerAndNotify(ctx);
+                return getUpdates(ctx);
             }
 
             return updates;
@@ -144,13 +137,35 @@ public class UpdateTask extends AsyncTask<Context, String, Update[]> {
     /**
      * @return *ALWAYS* returns null!
      */
-    public Update[] showNoCacheAndNoInternetError(Context ctx, Exception serverException, Exception cacheException) {
+    private Update[] showNoCacheAndNoInternetError(Context ctx, Exception serverException, Exception cacheException) {
         publishProgress(ctx.getString(R.string.toast_load_nocache_nointernet));
         Log.e("MainActivity",
                 "Failed getting updates from server and cache (cache exception: "
                         + cacheException.getMessage()
                         + ", server exception: " + serverException.getMessage() + ")");
         return null;
+    }
+
+    /**
+     * Resets to the default update server if it's not set to it already.
+     * ALWAYS deletes cache.
+     * @param ctx Used to get preferences
+     * @return Was the update server actually changed
+     */
+    private boolean resetToDefaultServerAndNotify(Context ctx) {
+        UpdateHelper.deleteCache(ctx);
+
+        if (!PreferenceUtil.getUpdateServerPreference(ctx).equals(UpdateFetcher.DEFAULT_UPDATE_URL)) {
+            // it failed and it doesn't use the default update url, so switch to default
+            PreferenceUtil.getSharedPreferences(ctx).edit()
+                    .putString(ctx.getString(R.string.pref_updateserver_string), ctx.getString(R.string.pref_updateserver_string_def))
+                    .apply();
+            publishProgress(ctx.getString(R.string.toast_load_defaultserver_revert));
+
+            return true;
+        }
+
+        return false;
     }
 
 }
