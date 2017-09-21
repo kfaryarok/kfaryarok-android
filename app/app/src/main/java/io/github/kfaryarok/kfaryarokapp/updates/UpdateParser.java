@@ -24,6 +24,11 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.github.kfaryarok.kfaryarokapp.updates.api.ClassesAffected;
+import io.github.kfaryarok.kfaryarokapp.updates.api.GlobalAffected;
+import io.github.kfaryarok.kfaryarokapp.updates.api.Update;
+import io.github.kfaryarok.kfaryarokapp.updates.api.UpdateImpl;
+
 /**
  * Takes the JSON string, parses it and returns an array of updates.
  * For information about how the JSON should be constructed, see JSONDATA.md.

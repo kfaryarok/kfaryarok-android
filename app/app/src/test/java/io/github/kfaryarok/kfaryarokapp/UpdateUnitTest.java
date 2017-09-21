@@ -21,9 +21,9 @@ import android.content.Context;
 
 import org.junit.Test;
 
-import io.github.kfaryarok.kfaryarokapp.updates.Update;
+import io.github.kfaryarok.kfaryarokapp.updates.api.Update;
 import io.github.kfaryarok.kfaryarokapp.updates.UpdateHelper;
-import io.github.kfaryarok.kfaryarokapp.updates.UpdateImpl;
+import io.github.kfaryarok.kfaryarokapp.updates.api.UpdateImpl;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;

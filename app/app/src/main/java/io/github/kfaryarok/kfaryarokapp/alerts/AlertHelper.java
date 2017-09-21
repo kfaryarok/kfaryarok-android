@@ -34,7 +34,7 @@ import java.util.concurrent.ExecutionException;
 import io.github.kfaryarok.kfaryarokapp.MainActivity;
 import io.github.kfaryarok.kfaryarokapp.R;
 import io.github.kfaryarok.kfaryarokapp.prefs.TimePreference;
-import io.github.kfaryarok.kfaryarokapp.updates.Update;
+import io.github.kfaryarok.kfaryarokapp.updates.api.Update;
 import io.github.kfaryarok.kfaryarokapp.updates.UpdateHelper;
 import io.github.kfaryarok.kfaryarokapp.updates.UpdateTask;
 import io.github.kfaryarok.kfaryarokapp.util.PreferenceUtil;

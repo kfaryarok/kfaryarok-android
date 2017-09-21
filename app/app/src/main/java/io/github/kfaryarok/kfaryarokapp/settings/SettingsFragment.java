@@ -49,7 +49,7 @@ import io.github.kfaryarok.kfaryarokapp.alerts.BootReceiver;
 import io.github.kfaryarok.kfaryarokapp.prefs.ClassPreference;
 import io.github.kfaryarok.kfaryarokapp.prefs.ClassPreferenceDialogFragmentCompat;
 import io.github.kfaryarok.kfaryarokapp.prefs.TimePreference;
-import io.github.kfaryarok.kfaryarokapp.updates.Update;
+import io.github.kfaryarok.kfaryarokapp.updates.api.Update;
 import io.github.kfaryarok.kfaryarokapp.updates.UpdateFetcher;
 import io.github.kfaryarok.kfaryarokapp.updates.UpdateHelper;
 import io.github.kfaryarok.kfaryarokapp.updates.UpdateTask;
@@ -129,30 +129,6 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         });
 
         mCdClass.setSummary(PreferenceUtil.getClassPreference(getContext()));
-
-//        mEtpClass.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-//
-//            @Override
-//            public boolean onPreferenceChange(Preference preference, Object newValue) {
-//                // if entered class name isn't valid, prevent saving it
-//                if (!ClassUtil.checkValidHebrewClassName((String) newValue)) {
-//                    if (mToast != null) {
-//                        mToast.cancel();
-//                    }
-//                    mToast = Toast.makeText(getContext(), getString(R.string.toast_invalid_class), Toast.LENGTH_LONG);
-//                    mToast.show();
-//                    return false;
-//                }
-//
-//                // update summary
-//                mEtpClass.setSummary((String) newValue);
-//                return true;
-//            }
-//
-//        });
-//
-//        // set summary to contain current value
-//        mEtpClass.setSummary(PreferenceUtil.getClassPreference(getContext()));
 
         // set advanced settings prefscreen category's visibility based on prefs
         PreferenceCategory prefCategoryAdvanced = (PreferenceCategory) findPreference(getString(R.string.settings_advanced_category));

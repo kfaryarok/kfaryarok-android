@@ -34,6 +34,8 @@ import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
 
 import io.github.kfaryarok.kfaryarokapp.R;
+import io.github.kfaryarok.kfaryarokapp.updates.api.ClassesAffected;
+import io.github.kfaryarok.kfaryarokapp.updates.api.Update;
 import io.github.kfaryarok.kfaryarokapp.util.PreferenceUtil;
 
 /**

@@ -43,7 +43,7 @@ import android.widget.ViewSwitcher;
 import java.util.concurrent.ExecutionException;
 
 import io.github.kfaryarok.kfaryarokapp.settings.SettingsActivity;
-import io.github.kfaryarok.kfaryarokapp.updates.Update;
+import io.github.kfaryarok.kfaryarokapp.updates.api.Update;
 import io.github.kfaryarok.kfaryarokapp.updates.UpdateAdapter;
 import io.github.kfaryarok.kfaryarokapp.updates.UpdateHelper;
 import io.github.kfaryarok.kfaryarokapp.updates.UpdateTask;
@@ -141,122 +141,7 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter.Upd
             public void accept(String s) {
                 showToast(s);
             }
-        }).execute(this).get(); // new AsyncTask<Context, String, Update[]>() {
-//
-//            private Toast mToast;
-//
-//            @Override
-//            protected Update[] doInBackground(Context... params) {
-//                return getUpdates(params[0]);
-//            }
-//
-//            public Update[] getUpdates(Context ctx) {
-//                // if last sync was less than an hour ago, use cache instead of syncing again
-//                if (!UpdateHelper.isCacheOlderThan1Hour(ctx)) {
-//                    try {
-//                        // first trying to get updates from cache
-//                        return UpdateHelper.getUpdatesFromCache(ctx);
-//                    } catch (FileNotFoundException cacheException) {
-//                        // failed getting data from cache
-//                        try {
-//                            // trying to get updates from server
-//                            Log.i("UpdateHelper", "No cache saved, syncing from server");
-//                            return getUpdatesFromServer(ctx);
-//                        } catch (IOException | JSONException serverException) {
-//                            // failed getting data from server too, error out
-//                            return showNoCacheAndNoInternetError(serverException, cacheException);
-//                        }
-//                    } catch (JSONException e) {
-//                        // whatever's in cache is invalid, delete it and retry
-//                        UpdateHelper.deleteCache(ctx);
-//                        return getUpdates(ctx);
-//                    }
-//                } else {
-//                    Update[] updates;
-//
-//                    // last sync was more than an hour ago, try syncing from server first
-//                    try {
-//                        updates = getUpdatesFromServer(ctx);
-//                    } catch (IOException | JSONException serverException) {
-//                        // loading from server failed
-//                        try {
-//                            // try showing cached data
-//                            updates = UpdateHelper.getUpdatesFromCache(ctx);
-//
-//                            publishProgress(ctx.getString(R.string.toast_load_nointernet_usingcache));
-//
-//                            return updates;
-//                        } catch (FileNotFoundException cacheException) {
-//                            // loading from cache failed too, just error out and tell user
-//                            return showNoCacheAndNoInternetError(serverException, cacheException);
-//                        } catch (JSONException e) {
-//                            // whatever's in cache is invalid, delete it and retry
-//                            UpdateHelper.deleteCache(ctx);
-//                            return getUpdates(ctx);
-//                        }
-//                    }
-//
-//                    // some fail-safes to help user in case he entered an invalid custom update server
-//                    if (updates == null) {
-//                        if (!PreferenceUtil.getUpdateServerPreference(ctx).equals(UpdateFetcher.DEFAULT_UPDATE_URL)) {
-//                            // it failed and it doesn't use the default update url, so switch to default and retry
-//                            PreferenceUtil.getSharedPreferences(ctx).edit()
-//                                    .putString(ctx.getString(R.string.pref_updateserver_string), ctx.getString(R.string.pref_updateserver_string_def))
-//                                    .apply();
-//                            publishProgress(ctx.getString(R.string.toast_load_defaultserver_revert));
-//                            // re-run this method, but now with default server
-//                            return getUpdates(ctx);
-//                        }
-//                        // failed somewhere along the line of getting the updates so notify user
-//                        publishProgress(ctx.getString(R.string.toast_load_failure));
-//                    }
-//
-//                    return updates;
-//                }
-//            }
-//
-//            public Update[] getUpdatesFromServer(Context ctx) throws IOException, JSONException {
-//                String json = UpdateFetcher.fetchUpdates(ctx);
-//                if ("".equals(json)) {
-//                    throw new IOException();
-//                } else {
-//                    // I know all of these try blocks are ugly but that's how it's gotta be done
-//                    try {
-//                        UpdateHelper.setUpdatesCache(ctx, json);
-//                    } catch (IOException e) {
-//                        Log.w("UpdateHelper", "Failed caching updates: " + e.getMessage());
-//                    }
-//                    return UpdateParser.filterUpdates(UpdateParser.parseUpdates(json), PreferenceUtil.getClassPreference(ctx));
-//                }
-//            }
-//
-//            /**
-//             * @return *ALWAYS* returns null!
-//             */
-//            public Update[] showNoCacheAndNoInternetError(Exception serverException, Exception cacheException) {
-//                publishProgress(getString(R.string.toast_load_nocache_nointernet));
-//                Log.e("MainActivity",
-//                        "Failed getting updates from server and cache (cache exception: "
-//                                + cacheException.getMessage()
-//                                + ", server exception: " + serverException.getMessage() + ")");
-//                return null;
-//            }
-//
-//            @Override
-//            protected void onProgressUpdate(String... values) {
-//                if (mToast != null) {
-//                    mToast.cancel();
-//                }
-//                mToast = Toast.makeText(MainActivity.this, values[0], Toast.LENGTH_LONG);
-//                mToast.show();
-//            }
-//
-//            @Override
-//            protected void onPostExecute(Update[] updates) {
-//
-//            }
-//
-//        }.execute(this).get();
+        }).execute(this).get();
     }
 
     public void setupMisc() {

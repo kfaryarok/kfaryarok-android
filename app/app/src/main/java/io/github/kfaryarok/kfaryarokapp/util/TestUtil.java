@@ -21,9 +21,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import io.github.kfaryarok.kfaryarokapp.updates.ClassesAffected;
-import io.github.kfaryarok.kfaryarokapp.updates.Update;
-import io.github.kfaryarok.kfaryarokapp.updates.UpdateImpl;
+import io.github.kfaryarok.kfaryarokapp.updates.api.ClassesAffected;
+import io.github.kfaryarok.kfaryarokapp.updates.api.Update;
+import io.github.kfaryarok.kfaryarokapp.updates.api.UpdateImpl;
 import io.github.kfaryarok.kfaryarokapp.updates.UpdateParser;
 
 /**

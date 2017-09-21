@@ -54,26 +54,4 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        if (mFirstLaunchActivity) {
-//            // first launch, then put the first launch menu
-//            getMenuInflater().inflate(R.menu.first_launch, menu);
-//            return true;
-//        } else {
-//            // normal settings, so show normal menu
-//            return super.onCreateOptionsMenu(menu);
-//        }
-//    }
-
-
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        if (item.getItemId() == R.id.menu_firstlaunch_accept) {
-//            finish();
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
-
 }

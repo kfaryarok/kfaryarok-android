@@ -27,6 +27,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import io.github.kfaryarok.kfaryarokapp.R;
+import io.github.kfaryarok.kfaryarokapp.updates.api.Update;
 import io.github.kfaryarok.kfaryarokapp.util.PreferenceUtil;
 import io.github.kfaryarok.kfaryarokapp.util.functional.Consumer;
 import io.github.kfaryarok.kfaryarokapp.util.functional.FunctionalUtil;

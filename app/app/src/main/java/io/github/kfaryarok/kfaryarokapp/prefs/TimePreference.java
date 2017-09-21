@@ -86,8 +86,4 @@ public class TimePreference extends DialogPreference {
         setSummary(value);
     }
 
-    public void persistStringValue(String value) {
-        persistString(value);
-    }
-
 }
