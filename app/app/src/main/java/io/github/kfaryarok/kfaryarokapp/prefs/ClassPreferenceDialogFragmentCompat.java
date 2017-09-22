@@ -65,8 +65,8 @@ public class ClassPreferenceDialogFragmentCompat extends PreferenceDialogFragmen
     protected void onBindDialogView(View v) {
         super.onBindDialogView(v);
 
-        mGradeRadioGroup = (RadioGroup) v.findViewById(R.id.rg_dialog_grade);
-        mClassNumPicker = (NumberPicker) v.findViewById(R.id.np_dialog_class_num);
+        mGradeRadioGroup = v.findViewById(R.id.rg_dialog_grade);
+        mClassNumPicker = v.findViewById(R.id.np_dialog_class_num);
         final ClassPreference pref = (ClassPreference) getPreference();
 
         // set options and set current selected entries

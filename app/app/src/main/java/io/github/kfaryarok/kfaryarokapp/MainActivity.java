@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter.Upd
     }
 
     public void showLoadingScreen() {
-        mViewSwitcher = (ViewSwitcher) findViewById(R.id.vs_main_loading_data);
+        mViewSwitcher = findViewById(R.id.vs_main_loading_data);
     }
 
     public void hideLoadingScreen() {
@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter.Upd
     }
 
     public void setupUpdateRecyclerView() {
-        mUpdatesRecyclerView = (RecyclerView) findViewById(R.id.rv_updates);
+        mUpdatesRecyclerView = findViewById(R.id.rv_updates);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mUpdatesRecyclerView.setLayoutManager(layoutManager);
@@ -143,11 +143,11 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter.Upd
     }
 
     public void setupMisc() {
-        mOutdatedWarningTextView = (TextView) findViewById(R.id.tv_main_outdated_warning);
+        mOutdatedWarningTextView = findViewById(R.id.tv_main_outdated_warning);
     }
 
     public void updateInfoTextView() {
-        mInfoTextView = (TextView) findViewById(R.id.tv_main_info);
+        mInfoTextView = findViewById(R.id.tv_main_info);
         mInfoTextView.setText(String.format("עודכן לאחרונה: %s", UpdateHelper.getWhenLastCachedFormatted(this)));
 
         // if cached data is older than 3 hours tell user it might be outdated
@@ -198,7 +198,7 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter.Upd
     @Override
     public void onClickCard(View v, Update update) {
         // if card is clicked and the line count is bigger than 3 (meaning it can be expanded/"dexpanded")
-        TextView tvText = (TextView) v.findViewById(R.id.tv_updatecard_text);
+        TextView tvText = v.findViewById(R.id.tv_updatecard_text);
         View viewExpand = v.findViewById(R.id.view_updatecard_expand);
         if (tvText.getLineCount() > 3) {
             // if current max lines is 3, expand to 100 lines, and else "dexpand" back to 3

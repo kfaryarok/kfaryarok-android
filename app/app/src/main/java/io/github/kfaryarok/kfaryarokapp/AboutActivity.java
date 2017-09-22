@@ -47,7 +47,7 @@ public class AboutActivity extends AppCompatActivity {
         // cache current devmode state
         mDeveloperModeActive = prefs.getBoolean(getString(R.string.pref_advanced_mode_bool), false);
 
-        final Button btnEasterEgg = (Button) findViewById(R.id.btn_about_advancedmode_easteregg);
+        final Button btnEasterEgg = findViewById(R.id.btn_about_advancedmode_easteregg);
 
         if (mDeveloperModeActive) {
             // show button if devmode is enabled already, as a way to disable it
