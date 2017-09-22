@@ -35,12 +35,12 @@ public class Pair<L, R> {
         return left;
     }
 
-    public L left() {
-        return left;
-    }
-
     public R value() {
         return right;
+    }
+
+    public L left() {
+        return left;
     }
 
     public R right() {
