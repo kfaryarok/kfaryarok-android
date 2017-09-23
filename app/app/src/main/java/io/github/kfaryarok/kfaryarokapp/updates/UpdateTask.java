@@ -37,21 +37,21 @@ import io.github.kfaryarok.kfaryarokapp.util.functional.FunctionalUtil;
  */
 public class UpdateTask extends AsyncTask<Context, String, Update[]> {
 
-    private Consumer<String> mShowToast;
+    private Consumer<String> showToast;
 
     /**
      * A constructor that lets you specify how should toasts be shown.
      * @param showToast consumemr that will show a toast of the given string
      */
     public UpdateTask(Consumer<String> showToast) {
-        this.mShowToast = showToast;
+        this.showToast = showToast;
     }
 
     /**
      * A constructor that will not show any toasts (empty consumer)
      */
     public UpdateTask() {
-        this.mShowToast = FunctionalUtil.emptyConsumer();
+        this.showToast = FunctionalUtil.emptyConsumer();
     }
 
     @Override
@@ -61,7 +61,7 @@ public class UpdateTask extends AsyncTask<Context, String, Update[]> {
 
     @Override
     protected void onProgressUpdate(String... values) {
-        mShowToast.accept(values[0]);
+        showToast.accept(values[0]);
     }
 
     /**

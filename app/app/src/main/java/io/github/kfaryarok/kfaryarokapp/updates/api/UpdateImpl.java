@@ -49,8 +49,8 @@ import java.util.List;
  */
 public class UpdateImpl implements Update {
 
-    private Affected mAffected;
-    private String mSummary;
+    private Affected affected;
+    private String summary;
 
     /**
      * Constructor for creating an update, that affects only one class.
@@ -62,8 +62,8 @@ public class UpdateImpl implements Update {
      * @param text A short text explaining the update
      */
     public UpdateImpl(String affectedClass, String text) {
-        this.mAffected = new ClassesAffected(affectedClass);
-        this.mSummary = text;
+        this.affected = new ClassesAffected(affectedClass);
+        this.summary = text;
     }
 
     /**
@@ -76,8 +76,8 @@ public class UpdateImpl implements Update {
      * @param text A short text explaining the update
      */
     public UpdateImpl(String[] affectedClasses, String text) {
-        this.mAffected = new ClassesAffected(affectedClasses);
-        this.mSummary = text;
+        this.affected = new ClassesAffected(affectedClasses);
+        this.summary = text;
     }
 
     /**
@@ -90,8 +90,8 @@ public class UpdateImpl implements Update {
      * @param text A short text explaining the update
      */
     public UpdateImpl(List<String> affectedClasses, String text) {
-        this.mAffected = new ClassesAffected(affectedClasses.toArray(new String[0]));
-        this.mSummary = text;
+        this.affected = new ClassesAffected(affectedClasses.toArray(new String[0]));
+        this.summary = text;
     }
 
     /**
@@ -100,8 +100,8 @@ public class UpdateImpl implements Update {
      * @param text what to display
      */
     public UpdateImpl(String text) {
-        this.mAffected = new GlobalAffected();
-        this.mSummary = text;
+        this.affected = new GlobalAffected();
+        this.summary = text;
     }
 
     /**
@@ -111,18 +111,18 @@ public class UpdateImpl implements Update {
      * @param text short text to display on card
      */
     public UpdateImpl(Affected affects, String text) {
-        this.mAffected = affects;
-        this.mSummary = text;
+        this.affected = affects;
+        this.summary = text;
     }
 
     @Override
     public Affected getAffected() {
-        return mAffected;
+        return affected;
     }
 
     @Override
     public String getText() {
-        return mSummary;
+        return summary;
     }
 
 }

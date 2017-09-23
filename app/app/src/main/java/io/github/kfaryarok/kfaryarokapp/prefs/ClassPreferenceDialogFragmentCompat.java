@@ -41,8 +41,8 @@ import io.github.kfaryarok.kfaryarokapp.util.ClassUtil;
  */
 public class ClassPreferenceDialogFragmentCompat extends PreferenceDialogFragmentCompat implements DialogPreference.TargetFragment {
 
-    RadioGroup mGradeRadioGroup;
-    NumberPicker mClassNumPicker;
+    RadioGroup gradeRadioGroup;
+    NumberPicker classNumPicker;
 
     @Override
     protected View onCreateDialogView(Context context) {
@@ -65,33 +65,33 @@ public class ClassPreferenceDialogFragmentCompat extends PreferenceDialogFragmen
     protected void onBindDialogView(View v) {
         super.onBindDialogView(v);
 
-        mGradeRadioGroup = v.findViewById(R.id.rg_dialog_grade);
-        mClassNumPicker = v.findViewById(R.id.np_dialog_class_num);
+        gradeRadioGroup = v.findViewById(R.id.rg_dialog_grade);
+        classNumPicker = v.findViewById(R.id.np_dialog_class_num);
         final ClassPreference pref = (ClassPreference) getPreference();
 
         // set options and set current selected entries
-        mGradeRadioGroup.check(convertGradeStringToRadioButtonRes(pref.mGrade));
+        gradeRadioGroup.check(convertGradeStringToRadioButtonRes(pref.grade));
         // used to change the number picker's max value based on the selected grade
-        mGradeRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+        gradeRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 
             @Override
             public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
-                mClassNumPicker.setMaxValue(ClassUtil.getClassesInHebrewGrade(convertGradeRadioButtonResToString(getContext(), checkedId)));
+                classNumPicker.setMaxValue(ClassUtil.getClassesInHebrewGrade(convertGradeRadioButtonResToString(getContext(), checkedId)));
             }
 
         });
-        mClassNumPicker.setMinValue(1);
-        mClassNumPicker.setMaxValue(ClassUtil.getClassesInHebrewGrade(pref.mGrade));
-        mClassNumPicker.setWrapSelectorWheel(false);
-        mClassNumPicker.setValue(pref.mClassNum);
+        classNumPicker.setMinValue(1);
+        classNumPicker.setMaxValue(ClassUtil.getClassesInHebrewGrade(pref.grade));
+        classNumPicker.setWrapSelectorWheel(false);
+        classNumPicker.setValue(pref.classNum);
     }
 
     @Override
     public void onDialogClosed(boolean positiveResult) {
         if (positiveResult) {
-            @IdRes int gradeRes = mGradeRadioGroup.getCheckedRadioButtonId();
+            @IdRes int gradeRes = gradeRadioGroup.getCheckedRadioButtonId();
             String grade = convertGradeRadioButtonResToString(getContext(), gradeRes);
-            int classNum = mClassNumPicker.getValue();
+            int classNum = classNumPicker.getValue();
             ClassPreference pref = (ClassPreference) getPreference();
             pref.setClass(grade, classNum);
             getPreference().setSummary(grade + classNum);

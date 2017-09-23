@@ -43,10 +43,10 @@ package io.github.kfaryarok.kfaryarokapp.updates.api;
  */
 public class ClassesAffected implements Affected {
 
-    private String[] mClassesAffected;
+    private String[] classesAffected;
 
     public ClassesAffected(String... classes) {
-        this.mClassesAffected = classes;
+        this.classesAffected = classes;
     }
 
     /**
@@ -55,7 +55,7 @@ public class ClassesAffected implements Affected {
      * @return affected classes array.
      */
     public String[] getClassesAffected() {
-        return mClassesAffected;
+        return classesAffected;
     }
 
     /**
@@ -71,7 +71,7 @@ public class ClassesAffected implements Affected {
         }
 
         // loop through array
-        for (String clazzAffected : mClassesAffected) {
+        for (String clazzAffected : classesAffected) {
             if (clazzAffected.equals(clazz)) {
                 // exists
                 return true;

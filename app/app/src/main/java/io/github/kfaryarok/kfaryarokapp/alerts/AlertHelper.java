@@ -62,8 +62,8 @@ public class AlertHelper {
     public static final String NOTIFICATION_CHANNEL = "kfar_yarok_01";
     public static final int NOTIFICATION_ALERT = 1;
 
-    private static AlarmManager mAlarmManager;
-    private static PendingIntent mPendingAlertReceiver;
+    private static AlarmManager alarmManager;
+    private static PendingIntent pendingAlertReceiver;
 
     /**
      * Enables an alarm using preferences and default values.
@@ -95,7 +95,7 @@ public class AlertHelper {
             calendar.add(Calendar.DATE, 1);
         }
 
-        mAlarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, mPendingAlertReceiver);
+        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingAlertReceiver);
     }
 
     /**
@@ -105,7 +105,7 @@ public class AlertHelper {
     public static void disableAlert(Context ctx) {
         initiateFields(ctx);
 
-        mAlarmManager.cancel(mPendingAlertReceiver);
+        alarmManager.cancel(pendingAlertReceiver);
     }
 
     /**
@@ -113,13 +113,13 @@ public class AlertHelper {
      * @param ctx Used to get the alarm manager instance and to create the pending intent
      */
     private static void initiateFields(Context ctx) {
-        if (mAlarmManager == null) {
+        if (alarmManager == null) {
             // cache alarm manager if null
-            mAlarmManager = (AlarmManager) ctx.getSystemService(Context.ALARM_SERVICE);
+            alarmManager = (AlarmManager) ctx.getSystemService(Context.ALARM_SERVICE);
         }
-        if (mPendingAlertReceiver == null) {
+        if (pendingAlertReceiver == null) {
             // init pendingintent if null
-            mPendingAlertReceiver = createIntent(ctx);
+            pendingAlertReceiver = createIntent(ctx);
         }
     }
 

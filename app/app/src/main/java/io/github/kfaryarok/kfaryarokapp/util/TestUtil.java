@@ -35,8 +35,8 @@ import io.github.kfaryarok.kfaryarokapp.updates.UpdateParser;
  */
 public class TestUtil {
 
-    private static String mTestJsonString = null;
-    private static Update[] mTestUpdateArray = new Update[0];
+    private static String testJsonString = null;
+    private static Update[] testUpdateArray = new Update[0];
 
     static {
         // instead of creating an array every time it's needed or to create the json, cache everything
@@ -58,9 +58,9 @@ public class TestUtil {
             e.printStackTrace();
         }
 
-        mTestJsonString = testJson.toString();
+        testJsonString = testJson.toString();
 
-        mTestUpdateArray = new Update[] {
+        testUpdateArray = new Update[] {
                 new UpdateImpl("שלום"),
                 new UpdateImpl("test"),
                 new UpdateImpl(new String[] {
@@ -77,14 +77,14 @@ public class TestUtil {
      * @return "useless" JSON string for testing parser
      */
     public static String getTestJsonString() {
-        return mTestJsonString;
+        return testJsonString;
     }
 
     /**
      * @return array of useless updates
      */
     public static Update[] getTestUpdateArray() {
-        return mTestUpdateArray;
+        return testUpdateArray;
     }
 
 }
