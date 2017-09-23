@@ -108,6 +108,8 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 PackageManager pm = getContext().getPackageManager();
                 boolean newBool = (boolean) newValue;
 
+                // sadly, when coding this, I didn't document why I used the package manager
+                // so I have no idea why it's there
                 if (newBool) {
                     // alerts are enabled, enable alert and boot receiver
                     AlertHelper.enableAlert(getContext());

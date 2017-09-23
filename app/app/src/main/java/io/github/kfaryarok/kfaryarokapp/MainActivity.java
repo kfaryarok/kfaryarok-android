@@ -20,6 +20,7 @@ package io.github.kfaryarok.kfaryarokapp;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -41,6 +42,7 @@ import android.widget.ViewSwitcher;
 
 import java.util.concurrent.ExecutionException;
 
+import io.github.kfaryarok.kfaryarokapp.alerts.BootReceiver;
 import io.github.kfaryarok.kfaryarokapp.settings.SettingsActivity;
 import io.github.kfaryarok.kfaryarokapp.updates.UpdateAdapter;
 import io.github.kfaryarok.kfaryarokapp.updates.UpdateHelper;
@@ -66,6 +68,9 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter.Upd
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+        // registering implicit receivers in API 26 can only be done programmatically
+        registerReceiver(new BootReceiver(), new IntentFilter(Intent.ACTION_BOOT_COMPLETED));
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
