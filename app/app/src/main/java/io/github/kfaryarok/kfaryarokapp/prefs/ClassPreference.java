@@ -32,8 +32,8 @@ import io.github.kfaryarok.kfaryarokapp.util.ClassUtil;
  */
 public class ClassPreference extends DialogPreference {
 
-    String mGrade;
-    int mClassNum;
+    String grade;
+    int classNum;
 
     public ClassPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -45,8 +45,8 @@ public class ClassPreference extends DialogPreference {
     }
 
     public void setClass(String grade, int classNum) {
-        this.mGrade = grade;
-        this.mClassNum = classNum;
+        this.grade = grade;
+        this.classNum = classNum;
         persistString(grade + classNum);
     }
 
@@ -58,7 +58,7 @@ public class ClassPreference extends DialogPreference {
     @Override
     protected void onSetInitialValue(boolean restorePersistedValue, Object defaultValue) {
         if (restorePersistedValue) {
-            String persistedString = getPersistedString(mGrade + mClassNum);
+            String persistedString = getPersistedString(grade + classNum);
             setClass(ClassUtil.parseHebrewGrade(persistedString), ClassUtil.parseHebrewClassNumber(persistedString));
         } else {
             String defaultString = (String) defaultValue;

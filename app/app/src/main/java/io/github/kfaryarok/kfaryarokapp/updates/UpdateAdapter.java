@@ -36,14 +36,14 @@ import io.github.kfaryarok.kfaryarokapp.util.PreferenceUtil;
  */
 public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.UpdateViewHolder> {
 
-    public Update[] mUpdates;
-    public int mItemCount;
-    private final UpdateAdapterOnClickHandler mClickHandler;
+    public Update[] updates;
+    public int itemCount;
+    private final UpdateAdapterOnClickHandler clickHandler;
 
     public UpdateAdapter(Update[] updates, UpdateAdapterOnClickHandler clickHandler) {
-        this.mItemCount = updates == null ? 0 : updates.length;
-        this.mUpdates = updates;
-        this.mClickHandler = clickHandler;
+        this.itemCount = updates == null ? 0 : updates.length;
+        this.updates = updates;
+        this.clickHandler = clickHandler;
     }
 
     @Override
@@ -54,7 +54,7 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.UpdateView
     @Override
     public void onBindViewHolder(UpdateViewHolder holder, int position) {
         final View itemView = holder.itemView;
-        Update update = mUpdates[position];
+        Update update = updates[position];
 
         // set text
         final TextView tvText = itemView.findViewById(R.id.tv_updatecard_text);
@@ -100,7 +100,7 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.UpdateView
 
     @Override
     public int getItemCount() {
-        return mItemCount;
+        return itemCount;
     }
 
     public class UpdateViewHolder extends RecyclerView.ViewHolder {
@@ -112,14 +112,14 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.UpdateView
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mClickHandler.onClickCard(v, mUpdates[getAdapterPosition()]);
+                    clickHandler.onClickCard(v, updates[getAdapterPosition()]);
                 }
             });
 
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    mClickHandler.onClickOptions(v, mUpdates[getAdapterPosition()], (Button) v.findViewById(R.id.btn_updatecard_options));
+                    clickHandler.onClickOptions(v, updates[getAdapterPosition()], (Button) v.findViewById(R.id.btn_updatecard_options));
                     return true;
                 }
             });
@@ -128,7 +128,7 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.UpdateView
             itemView.findViewById(R.id.btn_updatecard_options).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mClickHandler.onClickOptions(v, mUpdates[getAdapterPosition()], (Button) v);
+                    clickHandler.onClickOptions(v, updates[getAdapterPosition()], (Button) v);
                 }
             });
         }

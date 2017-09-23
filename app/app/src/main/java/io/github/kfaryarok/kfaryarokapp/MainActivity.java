@@ -53,17 +53,17 @@ import io.github.kfaryarok.kfaryarokapp.util.functional.Consumer;
 
 public class MainActivity extends AppCompatActivity implements UpdateAdapter.UpdateAdapterOnClickHandler {
 
-    private RecyclerView mUpdatesRecyclerView;
-    private UpdateAdapter mUpdateAdapter;
-    private ViewSwitcher mViewSwitcher;
-    private TextView mInfoTextView;
-    public TextView mOutdatedWarningTextView;
+    private RecyclerView updatesRecyclerView;
+    private UpdateAdapter updateAdapter;
+    private ViewSwitcher viewSwitcher;
+    private TextView infoTextView;
+    public TextView outdatedWarningTextView;
 
     private SharedPreferences prefs;
 
-    private Toast mToast;
+    private Toast toast;
 
-    public static boolean mResumeFromFirstLaunch = false;
+    public static boolean resumeFromFirstLaunch = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,14 +88,14 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter.Upd
     }
 
     public void showLoadingScreen() {
-        mViewSwitcher = findViewById(R.id.vs_main_loading_data);
+        viewSwitcher = findViewById(R.id.vs_main_loading_data);
     }
 
     public void hideLoadingScreen() {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                mViewSwitcher.showNext();
+                viewSwitcher.showNext();
             }
         }, 150); // artificial delay
     }
@@ -119,19 +119,19 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter.Upd
     }
 
     public void setupUpdateRecyclerView() {
-        mUpdatesRecyclerView = findViewById(R.id.rv_updates);
+        updatesRecyclerView = findViewById(R.id.rv_updates);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        mUpdatesRecyclerView.setLayoutManager(layoutManager);
-        mUpdatesRecyclerView.setHasFixedSize(true);
+        updatesRecyclerView.setLayoutManager(layoutManager);
+        updatesRecyclerView.setHasFixedSize(true);
 
         setupUpdateAdapter();
     }
 
     public void setupUpdateAdapter() {
         try {
-            mUpdateAdapter = new UpdateAdapter(getUpdatesAsync(), this);
-            mUpdatesRecyclerView.setAdapter(mUpdateAdapter);
+            updateAdapter = new UpdateAdapter(getUpdatesAsync(), this);
+            updatesRecyclerView.setAdapter(updateAdapter);
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
             Log.e("MainActivity", "UpdateTask interrupted: " + e.getMessage());
@@ -148,34 +148,34 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter.Upd
     }
 
     public void setupMisc() {
-        mOutdatedWarningTextView = findViewById(R.id.tv_main_outdated_warning);
+        outdatedWarningTextView = findViewById(R.id.tv_main_outdated_warning);
     }
 
     public void updateInfoTextView() {
-        mInfoTextView = findViewById(R.id.tv_main_info);
-        mInfoTextView.setText(String.format("עודכן לאחרונה: %s", UpdateHelper.getWhenLastCachedFormatted(this)));
+        infoTextView = findViewById(R.id.tv_main_info);
+        infoTextView.setText(String.format("עודכן לאחרונה: %s", UpdateHelper.getWhenLastCachedFormatted(this)));
 
         // if cached data is older than 3 hours tell user it might be outdated
         if (UpdateHelper.isCacheOlderThan3Hours(MainActivity.this)) {
-            MainActivity.this.mOutdatedWarningTextView.setVisibility(View.VISIBLE);
-            MainActivity.this.mOutdatedWarningTextView.setText(R.string.tv_main_warning_outdated);
+            MainActivity.this.outdatedWarningTextView.setVisibility(View.VISIBLE);
+            MainActivity.this.outdatedWarningTextView.setText(R.string.tv_main_warning_outdated);
         }
     }
 
     public Toast showToast(String message) {
-        if (mToast != null) {
-            mToast.cancel();
+        if (toast != null) {
+            toast.cancel();
         }
-        mToast = Toast.makeText(this, message, Toast.LENGTH_LONG);
-        mToast.show();
-        return mToast;
+        toast = Toast.makeText(this, message, Toast.LENGTH_LONG);
+        toast.show();
+        return toast;
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (mResumeFromFirstLaunch) {
-            mResumeFromFirstLaunch = false;
+        if (resumeFromFirstLaunch) {
+            resumeFromFirstLaunch = false;
             recreate();
         }
     }

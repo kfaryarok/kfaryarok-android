@@ -33,8 +33,8 @@ import io.github.kfaryarok.kfaryarokapp.R;
  */
 public class TimePreference extends DialogPreference {
 
-    public int mHour = 0;
-    public int mMinute = 0;
+    public int hour = 0;
+    public int minute = 0;
 
     public static int parseHour(String value) {
         try {
@@ -80,8 +80,8 @@ public class TimePreference extends DialogPreference {
             value = defaultValue.toString();
         }
 
-        mHour = parseHour(value);
-        mMinute = parseMinute(value);
+        hour = parseHour(value);
+        minute = parseMinute(value);
 
         setSummary(value);
     }

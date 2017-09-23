@@ -64,14 +64,13 @@ import io.github.kfaryarok.kfaryarokapp.util.PreferenceUtil;
  */
 public class SettingsFragment extends PreferenceFragmentCompat {
 
-    private CheckBoxPreference mCbAlerts;
-    private TimePreference mTpAlertTime;
-    private CheckBoxPreference mCbGlobalAlerts;
-    private ClassPreference mCdClass;
-    // private EditTextPreference mEtpClass;
-    private EditTextPreference mEtpUpdateServer;
-    private Preference mForceFetch;
-    private Preference mResetApp;
+    private CheckBoxPreference alertsCb;
+    private TimePreference alertTimeTp;
+    private CheckBoxPreference globalAlertsCb;
+    private ClassPreference classCd;
+    private EditTextPreference updateServerEtp;
+    private Preference forceFetchBp;
+    private Preference resetAppBp;
 
     private Toast mToast;
 
@@ -79,29 +78,29 @@ public class SettingsFragment extends PreferenceFragmentCompat {
      * This activity is used both for the first launch of the app and for normal settings.
      * This variable lets me change various things based of the use of this activity.
      */
-    private boolean mFirstLaunchActivity = false;
+    private boolean firstLaunchActivity = false;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         addPreferencesFromResource(R.xml.pref_kfaryarok);
         setHasOptionsMenu(true);
 
-        mFirstLaunchActivity = getActivity().getIntent().getBooleanExtra(Intent.EXTRA_TEXT, false);
+        firstLaunchActivity = getActivity().getIntent().getBooleanExtra(Intent.EXTRA_TEXT, false);
 
-        mCbAlerts = (CheckBoxPreference) findPreference(getString(R.string.pref_alerts_enabled_bool));
-        mTpAlertTime = (TimePreference) findPreference(getString(R.string.pref_alerts_time_string));
-        mCbGlobalAlerts = (CheckBoxPreference) findPreference(getString(R.string.pref_globalalerts_enabled_bool));
-        mCdClass = (ClassPreference) findPreference(getString(R.string.pref_class_string));
+        alertsCb = (CheckBoxPreference) findPreference(getString(R.string.pref_alerts_enabled_bool));
+        alertTimeTp = (TimePreference) findPreference(getString(R.string.pref_alerts_time_string));
+        globalAlertsCb = (CheckBoxPreference) findPreference(getString(R.string.pref_globalalerts_enabled_bool));
+        classCd = (ClassPreference) findPreference(getString(R.string.pref_class_string));
         // mEtpClass = (EditTextPreference) findPreference(getString(R.string.pref_class_string));
-        mEtpUpdateServer = (EditTextPreference) findPreference(getString(R.string.pref_updateserver_string));
-        mForceFetch = findPreference(getString(R.string.pref_forcefetch));
-        mResetApp = findPreference(getString(R.string.pref_reset_bool));
+        updateServerEtp = (EditTextPreference) findPreference(getString(R.string.pref_updateserver_string));
+        forceFetchBp = findPreference(getString(R.string.pref_forcefetch));
+        resetAppBp = findPreference(getString(R.string.pref_reset_bool));
 
         boolean alertsEnabled = PreferenceUtil.getAlertEnabledPreference(getContext());
-        mTpAlertTime.setEnabled(alertsEnabled);
-        mCbGlobalAlerts.setEnabled(alertsEnabled);
+        alertTimeTp.setEnabled(alertsEnabled);
+        globalAlertsCb.setEnabled(alertsEnabled);
 
-        mCbAlerts.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+        alertsCb.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
                 ComponentName receiver = new ComponentName(getContext(), BootReceiver.class);
@@ -124,13 +123,13 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                             PackageManager.DONT_KILL_APP);
                 }
 
-                mTpAlertTime.setEnabled(newBool);
-                mCbGlobalAlerts.setEnabled(newBool);
+                alertTimeTp.setEnabled(newBool);
+                globalAlertsCb.setEnabled(newBool);
                 return true;
             }
         });
 
-        mCdClass.setSummary(PreferenceUtil.getClassPreference(getContext()));
+        classCd.setSummary(PreferenceUtil.getClassPreference(getContext()));
 
         // set advanced settings prefscreen category's visibility based on prefs
         PreferenceCategory prefCategoryAdvanced = (PreferenceCategory) findPreference(getString(R.string.settings_advanced_category));
@@ -141,7 +140,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             prefCategoryAdvanced.removeAll();
         }
 
-        mResetApp.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+        resetAppBp.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 
             @SuppressLint("ApplySharedPref")
             @Override
@@ -156,7 +155,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
         });
 
-        mForceFetch.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+        forceFetchBp.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 UpdateHelper.deleteCache(getContext());
@@ -186,7 +185,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             }
         });
 
-        mEtpUpdateServer.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+        updateServerEtp.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @SuppressLint("ApplySharedPref")
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -218,7 +217,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                     }
                 }
 
-                mEtpUpdateServer.setSummary(server);
+                updateServerEtp.setSummary(server);
 
                 // if changing server, than delete cache so new data from new server is fetched
                 UpdateHelper.deleteCache(getContext());
@@ -227,7 +226,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             }
         });
 
-        mEtpUpdateServer.setSummary(PreferenceUtil.getUpdateServerPreference(getContext()));
+        updateServerEtp.setSummary(PreferenceUtil.getUpdateServerPreference(getContext()));
     }
 
     @Override
@@ -267,7 +266,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        if (mFirstLaunchActivity) {
+        if (firstLaunchActivity) {
             // first launch, so put the first launch menu
             inflater.inflate(R.menu.first_launch, menu);
         }
@@ -283,7 +282,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 // mark in preferences that first launch just finished
                 getPreferenceManager().getSharedPreferences().edit().putBoolean(getString(R.string.pref_launched_before_bool), true).apply();
                 // tell main activity that first launched just finished so recreate main activity
-                MainActivity.mResumeFromFirstLaunch = true;
+                MainActivity.resumeFromFirstLaunch = true;
             } else {
                 // else notify user
                 if (mToast != null) {
