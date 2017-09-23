@@ -19,12 +19,16 @@ package io.github.kfaryarok.kfaryarokapp.alerts;
 
 import android.app.AlarmManager;
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
-import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 
 import java.util.Calendar;
@@ -34,9 +38,9 @@ import java.util.concurrent.ExecutionException;
 import io.github.kfaryarok.kfaryarokapp.MainActivity;
 import io.github.kfaryarok.kfaryarokapp.R;
 import io.github.kfaryarok.kfaryarokapp.prefs.TimePreference;
-import io.github.kfaryarok.kfaryarokapp.updates.api.Update;
 import io.github.kfaryarok.kfaryarokapp.updates.UpdateHelper;
 import io.github.kfaryarok.kfaryarokapp.updates.UpdateTask;
+import io.github.kfaryarok.kfaryarokapp.updates.api.Update;
 import io.github.kfaryarok.kfaryarokapp.util.PreferenceUtil;
 
 /**
@@ -52,6 +56,10 @@ import io.github.kfaryarok.kfaryarokapp.util.PreferenceUtil;
  */
 public class AlertHelper {
 
+    /**
+     * Starting with API 26, notifications need to be assigned a channel
+     */
+    public static final String NOTIFICATION_CHANNEL = "kfar_yarok_01";
     public static final int NOTIFICATION_ALERT = 1;
 
     private static AlarmManager mAlarmManager;
@@ -63,6 +71,9 @@ public class AlertHelper {
      */
     public static void enableAlert(Context ctx) {
         initiateFields(ctx);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            registerChannel(ctx);
+        }
 
         String alertTime = PreferenceUtil.getAlertTimePreference(ctx);
         int alertHour = TimePreference.parseHour(alertTime);
@@ -113,6 +124,25 @@ public class AlertHelper {
     }
 
     /**
+     * Registers the app's notification channel to the system.
+     * @param ctx Used to access system
+     */
+    @RequiresApi(Build.VERSION_CODES.O)
+    private static void registerChannel(Context ctx) {
+        NotificationManager mNotifManager =
+                (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        NotificationChannel mChannel = new NotificationChannel(NOTIFICATION_CHANNEL,
+                ctx.getString(R.string.notif_channel_name), NotificationManager.IMPORTANCE_DEFAULT);
+
+        mChannel.setDescription(ctx.getString(R.string.notif_channel_desc));
+        mChannel.setLightColor(Color.GREEN);
+        mChannel.enableVibration(true);
+
+        mNotifManager.createNotificationChannel(mChannel);
+    }
+
+    /**
      * Creates an instance of the pending intent that is used to fire the receiver after
      * the alarm was called.
      * @param ctx For creating the intent
@@ -143,7 +173,7 @@ public class AlertHelper {
             return null;
         }
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, NOTIFICATION_CHANNEL);
         builder.setContentTitle(context.getString(R.string.alert_updates_title) + " (" + UpdateHelper.getWhenLastCachedFormatted(context) + ")")
                 .setSmallIcon(R.mipmap.ic_launcher);
 

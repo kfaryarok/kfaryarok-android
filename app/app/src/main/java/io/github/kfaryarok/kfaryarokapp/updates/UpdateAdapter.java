@@ -57,7 +57,7 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.UpdateView
         Update update = mUpdates[position];
 
         // set text
-        final TextView tvText = (TextView) itemView.findViewById(R.id.tv_updatecard_text);
+        final TextView tvText = itemView.findViewById(R.id.tv_updatecard_text);
         tvText.setText(update.getText());
 
         // messy hack that android forces me to use
@@ -79,7 +79,7 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.UpdateView
         });
 
         // set class
-        TextView tvClass = (TextView) itemView.findViewById(R.id.tv_updatecard_class);
+        TextView tvClass = itemView.findViewById(R.id.tv_updatecard_class);
         if (update.getAffected().isGlobal()) {
             // tells user it's a global update
             tvClass.setText(R.string.global_update);

@@ -20,6 +20,7 @@ package io.github.kfaryarok.kfaryarokapp;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -41,6 +42,7 @@ import android.widget.ViewSwitcher;
 
 import java.util.concurrent.ExecutionException;
 
+import io.github.kfaryarok.kfaryarokapp.alerts.BootReceiver;
 import io.github.kfaryarok.kfaryarokapp.settings.SettingsActivity;
 import io.github.kfaryarok.kfaryarokapp.updates.UpdateAdapter;
 import io.github.kfaryarok.kfaryarokapp.updates.UpdateHelper;
@@ -67,6 +69,9 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter.Upd
     protected void onCreate(Bundle savedInstanceState) {
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
+        // registering implicit receivers in API 26 can only be done programmatically
+        registerReceiver(new BootReceiver(), new IntentFilter(Intent.ACTION_BOOT_COMPLETED));
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -83,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter.Upd
     }
 
     public void showLoadingScreen() {
-        mViewSwitcher = (ViewSwitcher) findViewById(R.id.vs_main_loading_data);
+        mViewSwitcher = findViewById(R.id.vs_main_loading_data);
     }
 
     public void hideLoadingScreen() {
@@ -114,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter.Upd
     }
 
     public void setupUpdateRecyclerView() {
-        mUpdatesRecyclerView = (RecyclerView) findViewById(R.id.rv_updates);
+        mUpdatesRecyclerView = findViewById(R.id.rv_updates);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mUpdatesRecyclerView.setLayoutManager(layoutManager);
@@ -143,11 +148,11 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter.Upd
     }
 
     public void setupMisc() {
-        mOutdatedWarningTextView = (TextView) findViewById(R.id.tv_main_outdated_warning);
+        mOutdatedWarningTextView = findViewById(R.id.tv_main_outdated_warning);
     }
 
     public void updateInfoTextView() {
-        mInfoTextView = (TextView) findViewById(R.id.tv_main_info);
+        mInfoTextView = findViewById(R.id.tv_main_info);
         mInfoTextView.setText(String.format("עודכן לאחרונה: %s", UpdateHelper.getWhenLastCachedFormatted(this)));
 
         // if cached data is older than 3 hours tell user it might be outdated
@@ -198,7 +203,7 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter.Upd
     @Override
     public void onClickCard(View v, Update update) {
         // if card is clicked and the line count is bigger than 3 (meaning it can be expanded/"dexpanded")
-        TextView tvText = (TextView) v.findViewById(R.id.tv_updatecard_text);
+        TextView tvText = v.findViewById(R.id.tv_updatecard_text);
         View viewExpand = v.findViewById(R.id.view_updatecard_expand);
         if (tvText.getLineCount() > 3) {
             // if current max lines is 3, expand to 100 lines, and else "dexpand" back to 3
