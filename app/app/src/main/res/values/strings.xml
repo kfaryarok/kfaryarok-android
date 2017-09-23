@@ -10,6 +10,8 @@
 
     <!-- Alert strings -->
     <string name="alert_updates_title">עדכונים חדשים</string>
+    <string name="notif_channel_name">הכפר הירוק</string>
+    <string name="notif_channel_desc">התראות עדכונים יומיים</string>
 
     <!-- Dialog strings -->
     <string name="dialog_pref_class_title">בחר כיתה</string>
