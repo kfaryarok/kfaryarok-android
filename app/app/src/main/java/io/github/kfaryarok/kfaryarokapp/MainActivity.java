@@ -21,13 +21,11 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.TextViewCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -42,6 +40,8 @@ import android.widget.ViewSwitcher;
 
 import java.util.concurrent.ExecutionException;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import io.github.kfaryarok.kfaryarokapp.alerts.BootReceiver;
 import io.github.kfaryarok.kfaryarokapp.settings.SettingsActivity;
 import io.github.kfaryarok.kfaryarokapp.updates.UpdateAdapter;
@@ -53,13 +53,18 @@ import io.github.kfaryarok.kfaryarokapp.util.functional.Consumer;
 
 public class MainActivity extends AppCompatActivity implements UpdateAdapter.UpdateAdapterOnClickHandler {
 
-    private RecyclerView updatesRecyclerView;
-    private UpdateAdapter updateAdapter;
-    private ViewSwitcher viewSwitcher;
-    private TextView infoTextView;
-    public TextView outdatedWarningTextView;
+    @BindView(R.id.rv_updates)
+    public RecyclerView updatesRecyclerView;
+    public UpdateAdapter updateAdapter;
 
-    private SharedPreferences prefs;
+    @BindView(R.id.vs_main_loading_data)
+    public ViewSwitcher viewSwitcher;
+
+    @BindView(R.id.tv_main_info)
+    public TextView infoTextView;
+
+    @BindView(R.id.tv_main_outdated_warning)
+    public TextView outdatedWarningTextView;
 
     private Toast toast;
 
@@ -67,28 +72,20 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter.Upd
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        prefs = PreferenceManager.getDefaultSharedPreferences(this);
-
         // registering implicit receivers in API 26 can only be done programmatically
         registerReceiver(new BootReceiver(), new IntentFilter(Intent.ACTION_BOOT_COMPLETED));
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        showLoadingScreen();
+        ButterKnife.bind(this);
 
         checkFirstLaunch();
         setupLayoutDirection();
 
-        setupMisc();
         setupUpdateRecyclerView();
         updateInfoTextView();
 
         hideLoadingScreen();
-    }
-
-    public void showLoadingScreen() {
-        viewSwitcher = findViewById(R.id.vs_main_loading_data);
     }
 
     public void hideLoadingScreen() {
@@ -119,8 +116,6 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter.Upd
     }
 
     public void setupUpdateRecyclerView() {
-        updatesRecyclerView = findViewById(R.id.rv_updates);
-
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         updatesRecyclerView.setLayoutManager(layoutManager);
         updatesRecyclerView.setHasFixedSize(true);
@@ -147,12 +142,7 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter.Upd
         }).execute(this).get();
     }
 
-    public void setupMisc() {
-        outdatedWarningTextView = findViewById(R.id.tv_main_outdated_warning);
-    }
-
     public void updateInfoTextView() {
-        infoTextView = findViewById(R.id.tv_main_info);
         infoTextView.setText(String.format("עודכן לאחרונה: %s", UpdateHelper.getWhenLastCachedFormatted(this)));
 
         // if cached data is older than 3 hours tell user it might be outdated

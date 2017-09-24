@@ -117,6 +117,7 @@
     <orderEntry type="library" exported="" name="support-core-utils-26.1.0" level="project" />
     <orderEntry type="library" exported="" name="transition-26.1.0" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="jsr305-2.0.1" level="project" />
+    <orderEntry type="library" exported="" name="butterknife-annotations-8.8.1" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="espresso-core-2.2.2" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="exposed-instrumentation-api-publish-0.5" level="project" />
     <orderEntry type="library" exported="" name="support-compat-26.1.0" level="project" />
@@ -137,5 +138,6 @@
     <orderEntry type="library" exported="" name="preference-v7-26.1.0" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="junit-4.12" level="project" />
     <orderEntry type="library" exported="" name="design-26.1.0" level="project" />
+    <orderEntry type="library" exported="" name="butterknife-8.8.1" level="project" />
   </component>
 </module>

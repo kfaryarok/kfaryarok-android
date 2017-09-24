@@ -26,7 +26,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class AboutActivity extends AppCompatActivity {
+
+    @BindView(R.id.btn_about_advancedmode_easteregg)
+    public Button btnEasterEgg;
 
     private int easterEggClickCounter;
     private static final int clickCounterMax = 7;
@@ -37,15 +43,14 @@ public class AboutActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
+        ButterKnife.bind(this);
 
-        ViewCompat.setLayoutDirection(getWindow().getDecorView(), ViewCompat.LAYOUT_DIRECTION_LTR);
+        ViewCompat.setLayoutDirection(getWindow().getDecorView(), ViewCompat.LAYOUT_DIRECTION_RTL);
 
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
         // cache current devmode state
         developerModeActive = prefs.getBoolean(getString(R.string.pref_advanced_mode_bool), false);
-
-        final Button btnEasterEgg = findViewById(R.id.btn_about_advancedmode_easteregg);
 
         if (developerModeActive) {
             // show button if devmode is enabled already, as a way to disable it
