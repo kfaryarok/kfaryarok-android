@@ -72,7 +72,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     private Preference forceFetchBp;
     private Preference resetAppBp;
 
-    private Toast mToast;
+    private Toast toast;
 
     /**
      * This activity is used both for the first launch of the app and for normal settings.
@@ -164,22 +164,22 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                     updates = new UpdateTask(new Consumer<String>() {
                         @Override
                         public void accept(String s) {
-                            if (mToast != null) {
-                                mToast.cancel();
+                            if (toast != null) {
+                                toast.cancel();
                             }
-                            mToast = Toast.makeText(getContext(), s, Toast.LENGTH_LONG);
-                            mToast.show();
+                            toast = Toast.makeText(getContext(), s, Toast.LENGTH_LONG);
+                            toast.show();
                         }
                     }).execute(getContext()).get();
                 } catch (InterruptedException | ExecutionException e) {
                     Log.e("SettingsFragment", "UpdateTask interrupted: " + e.getMessage());
                 }
                 if (updates != null) {
-                    if (mToast != null) {
-                        mToast.cancel();
+                    if (toast != null) {
+                        toast.cancel();
                     }
-                    mToast = Toast.makeText(getContext(), getString(R.string.toast_devmode_forcefetch), Toast.LENGTH_LONG);
-                    mToast.show();
+                    toast = Toast.makeText(getContext(), getString(R.string.toast_devmode_forcefetch), Toast.LENGTH_LONG);
+                    toast.show();
                 }
                 return true;
             }
@@ -196,11 +196,11 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                     PreferenceUtil.getSharedPreferences(getContext()).edit()
                             .putString(getString(R.string.pref_updateserver_string), getString(R.string.pref_updateserver_string_def))
                             .commit();
-                    if (mToast != null) {
-                        mToast.cancel();
+                    if (toast != null) {
+                        toast.cancel();
                     }
-                    mToast = Toast.makeText(getContext(), getString(R.string.toast_devmode_defaultserver_revert), Toast.LENGTH_LONG);
-                    mToast.show();
+                    toast = Toast.makeText(getContext(), getString(R.string.toast_devmode_defaultserver_revert), Toast.LENGTH_LONG);
+                    toast.show();
                 } else {
                     // check if it's a valid url
                     try {
@@ -208,11 +208,11 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                         new URL(server);
                     } catch (MalformedURLException e) {
                         // invalid
-                        if (mToast != null) {
-                            mToast.cancel();
+                        if (toast != null) {
+                            toast.cancel();
                         }
-                        mToast = Toast.makeText(getContext(), getString(R.string.toast_devmode_invalid_server), Toast.LENGTH_LONG);
-                        mToast.show();
+                        toast = Toast.makeText(getContext(), getString(R.string.toast_devmode_invalid_server), Toast.LENGTH_LONG);
+                        toast.show();
                         return false;
                     }
                 }
@@ -285,11 +285,11 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 MainActivity.resumeFromFirstLaunch = true;
             } else {
                 // else notify user
-                if (mToast != null) {
-                    mToast.cancel();
+                if (toast != null) {
+                    toast.cancel();
                 }
-                mToast = Toast.makeText(getContext(), getString(R.string.toast_firstlaunch_no_class), Toast.LENGTH_LONG);
-                mToast.show();
+                toast = Toast.makeText(getContext(), getString(R.string.toast_firstlaunch_no_class), Toast.LENGTH_LONG);
+                toast.show();
             }
         }
 
