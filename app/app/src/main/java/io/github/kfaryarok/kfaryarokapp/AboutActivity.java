@@ -45,7 +45,7 @@ public class AboutActivity extends AppCompatActivity {
         setContentView(R.layout.activity_about);
         ButterKnife.bind(this);
 
-        ViewCompat.setLayoutDirection(getWindow().getDecorView(), ViewCompat.LAYOUT_DIRECTION_LTR);
+        ViewCompat.setLayoutDirection(getWindow().getDecorView(), ViewCompat.LAYOUT_DIRECTION_RTL);
 
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
