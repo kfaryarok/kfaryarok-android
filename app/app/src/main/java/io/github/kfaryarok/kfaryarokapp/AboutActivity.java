@@ -22,7 +22,6 @@ import android.os.Bundle;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
-import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -59,53 +58,49 @@ public class AboutActivity extends AppCompatActivity {
             btnEasterEgg.setText("");
         }
 
-        btnEasterEgg.setOnClickListener(new View.OnClickListener() {
+        btnEasterEgg.setOnClickListener(v -> {
+            if (!developerModeActive) {
+                // only if devmode isn't enabled
+                if (easterEggClickCounter == clickCounterMax) {
+                    // update prefs
+                    prefs.edit().putBoolean(getString(R.string.pref_advanced_mode_bool), developerModeActive = true).apply();
 
-            @Override
-            public void onClick(View v) {
-                if (!developerModeActive) {
-                    // only if devmode isn't enabled
-                    if (easterEggClickCounter == clickCounterMax) {
-                        // update prefs
-                        prefs.edit().putBoolean(getString(R.string.pref_advanced_mode_bool), developerModeActive = true).apply();
-
-                        // alert user
-                        if (toast != null) {
-                            toast.cancel();
-                        }
-                        toast = Toast.makeText(getApplicationContext(), getString(R.string.toast_devmode_enabled), Toast.LENGTH_LONG);
-                        toast.show();
-
-                        btnEasterEgg.setBackgroundResource(android.R.drawable.btn_default);
-                        btnEasterEgg.setText(getString(R.string.btn_devmode_easteregg));
-                    } else {
-                        // increase count
-                        easterEggClickCounter++;
-
-                        if (easterEggClickCounter >= 4) {
-                            if (toast != null) {
-                                toast.cancel();
-                            }
-                            // the extra space is because android removes spaces from strings
-                            toast = Toast.makeText(getApplicationContext(),
-                                    (clickCounterMax - easterEggClickCounter + 1) + " " +
-                                            getString(R.string.toast_devmode_clicks_remaining),
-                                    Toast.LENGTH_LONG);
-                            toast.show();
-                        }
-                    }
-                } else {
-                    prefs.edit().putBoolean(getString(R.string.pref_advanced_mode_bool), developerModeActive = false).apply();
-                    btnEasterEgg.setBackgroundResource(android.R.color.transparent);
-                    btnEasterEgg.setText("");
-                    easterEggClickCounter = 0;
-
+                    // alert user
                     if (toast != null) {
                         toast.cancel();
                     }
-                    toast = Toast.makeText(getApplicationContext(), getString(R.string.toast_devmode_disabled), Toast.LENGTH_LONG);
+                    toast = Toast.makeText(getApplicationContext(), getString(R.string.toast_devmode_enabled), Toast.LENGTH_LONG);
                     toast.show();
+
+                    btnEasterEgg.setBackgroundResource(android.R.drawable.btn_default);
+                    btnEasterEgg.setText(getString(R.string.btn_devmode_easteregg));
+                } else {
+                    // increase count
+                    easterEggClickCounter++;
+
+                    if (easterEggClickCounter >= 4) {
+                        if (toast != null) {
+                            toast.cancel();
+                        }
+                        // the extra space is because android removes spaces from strings
+                        toast = Toast.makeText(getApplicationContext(),
+                                (clickCounterMax - easterEggClickCounter + 1) + " " +
+                                        getString(R.string.toast_devmode_clicks_remaining),
+                                Toast.LENGTH_LONG);
+                        toast.show();
+                    }
                 }
+            } else {
+                prefs.edit().putBoolean(getString(R.string.pref_advanced_mode_bool), developerModeActive = false).apply();
+                btnEasterEgg.setBackgroundResource(android.R.color.transparent);
+                btnEasterEgg.setText("");
+                easterEggClickCounter = 0;
+
+                if (toast != null) {
+                    toast.cancel();
+                }
+                toast = Toast.makeText(getApplicationContext(), getString(R.string.toast_devmode_disabled), Toast.LENGTH_LONG);
+                toast.show();
             }
         });
     }

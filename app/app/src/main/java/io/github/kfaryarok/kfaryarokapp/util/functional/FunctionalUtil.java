@@ -29,12 +29,7 @@ public class FunctionalUtil {
      * @return An instance of {@link Function} that will do nothing and return null
      */
     public static <T, R> Function<T, R> emptyFunction() {
-        return new Function<T, R>() {
-            @Override
-            public R apply(T t) {
-                return null;
-            }
-        };
+        return t -> null;
     }
 
     /**
@@ -45,12 +40,7 @@ public class FunctionalUtil {
      * @return An instance of {@link Function} that will do nothing and return the given return value
      */
     public static <T, R> Function<T, R> returnFunction(final R returnValue) {
-        return new Function<T, R>() {
-            @Override
-            public R apply(T t) {
-                return returnValue;
-            }
-        };
+        return t -> returnValue;
     }
 
     /**
@@ -59,11 +49,8 @@ public class FunctionalUtil {
      * @return An instance of {@link Consumer} that will do nothing
      */
     public static <T> Consumer<T> emptyConsumer() {
-        return new Consumer<T>() {
-            @Override
-            public void accept(T t) {
-                // no-op
-            }
+        return t -> {
+            // no-op
         };
     }
 
@@ -73,12 +60,7 @@ public class FunctionalUtil {
      * @return An instance of {@link Supplier} that will always supply null
      */
     public static <T> Supplier<T> nullSupplier() {
-        return new Supplier<T>() {
-            @Override
-            public T get() {
-                return null;
-            }
-        };
+        return () -> null;
     }
 
     /**
@@ -88,12 +70,7 @@ public class FunctionalUtil {
      * @return An instance of {@link Supplier} that will always supply the given object
      */
     public static <T> Supplier<T> objectSupplier(final T object) {
-        return new Supplier<T>() {
-            @Override
-            public T get() {
-                return object;
-            }
-        };
+        return () -> object;
     }
 
     /**
@@ -102,12 +79,7 @@ public class FunctionalUtil {
      * @return An instance of {@link Predicate} that will always test false
      */
     public static <T> Predicate<T> falsePredicate() {
-        return new Predicate<T>() {
-            @Override
-            public boolean test(T t) {
-                return false;
-            }
-        };
+        return t -> false;
     }
 
     /**
@@ -116,12 +88,7 @@ public class FunctionalUtil {
      * @return An instance of {@link Predicate} that will always test true
      */
     public static <T> Predicate<T> truePredicate() {
-        return new Predicate<T>() {
-            @Override
-            public boolean test(T t) {
-                return true;
-            }
-        };
+        return t -> true;
     }
 
 }

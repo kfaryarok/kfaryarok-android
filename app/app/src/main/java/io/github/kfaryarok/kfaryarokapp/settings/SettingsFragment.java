@@ -35,7 +35,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 import java.net.MalformedURLException;
@@ -49,11 +48,10 @@ import io.github.kfaryarok.kfaryarokapp.alerts.BootReceiver;
 import io.github.kfaryarok.kfaryarokapp.prefs.ClassPreference;
 import io.github.kfaryarok.kfaryarokapp.prefs.ClassPreferenceDialogFragmentCompat;
 import io.github.kfaryarok.kfaryarokapp.prefs.TimePreference;
-import io.github.kfaryarok.kfaryarokapp.updates.api.Update;
 import io.github.kfaryarok.kfaryarokapp.updates.UpdateFetcher;
 import io.github.kfaryarok.kfaryarokapp.updates.UpdateHelper;
 import io.github.kfaryarok.kfaryarokapp.updates.UpdateTask;
-import io.github.kfaryarok.kfaryarokapp.util.functional.Consumer;
+import io.github.kfaryarok.kfaryarokapp.updates.api.Update;
 import io.github.kfaryarok.kfaryarokapp.util.PreferenceUtil;
 
 /**
@@ -81,6 +79,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     private boolean firstLaunchActivity = false;
 
     @Override
+    @SuppressLint("ApplySharedPref")
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         addPreferencesFromResource(R.xml.pref_kfaryarok);
         setHasOptionsMenu(true);
@@ -100,33 +99,30 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         alertTimeTp.setEnabled(alertsEnabled);
         globalAlertsCb.setEnabled(alertsEnabled);
 
-        alertsCb.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                ComponentName receiver = new ComponentName(getContext(), BootReceiver.class);
-                PackageManager pm = getContext().getPackageManager();
-                boolean newBool = (boolean) newValue;
+        alertsCb.setOnPreferenceChangeListener((preference, newValue) -> {
+            ComponentName receiver = new ComponentName(getContext(), BootReceiver.class);
+            PackageManager pm = getContext().getPackageManager();
+            boolean newBool = (boolean) newValue;
 
-                // sadly, when coding this, I didn't document why I used the package manager
-                // so I have no idea why it's there
-                if (newBool) {
-                    // alerts are enabled, enable alert and boot receiver
-                    AlertHelper.enableAlert(getContext());
-                    pm.setComponentEnabledSetting(receiver,
-                            PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
-                            PackageManager.DONT_KILL_APP);
-                } else {
-                    // alerts are disabled, disable alert and boot receiver
-                    AlertHelper.disableAlert(getContext());
-                    pm.setComponentEnabledSetting(receiver,
-                            PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
-                            PackageManager.DONT_KILL_APP);
-                }
-
-                alertTimeTp.setEnabled(newBool);
-                globalAlertsCb.setEnabled(newBool);
-                return true;
+            // sadly, when coding this, I didn't document why I used the package manager
+            // so I have no idea why it's there
+            if (newBool) {
+                // alerts are enabled, enable alert and boot receiver
+                AlertHelper.enableAlert(getContext());
+                pm.setComponentEnabledSetting(receiver,
+                        PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+                        PackageManager.DONT_KILL_APP);
+            } else {
+                // alerts are disabled, disable alert and boot receiver
+                AlertHelper.disableAlert(getContext());
+                pm.setComponentEnabledSetting(receiver,
+                        PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+                        PackageManager.DONT_KILL_APP);
             }
+
+            alertTimeTp.setEnabled(newBool);
+            globalAlertsCb.setEnabled(newBool);
+            return true;
         });
 
         classCd.setSummary(PreferenceUtil.getClassPreference(getContext()));
@@ -140,90 +136,74 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             prefCategoryAdvanced.removeAll();
         }
 
-        resetAppBp.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-
-            @SuppressLint("ApplySharedPref")
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                // clear prefs
-                // because app quits immediately, we need to clear prefs immediately
-                PreferenceUtil.getSharedPreferences(getContext()).edit().clear().commit();
-                // relaunch app
-                System.exit(0);
-                return true;
-            }
-
+        resetAppBp.setOnPreferenceClickListener(preference -> {
+            // clear prefs
+            // because app quits immediately, we need to clear prefs immediately
+            PreferenceUtil.getSharedPreferences(getContext()).edit().clear().commit();
+            // relaunch app
+            System.exit(0);
+            return true;
         });
 
-        forceFetchBp.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                UpdateHelper.deleteCache(getContext());
-                Update[] updates = new Update[0];
+        forceFetchBp.setOnPreferenceClickListener(preference -> {
+            UpdateHelper.deleteCache(getContext());
+            Update[] updates = new Update[0];
+            try {
+                updates = new UpdateTask(s -> {
+                    if (toast != null) {
+                        toast.cancel();
+                    }
+                    toast = Toast.makeText(getContext(), s, Toast.LENGTH_LONG);
+                    toast.show();
+                }).execute(getContext()).get();
+            } catch (InterruptedException | ExecutionException e) {
+                Log.e("SettingsFragment", "UpdateTask interrupted: " + e.getMessage());
+            }
+            if (updates != null) {
+                if (toast != null) {
+                    toast.cancel();
+                }
+                toast = Toast.makeText(getContext(), getString(R.string.toast_devmode_forcefetch), Toast.LENGTH_LONG);
+                toast.show();
+            }
+            return true;
+        });
+
+        updateServerEtp.setOnPreferenceChangeListener((preference, newValue) -> {
+            String server = (String) newValue;
+
+            if ("".equals(server)) {
+                server = UpdateFetcher.DEFAULT_UPDATE_URL;
+                PreferenceUtil.getSharedPreferences(getContext()).edit()
+                        .putString(getString(R.string.pref_updateserver_string), getString(R.string.pref_updateserver_string_def))
+                        .commit();
+                if (toast != null) {
+                    toast.cancel();
+                }
+                toast = Toast.makeText(getContext(), getString(R.string.toast_devmode_defaultserver_revert), Toast.LENGTH_LONG);
+                toast.show();
+            } else {
+                // check if it's a valid url
                 try {
-                    updates = new UpdateTask(new Consumer<String>() {
-                        @Override
-                        public void accept(String s) {
-                            if (toast != null) {
-                                toast.cancel();
-                            }
-                            toast = Toast.makeText(getContext(), s, Toast.LENGTH_LONG);
-                            toast.show();
-                        }
-                    }).execute(getContext()).get();
-                } catch (InterruptedException | ExecutionException e) {
-                    Log.e("SettingsFragment", "UpdateTask interrupted: " + e.getMessage());
-                }
-                if (updates != null) {
+                    // use URL to see if the url is valid
+                    new URL(server);
+                } catch (MalformedURLException e) {
+                    // invalid
                     if (toast != null) {
                         toast.cancel();
                     }
-                    toast = Toast.makeText(getContext(), getString(R.string.toast_devmode_forcefetch), Toast.LENGTH_LONG);
+                    toast = Toast.makeText(getContext(), getString(R.string.toast_devmode_invalid_server), Toast.LENGTH_LONG);
                     toast.show();
+                    return false;
                 }
-                return true;
             }
-        });
 
-        updateServerEtp.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @SuppressLint("ApplySharedPref")
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                String server = (String) newValue;
+            updateServerEtp.setSummary(server);
 
-                if ("".equals(server)) {
-                    server = UpdateFetcher.DEFAULT_UPDATE_URL;
-                    PreferenceUtil.getSharedPreferences(getContext()).edit()
-                            .putString(getString(R.string.pref_updateserver_string), getString(R.string.pref_updateserver_string_def))
-                            .commit();
-                    if (toast != null) {
-                        toast.cancel();
-                    }
-                    toast = Toast.makeText(getContext(), getString(R.string.toast_devmode_defaultserver_revert), Toast.LENGTH_LONG);
-                    toast.show();
-                } else {
-                    // check if it's a valid url
-                    try {
-                        // use URL to see if the url is valid
-                        new URL(server);
-                    } catch (MalformedURLException e) {
-                        // invalid
-                        if (toast != null) {
-                            toast.cancel();
-                        }
-                        toast = Toast.makeText(getContext(), getString(R.string.toast_devmode_invalid_server), Toast.LENGTH_LONG);
-                        toast.show();
-                        return false;
-                    }
-                }
+            // if changing server, than delete cache so new data from new server is fetched
+            UpdateHelper.deleteCache(getContext());
 
-                updateServerEtp.setSummary(server);
-
-                // if changing server, than delete cache so new data from new server is fetched
-                UpdateHelper.deleteCache(getContext());
-
-                return true;
-            }
+            return true;
         });
 
         updateServerEtp.setSummary(PreferenceUtil.getUpdateServerPreference(getContext()));
@@ -234,18 +214,15 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         Dialog dialog = null;
         DialogFragment dialogFragment = null;
         if (preference instanceof TimePreference) {
-            dialog = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
-                @Override
-                public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                    SharedPreferences prefs = PreferenceUtil.getSharedPreferences(getContext());
-                    String time = TimePreference.timeToString(hourOfDay, minute);
-                    prefs.edit()
-                            .putString(getString(R.string.pref_alerts_time_string), time)
-                            .apply();
-                    preference.setSummary(time);
-                    // let it know alert time was changed
-                    AlertHelper.enableAlert(getContext());
-                }
+            dialog = new TimePickerDialog(getContext(), (view, hourOfDay, minute) -> {
+                SharedPreferences prefs = PreferenceUtil.getSharedPreferences(getContext());
+                String time = TimePreference.timeToString(hourOfDay, minute);
+                prefs.edit()
+                        .putString(getString(R.string.pref_alerts_time_string), time)
+                        .apply();
+                preference.setSummary(time);
+                // let it know alert time was changed
+                AlertHelper.enableAlert(getContext());
             }, PreferenceUtil.parseAlertHour(getContext()), PreferenceUtil.parseAlertMinute(getContext()), true);
         } else if (preference instanceof ClassPreference) {
             dialogFragment = new ClassPreferenceDialogFragmentCompat();

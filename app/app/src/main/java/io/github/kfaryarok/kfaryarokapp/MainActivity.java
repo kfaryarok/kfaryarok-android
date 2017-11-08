@@ -49,7 +49,6 @@ import io.github.kfaryarok.kfaryarokapp.updates.UpdateHelper;
 import io.github.kfaryarok.kfaryarokapp.updates.UpdateTask;
 import io.github.kfaryarok.kfaryarokapp.updates.api.Update;
 import io.github.kfaryarok.kfaryarokapp.util.PreferenceUtil;
-import io.github.kfaryarok.kfaryarokapp.util.functional.Consumer;
 
 public class MainActivity extends AppCompatActivity implements UpdateAdapter.UpdateAdapterOnClickHandler {
 
@@ -89,12 +88,7 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter.Upd
     }
 
     public void hideLoadingScreen() {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                viewSwitcher.showNext();
-            }
-        }, 150); // artificial delay
+        new Handler().postDelayed(() -> viewSwitcher.showNext(), 150); // artificial delay
     }
 
     public void checkFirstLaunch() {
@@ -134,12 +128,7 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter.Upd
     }
 
     public Update[] getUpdatesAsync() throws ExecutionException, InterruptedException {
-        return new UpdateTask(new Consumer<String>() {
-            @Override
-            public void accept(String s) {
-                showToast(s);
-            }
-        }).execute(this).get();
+        return new UpdateTask(this::showToast).execute(this).get();
     }
 
     public void updateInfoTextView() {
@@ -213,21 +202,16 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter.Upd
         PopupMenu popupMenu = new PopupMenu(this, buttonView);
         popupMenu.getMenuInflater().inflate(R.menu.update_card, popupMenu.getMenu());
 
-        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+        popupMenu.setOnMenuItemClickListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.menu_card_copytext:
+                    ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+                    clipboard.setPrimaryClip(ClipData.newPlainText("Update Text", update.getText()));
 
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.menu_card_copytext:
-                        ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-                        clipboard.setPrimaryClip(ClipData.newPlainText("Update Text", update.getText()));
-
-                        showToast(getString(R.string.toast_card_copiedtext));
-                        break;
-                }
-                return false;
+                    showToast(getString(R.string.toast_card_copiedtext));
+                    break;
             }
-
+            return false;
         });
 
         popupMenu.show();
