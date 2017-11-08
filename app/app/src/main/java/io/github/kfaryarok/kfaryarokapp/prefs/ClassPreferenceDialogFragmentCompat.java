@@ -72,14 +72,10 @@ public class ClassPreferenceDialogFragmentCompat extends PreferenceDialogFragmen
         // set options and set current selected entries
         gradeRadioGroup.check(convertGradeStringToRadioButtonRes(pref.grade));
         // used to change the number picker's max value based on the selected grade
-        gradeRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-
-            @Override
-            public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
-                classNumPicker.setMaxValue(ClassUtil.getClassesInHebrewGrade(convertGradeRadioButtonResToString(getContext(), checkedId)));
-            }
-
-        });
+        gradeRadioGroup.setOnCheckedChangeListener(
+                (group, checkedId) ->
+                        classNumPicker.setMaxValue(ClassUtil.getClassesInHebrewGrade(convertGradeRadioButtonResToString(getContext(), checkedId)))
+        );
         classNumPicker.setMinValue(1);
         classNumPicker.setMaxValue(ClassUtil.getClassesInHebrewGrade(pref.grade));
         classNumPicker.setWrapSelectorWheel(false);

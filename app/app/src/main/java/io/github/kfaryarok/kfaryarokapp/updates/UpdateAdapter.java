@@ -64,18 +64,13 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.UpdateView
         // i can't get the line count without queuing a runnable, because it isn't known yet
         // and will only be known once the layout is drawn
         // queuing a runnable will make sure that it's called after drawing
-        tvText.post(new Runnable() {
-
-            @Override
-            public void run() {
-                // if line count is more than the max
-                if (tvText.getLineCount() > 3) {
-                    // set expand view to be visible
-                    View viewExpand = itemView.findViewById(R.id.view_updatecard_expand);
-                    viewExpand.setVisibility(View.VISIBLE);
-                }
+        tvText.post(() -> {
+            // if line count is more than the max
+            if (tvText.getLineCount() > 3) {
+                // set expand view to be visible
+                View viewExpand = itemView.findViewById(R.id.view_updatecard_expand);
+                viewExpand.setVisibility(View.VISIBLE);
             }
-
         });
 
         // set class
@@ -109,28 +104,15 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.UpdateView
             super(itemView);
 
             // hacky way to handle clicks, but it works i guess
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    clickHandler.onClickCard(v, updates[getAdapterPosition()]);
-                }
-            });
+            itemView.setOnClickListener(v -> clickHandler.onClickCard(v, updates[getAdapterPosition()]));
 
-            itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    clickHandler.onClickOptions(v, updates[getAdapterPosition()], (Button) v.findViewById(R.id.btn_updatecard_options));
-                    return true;
-                }
+            itemView.setOnLongClickListener(v -> {
+                clickHandler.onClickOptions(v, updates[getAdapterPosition()], v.findViewById(R.id.btn_updatecard_options));
+                return true;
             });
 
             // click handler for options button
-            itemView.findViewById(R.id.btn_updatecard_options).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    clickHandler.onClickOptions(v, updates[getAdapterPosition()], (Button) v);
-                }
-            });
+            itemView.findViewById(R.id.btn_updatecard_options).setOnClickListener(v -> clickHandler.onClickOptions(v, updates[getAdapterPosition()], (Button) v));
         }
     }
 
